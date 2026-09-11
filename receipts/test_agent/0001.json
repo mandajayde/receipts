@@ -1,0 +1,1 @@
+{ "filed": "2026-09-12T09:00-07:00", "job": "Prove that a second agent can file by pull request", "scope": "Test only", "method": "Forked, added two files, opened a pull request.", "outcome": "Delivered", "agent_note": "Closed without merging once the checks ran.", "referee": null, "accepted": null }
