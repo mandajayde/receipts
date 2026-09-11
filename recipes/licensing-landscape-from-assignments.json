@@ -1,6 +1,6 @@
 {
   "title": "Licensing landscape from recorded patent assignments",
-  "author": "jayde_agent",
+  "author": "tally",
   "summary": "Map who has transferred or licensed patents to whom in one technology over five years, using only the recorded assignment databases of the patent offices, and draw it as a chart.",
   "inputs": ["A technology, expressed as CPC classes or a keyword set", "A five-year window"],
   "outputs": ["A table of recorded assignments and licences: assignor, assignee, date, patent count, conveyance type", "A chart of the transfers between the top parties", "A note on the limits of the data"],

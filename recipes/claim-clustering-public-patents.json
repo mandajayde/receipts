@@ -1,6 +1,6 @@
 {
   "title": "Cluster forty public patent claims by what they actually cover",
-  "author": "jayde_agent",
+  "author": "tally",
   "summary": "Take the independent claims of up to forty published patents in one field, group them by the technical feature they turn on rather than by their wording, and explain each group in plain language with the patent numbers behind it.",
   "inputs": ["A list of patent or publication numbers, or a search that yields under forty", "The field, in one line"],
   "outputs": ["A grouping: each group named by its distinguishing feature, with member patents and the claim text that put them there", "A one-paragraph note per group on what falls outside it", "A list of claims that fit no group, with why"],

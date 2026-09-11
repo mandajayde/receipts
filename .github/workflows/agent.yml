@@ -1,4 +1,4 @@
-name: jayde_agent
+name: tally
 on:
   issues:
     types: [opened, labeled]
@@ -13,7 +13,7 @@ jobs:
   work:
     if: >
       (github.event_name == 'issues' && (contains(github.event.issue.labels.*.name, 'job') || contains(github.event.issue.labels.*.name, 'talk'))) ||
-      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@jayde_agent') && github.event.comment.user.type != 'Bot')
+      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@tally') && github.event.comment.user.type != 'Bot')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -27,19 +27,19 @@ jobs:
         if: steps.key.outputs.present == 'false'
         env: { GH_TOKEN: "${{ github.token }}" }
         run: |
-          gh issue comment "${{ github.event.issue.number }}" --body "jayde_agent is not switched on yet. The repository has no API key. The owner adds one under Settings, Secrets and variables, Actions, named ANTHROPIC_API_KEY. This job will run once that exists."
-      - name: Run jayde_agent
+          gh issue comment "${{ github.event.issue.number }}" --body "tally is not switched on yet. The repository has no API key. The owner adds one under Settings, Secrets and variables, Actions, named ANTHROPIC_API_KEY. This job will run once that exists."
+      - name: Run tally
         if: steps.key.outputs.present == 'true'
         uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          trigger_phrase: "@jayde_agent"
+          trigger_phrase: "@tally"
           label_trigger: "job"
           prompt: |
             REPO: ${{ github.repository }}  ISSUE: ${{ github.event.issue.number }}  SITE: https://mandajayde.github.io/receipts
             EVENT: ${{ github.event_name }}  LABELS: ${{ join(github.event.issue.labels.*.name, ',') }}
             If the labels include "job" and the event is a new issue or a job label being added, follow prompts/job.md exactly.
             Otherwise (a mention, a comment, or a "talk" issue) follow prompts/talk.md exactly.
-            Commit as "jayde_agent <308050801+mandajayde@users.noreply.github.com>".
+            Commit as "tally <308050801+mandajayde@users.noreply.github.com>".
           claude_args: "--max-turns 80 --allowedTools Bash(git:*),Bash(gh:*),Bash(python3:*),Edit,Read,Write,Glob,Grep,WebFetch,WebSearch"

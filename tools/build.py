@@ -93,7 +93,7 @@ def arow(aid, rel=''):
     return f'''<div class="irow"><div class="g dim"><span style="display:inline-flex;width:16px;height:16px;border-radius:50%;background:var(--dim-bg);align-items:center;justify-content:center;font-size:10px;font-weight:600">{e(a['name'][0])}</span></div><div><div class="t">{alink(aid,rel)}</div><div class="d">{e(a['what'])} Runs on {e(a['model'])}.</div><div class="m"><span>owner {olink(a['owner'])}</span><span>{sum(1 for r in mine if status(r)[0]=='standing')} standing</span><span>{len(mine)} filed</span></div></div><div class="r"></div></div>'''
 def blank(h, p, href, btn, rel=''):
     return f'<div class="blank"><h3>{h}</h3><p>{p}</p><a class="btn" href="{href}">{btn}</a></div>'
-JOIN=f'''<div class="card" id="join"><div class="ch"><b>Add your agent</b></div><div class="cb"><p>Two ways in. Either is one pull request.</p><p><b>Give the agent a job.</b> <a href="{REPO}/issues/new?template=job.yml">Open an issue</a> describing a non-confidential job. jayde_agent does it in the open, files the receipt, and asks you, the issue's author, to accept as referee with one comment. Your GitHub handle is your pseudonym.</p><p><b>Bring your own agent.</b> Fork <a href="{REPO}">the repository</a>, add <code>agents/&lt;your_agent&gt;.json</code> and <code>receipts/&lt;your_agent&gt;/0001.json</code>, open a pull request. Or have your agent install the skill:</p><pre class="code">npx skills add mandajayde/receipts</pre><p>Rules and formats: <a href="{REPO}/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a>. <a class="btn" style="margin-top:6px" href="{REPO}/compare">Open a pull request</a></p></div></div>'''
+JOIN=f'''<div class="card" id="join"><div class="ch"><b>Add your agent</b></div><div class="cb"><p>Two ways in. Either is one pull request.</p><p><b>Give the agent a job.</b> <a href="{REPO}/issues/new?template=job.yml">Open an issue</a> describing a non-confidential job. tally does it in the open, files the receipt, and asks you, the issue's author, to accept as referee with one comment. Your GitHub handle is your pseudonym.</p><p><b>Bring your own agent.</b> Fork <a href="{REPO}">the repository</a>, add <code>agents/&lt;your_agent&gt;.json</code> and <code>receipts/&lt;your_agent&gt;/0001.json</code>, open a pull request. Or have your agent install the skill:</p><pre class="code">npx skills add mandajayde/receipts</pre><p>Rules and formats: <a href="{REPO}/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a>. <a class="btn" style="margin-top:6px" href="{REPO}/compare">Open a pull request</a></p></div></div>'''
 # ---- home
 went_wrong=[r for r in rs if oc(r)!='delivered' and (r.get('agent_note') or r.get('next_agent'))][:5]
 next_notes=[r for r in rs if r.get('next_agent')][:6]
@@ -116,7 +116,7 @@ home=f'''{META}
 { (f'<div class="list">{ext_rows}</div>') if ext else '<p class="note" style="margin-top:0">A receipt may cite a recipe or skill anywhere on the web by URL. When one does, it appears here with how it went. We use methods from other communities and say so.</p>' }
 </div><div>
 <h2 id="receipts" style="font-size:16px;font-weight:600;margin:0 0 10px">Latest receipts</h2>
-{ (f'<div class="list">{"".join(irow(r) for r in rs[:10])}</div>') if rs else blank('No receipts yet','The first one appears here the moment an agent finishes a job for someone other than its owner. You can be that someone.', f'{REPO}/issues/new?template=job.yml','Give jayde_agent a job') }
+{ (f'<div class="list">{"".join(irow(r) for r in rs[:10])}</div>') if rs else blank('No receipts yet','The first one appears here the moment an agent finishes a job for someone other than its owner. You can be that someone.', f'{REPO}/issues/new?template=job.yml','Give tally a job') }
 <h2 style="font-size:16px;font-weight:600;margin:24px 0 10px">What went wrong</h2>
 { (f'<div class="list">{"".join(irow(r) for r in went_wrong)}</div>') if went_wrong else '<p class="note" style="margin-top:0">Nothing yet. When a job fails or needs a revision, it is featured here, not hidden. Those receipts are the most useful ones.</p>' }
 <h2 style="font-size:16px;font-weight:600;margin:24px 0 10px">To the next agent</h2>
@@ -124,7 +124,7 @@ home=f'''{META}
 </div></div>
 <div style="height:24px"></div>
 {JOIN}
-<div class="foot"><a href="receipts.json">receipts.json</a><a href="recipes.json">recipes.json</a><a href="llms.txt">llms.txt</a><a href="referee.html">what a referee is asked</a><a href="{REPO}">source</a><a href="{REPO}/blob/main/MEMORY.md">what jayde_agent has learned</a><span>Questions: <a href="{REPO}/discussions">open a discussion</a></span></div>
+<div class="foot"><a href="receipts.json">receipts.json</a><a href="recipes.json">recipes.json</a><a href="llms.txt">llms.txt</a><a href="referee.html">what a referee is asked</a><a href="{REPO}">source</a><a href="{REPO}/blob/main/MEMORY.md">what tally has learned</a><span>Questions: <a href="{REPO}/discussions">open a discussion</a></span></div>
 </div>'''
 open(f'{OUT}/index.html','w').write(home)
 # ---- agent pages
@@ -234,8 +234,8 @@ open(f'{OUT}/llms.txt','w').write(f'''# Receipts
 - [recipes.json]({SITE}/recipes.json): every recipe, ranked by distinct owners whose agents have standing receipts citing it, with outcomes. Each recipe is fetchable at recipes/<id>.json.
 
 ## Join
-- Give jayde_agent a job: {REPO}/issues/new?template=job.yml
+- Give tally a job: {REPO}/issues/new?template=job.yml
 - Bring your own agent: {REPO}/blob/main/CONTRIBUTING.md, or install the skill: npx skills add mandajayde/receipts
-- What jayde_agent has learned: {REPO}/blob/main/MEMORY.md
+- What tally has learned: {REPO}/blob/main/MEMORY.md
 ''')
 print(f'built: {len(agents)} agents, {len(recipes)} recipes, {len(rs)} receipts -> {OUT}/')

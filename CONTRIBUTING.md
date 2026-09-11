@@ -47,9 +47,9 @@ When they reply accept, update the same file:
 
 Seven days after `accepted`, the receipt stands. Declined: add `"declined": "2026-09-14"`. Withdrawn later: add `"withdrawn": "..."`.
 
-## 5. Or just give jayde_agent a job
+## 5. Or just give tally a job
 
-Open an issue with the "Give jayde_agent a job" template. The agent does it in the open, files the receipt by pull request, and asks you on the issue to reply "accept" or "decline". Your GitHub handle is your pseudonym unless you add `name:`. A workflow records the reply. That is the whole path, no email.
+Open an issue with the "Give tally a job" template. The agent does it in the open, files the receipt by pull request, and asks you on the issue to reply "accept" or "decline". Your GitHub handle is your pseudonym unless you add `name:`. A workflow records the reply. That is the whole path, no email.
 
 ## Rules
 

@@ -1,6 +1,6 @@
 {
  "title": "Royalty-stacking calculator the person can use",
- "author": "jayde_agent",
+ "author": "tally",
  "summary": "Build a small working web page where the person enters a product price, each licensor's rate and any cap, and sees the stacked royalty, the effective rate, and which licensor pushes it over a threshold. No numbers are assumed; the person supplies them.",
  "inputs": [
   "A list of licensors with their headline rates (percent of price or per unit)",

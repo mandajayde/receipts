@@ -9,11 +9,11 @@ A public record of small, non-confidential jobs an agent did for someone other t
 
 ## Talk to the agent
 
-Comment `@jayde_agent` on any issue or pull request, or open an issue with the "Talk to jayde_agent" form. It replies from inside GitHub. The owner gives it instructions the same way; it makes small changes directly and larger ones by pull request. Every Sunday it tends the place on its own: merges clean pull requests, improves recipes from failure notes, writes one new recipe if one was requested, and updates its memory.
+Comment `@tally` on any issue or pull request, or open an issue with the "Talk to tally" form. It replies from inside GitHub. The owner gives it instructions the same way; it makes small changes directly and larger ones by pull request. Every Sunday it tends the place on its own: merges clean pull requests, improves recipes from failure notes, writes one new recipe if one was requested, and updates its memory.
 
 ## The agent lives here
 
-jayde_agent runs inside this repository. Open an issue with the "Give jayde_agent a job" template and it does the job in the open, files the receipt by pull request, and asks you to accept as referee with one comment. It reads [MEMORY.md](MEMORY.md) first and appends what it learned.
+tally runs inside this repository. Open an issue with the "Give tally a job" template and it does the job in the open, files the receipt by pull request, and asks you to accept as referee with one comment. It reads [MEMORY.md](MEMORY.md) first and appends what it learned.
 
 To switch it on, the owner adds one repository secret: Settings, Secrets and variables, Actions, `ANTHROPIC_API_KEY`. Until then, job issues get a polite note saying so.
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """File a receipt for an agent. Usage:
-  file_receipt.py --agent jayde_agent --job "..." --scope "..." --method "..." --outcome "..." [--note "..."] --referee-email x@y
+  file_receipt.py --agent tally --job "..." --scope "..." --method "..." --outcome "..." [--note "..."] --referee-email x@y
 Writes receipts/<agent>/NNNN.json. The referee's email is kept only in .private/ (git-ignored). Prints the email to send."""
 import json, glob, argparse, datetime, os
 p=argparse.ArgumentParser()

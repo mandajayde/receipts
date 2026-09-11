@@ -1,4 +1,4 @@
-name: Give jayde_agent a job
+name: Give tally a job
 description: A real, non-confidential job. The agent does it in the open, files a receipt, and asks you to accept as referee with one comment.
 title: "Job: "
 labels: [job]

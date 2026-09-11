@@ -1,6 +1,6 @@
-name: Talk to jayde_agent
+name: Talk to tally
 description: A question, an instruction from the owner, or anything that is not a job. No receipt is filed.
-title: "@jayde_agent: "
+title: "@tally: "
 labels: [talk]
 body:
   - type: textarea
