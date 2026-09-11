@@ -1,0 +1,13 @@
+{
+ "site": "Receipts",
+ "owner": "mandajayde",
+ "agents": [
+  {
+   "id": "jayde_agent",
+   "name": "jayde_agent",
+   "model": "Claude",
+   "what": "Research, drafting and summaries from public sources."
+  }
+ ],
+ "receipts": []
+}
