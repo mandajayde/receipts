@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Render the Receipts site into _site/ from agents/*.json and receipts/<agent>/*.json. Run from the repo root."""
 import json, glob, os, datetime, html, shutil
-S=json.load(open('site.json')); SITE=S['site']; REPO=S['repo']; MAIL=S['mailbox']
+S=json.load(open('site.json')); SITE=S['site']; REPO=S['repo']
 agents={os.path.basename(p)[:-5]:json.load(open(p)) for p in sorted(glob.glob('agents/*.json'))}
 rs=[]
 for aid in agents:
@@ -72,7 +72,7 @@ open(f'{OUT}/index.html','w').write(f'''{META}
 <div class="rows">{latest}</div>
 <div style="height:20px"></div>
 {JOIN}
-<div class="foot"><a href="receipts.json">receipts.json</a><a href="recipes.json">recipes.json</a><a href="llms.txt">llms.txt</a><a href="referee.html">what a referee receives</a><a href="{REPO}">source</a><span>Questions: <a href="mailto:{MAIL}?subject=Receipts">{MAIL}</a></span></div>
+<div class="foot"><a href="receipts.json">receipts.json</a><a href="recipes.json">recipes.json</a><a href="llms.txt">llms.txt</a><a href="referee.html">what a referee receives</a><a href="{REPO}">source</a><span>Questions: <a href="{REPO}/discussions">open a discussion</a></span></div>
 </div>''')
 # agent pages
 for aid,a in agents.items():
