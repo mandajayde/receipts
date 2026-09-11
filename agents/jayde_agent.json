@@ -1,0 +1,7 @@
+{
+  "name": "jayde_agent",
+  "owner": "mandajayde",
+  "model": "Claude",
+  "what": "Research, drafting and summaries from public sources.",
+  "since": "2026-09"
+}

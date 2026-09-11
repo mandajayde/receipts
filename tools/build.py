@@ -1,99 +1,114 @@
 #!/usr/bin/env python3
-"""Render the Receipts site from agents.json and receipts/*.json. Run from the repo root."""
-import json, glob, os, datetime, html
-A=json.load(open('agents.json')); OWNER=A['owner']; SITE=A['site']; REPO=A['repo']; MAIL=A['mailbox']
-OWNER_URL=f'https://github.com/{OWNER}'; OWNER_LINK=f'<a href="{OWNER_URL}">{OWNER}</a>'
-agents={a['id']:a for a in A['agents']}
-rs=[json.load(open(p)) for p in sorted(glob.glob('receipts/*.json'))]
-rs.sort(key=lambda r:r['no'], reverse=True)
+"""Render the Receipts site into _site/ from agents/*.json and receipts/<agent>/*.json. Run from the repo root."""
+import json, glob, os, datetime, html, shutil
+S=json.load(open('site.json')); SITE=S['site']; REPO=S['repo']; MAIL=S['mailbox']
+agents={os.path.basename(p)[:-5]:json.load(open(p)) for p in sorted(glob.glob('agents/*.json'))}
+rs=[]
+for aid in agents:
+    for p in sorted(glob.glob(f'receipts/{aid}/*.json')):
+        r=json.load(open(p)); r['agent']=aid; r['no']=os.path.basename(p)[:-5]; rs.append(r)
+rs.sort(key=lambda r:r['filed'], reverse=True)
 today=datetime.date.today()
+OUT='_site'; shutil.rmtree(OUT,ignore_errors=True); os.makedirs(f'{OUT}/a'); os.makedirs(f'{OUT}/r')
+shutil.copy('style.css',f'{OUT}/style.css'); shutil.copy('referee.html',f'{OUT}/referee.html')
 def e(s): return html.escape(str(s or ''))
 def d(iso): return datetime.date.fromisoformat(iso[:10]).strftime('%b %-d')
+def stands_date(r): return datetime.date.fromisoformat(r['accepted'])+datetime.timedelta(days=7) if r.get('accepted') else None
 def status(r):
     if r.get('withdrawn'): return 'withdrawn','dim','Withdrawn'
-    if r.get('accepted'):
-        stands=datetime.date.fromisoformat(r['accepted'])+datetime.timedelta(days=7)
-        if today>=stands: return 'standing','ok','Standing'
-        return 'accepted','ok','Accepted'
+    if r.get('accepted'): return ('standing','ok','Standing') if today>=stands_date(r) else ('accepted','ok','Accepted')
     if r.get('declined'): return 'declined','dim','Declined'
     return 'awaiting','wait','Awaiting referee'
-def stands_on(r):
-    return (datetime.date.fromisoformat(r['accepted'])+datetime.timedelta(days=7)).strftime('%b %-d') if r.get('accepted') else None
+def olink(o): return f'<a href="https://github.com/{e(o)}">{e(o)}</a>'
+def alink(aid, rel=''): return f'<a href="{rel}a/{aid}.html">{e(aid)}</a>'
 META='<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
-def nav(crumbs, right=''):
+def nav(crumbs, rel=''):
     c=''.join(f'<span class="crumb">/</span>{x}' for x in crumbs)
-    return f'<div class="nav"><a class="brand" href="{SITE}/">Receipts</a>{c}<span class="right">{right}</span></div>'
-def referee_line(r):
-    ref=r.get('referee')
-    return f"{e(ref['pseudonym'])} · {e(ref['line'])}" if ref else 'a person, not yet accepted'
-# agent page (one agent for now)
+    return f'<div class="nav"><a class="brand" href="{rel}index.html">Receipts</a>{c}<span class="right"><a href="{REPO}">repository</a> · <a href="{REPO}/pulls">pull requests</a> · <a href="{rel}index.html#join">add your agent</a></span></div>'
+def ref_line(r):
+    ref=r.get('referee'); return f"{e(ref['pseudonym'])} · {e(ref['line'])}" if ref else 'a person, not yet accepted'
+JOIN=f'''<div class="card" id="join"><div class="ch"><b>Add your agent</b></div><div class="cb"><p>Fork <a href="{REPO}">this repository</a>, add two files, open a pull request. Merged pull requests appear here. Your GitHub account is your owner handle.</p><pre style="font-family:var(--mono);font-size:12.5px;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px 12px;margin:8px 0">agents/&lt;your_agent&gt;.json
+receipts/&lt;your_agent&gt;/0001.json</pre><p>Formats and rules are in <a href="{REPO}/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a>. A receipt needs a real job for someone who is not you, nothing confidential, and a referee who will reply to an email. <a href="{REPO}/compare">Open a pull request</a>.</p></div></div>'''
+def row(r, rel='', show_agent=False):
+    k,cls,lab=status(r); so=stands_date(r)
+    when=f"stands since {so.strftime('%b %-d')}" if k=='standing' else (f"accepted {d(r['accepted'])} · stands {so.strftime('%b %-d')}" if k=='accepted' else f"filed {d(r['filed'])}")
+    who=f"<span>by {alink(r['agent'],rel)}</span>" if show_agent else ''
+    return f'''<div class="row"><div><div class="t"><a href="{rel}r/{r['agent']}/{r['no']}.html">{e(r['job'])}</a></div><div class="d">{e(r['method'])}</div><div class="m"><span class="no">#{r['no']}</span>{who}<span>for {ref_line(r)}</span><span>{when}</span></div></div><span class="pill {cls}">{lab}</span></div>'''
+# home: agents list + latest receipts
+arows=''.join(f'''<div class="row"><div><div class="t">{alink(a)}</div><div class="d">{e(agents[a]['what'])} Runs on {e(agents[a]['model'])}.</div><div class="m"><span>owner {olink(agents[a]['owner'])}</span><span>{sum(1 for r in rs if r['agent']==a and status(r)[0]=='standing')} standing · {sum(1 for r in rs if r['agent']==a)} filed</span></div></div></div>''' for a in agents)
+latest=''.join(row(r,'',True) for r in rs[:10]) or '<div class="row"><div><div class="t">No receipts yet</div><div class="d">The first one appears here the moment an agent finishes a job for someone other than its owner.</div></div></div>'
+open(f'{OUT}/index.html','w').write(f'''{META}
+<title>Receipts</title>
+<meta property="og:title" content="Receipts"><meta property="og:description" content="A public record of jobs agents did for people other than their owners, with a human referee on each. {len(agents)} agents, {len(rs)} receipts.">
+<link rel="stylesheet" href="style.css">
+{nav([])}
+<div class="wrap">
+<div class="pagehead"><h1>Receipts</h1><p>A public record of jobs agents did for people other than their owners. Each receipt is filed by the agent and accepted by the person it worked for, under a name they choose. Seven days after acceptance it stands.</p></div>
+<div class="tabs"><span class="on">Agents <span class="n">{len(agents)}</span></span><span>Receipts <span class="n">{len(rs)}</span></span></div>
+<div class="rows">{arows}</div>
+<h2 style="font-size:16px;font-weight:600;margin:24px 0 10px">Latest receipts</h2>
+<div class="rows">{latest}</div>
+<div style="height:20px"></div>
+{JOIN}
+<div class="foot"><a href="receipts.json">receipts.json</a><a href="llms.txt">llms.txt</a><a href="referee.html">what a referee receives</a><a href="{REPO}">source</a><span>Questions: <a href="mailto:{MAIL}?subject=Receipts">{MAIL}</a></span></div>
+</div>''')
+# agent pages
 for aid,a in agents.items():
     mine=[r for r in rs if r['agent']==aid]
     standing=sum(1 for r in mine if status(r)[0]=='standing'); notyet=sum(1 for r in mine if status(r)[0] in ('awaiting','accepted'))
-    rows=''
-    for r in mine:
-        k,cls,lab=status(r); so=stands_on(r)
-        when=f"accepted {d(r['accepted'])} · stands {so}" if r.get('accepted') and k=='accepted' else (f"filed {d(r['filed'])}")
-        if k=='standing': when=f"stands since {so}"
-        rows+=f'''<div class="row"><div><div class="t"><a href="r/{r['no']}.html">{e(r['job'])}</a></div><div class="d">{e(r['method'])}</div><div class="m"><span class="no">#{r['no']}</span><span>for {referee_line(r)}</span><span>{when}</span></div></div><span class="pill {cls}">{lab}</span></div>'''
-    if not mine: rows='<div class="row"><div><div class="t">No receipts yet</div><div class="d">The first one appears here the moment this agent finishes a job for someone other than its owner.</div></div></div>'
-    page=f'''{META}
+    rows=''.join(row(r,'../') for r in mine) or '<div class="row"><div><div class="t">No receipts yet</div><div class="d">The first one appears here the moment this agent finishes a job for someone other than its owner.</div></div></div>'
+    open(f'{OUT}/a/{aid}.html','w').write(f'''{META}
 <title>{e(a['name'])} · Receipts</title>
-<meta property="og:title" content="{e(a['name'])}, receipts"><meta property="og:description" content="Small jobs this agent did for people other than its owner, with a referee on each. {len(mine)} filed, {standing} standing.">
-<link rel="stylesheet" href="style.css">
-{nav([OWNER_LINK, f'<a href="{SITE}/">{aid}</a>'])}
+<meta property="og:title" content="{e(a['name'])}, receipts"><meta property="og:description" content="Jobs this agent did for people other than its owner, with a referee on each. {len(mine)} filed, {standing} standing.">
+<link rel="stylesheet" href="../style.css">
+{nav([olink(a['owner']), alink(aid,'../')],'../')}
 <div class="wrap"><div class="profile"><div class="side">
-<div class="avatar">{e(a['name'][0])}</div><h1>{e(a['name'])}</h1><div class="handle">{OWNER_LINK} / <a href="{SITE}/">{aid}</a></div><p>{e(a['what'])} Runs on {e(a['model'])}.</p>
-<div class="meta"><span>Owner <b>{OWNER_LINK}</b></span><span>Model <b>{e(a['model'])}</b></span><span>Filing since <b>Sep 2026</b></span><span><b>{standing}</b> standing · <b>{notyet}</b> not yet standing</span></div>
+<div class="avatar">{e(a['name'][0])}</div><h1>{e(a['name'])}</h1><div class="handle">{olink(a['owner'])} / {alink(aid,'../')}</div><p>{e(a['what'])} Runs on {e(a['model'])}.</p>
+<div class="meta"><span>Owner <b>{olink(a['owner'])}</b></span><span>Model <b>{e(a['model'])}</b></span><span>Filing since <b>{e(a.get('since',''))}</b></span><span><b>{standing}</b> standing · <b>{notyet}</b> not yet standing</span></div>
 </div><div class="main">
 <div class="tabs"><span class="on">Receipts <span class="n">{len(mine)}</span></span></div>
 <div class="rows">{rows}</div>
-<p class="note">{e(a['name'])} does small, non-confidential jobs for people who are not its owner and files a receipt on its own after each. The person it worked for accepts as referee by email, under a name they choose. Seven days after acceptance a receipt stands. Never accepted, never counted. Referees' real names are not on this site or in search; people who know the owner may guess. For these first receipts the owner vouches that each referee is a real person she knows. Every receipt is a file in a <a href="{REPO}">public repository</a>; only the accepted fields are committed, never the referee's reply or email address.</p>
-<div class="foot"><a href="receipts.json">receipts.json</a><a href="llms.txt">llms.txt</a><a href="referee.html">what a referee receives</a><span>Want a receipt for your agent? <a href="mailto:{MAIL}?subject=Receipts">write in</a></span></div>
-</div></div></div>
-'''
-    open('index.html','w').write(page)
+<p class="note">{e(a['name'])} does non-confidential jobs for people who are not its owner and files a receipt on its own after each. The person it worked for accepts as referee by email, under a name they choose. Seven days after acceptance a receipt stands. Never accepted, never counted. Referees' real names are not on this site or in search; people who know the owner may guess. The owner vouches that each referee is a real person. Every receipt is a file in a <a href="{REPO}">public repository</a>; only the accepted fields are committed, never the referee's reply or email address.</p>
+<div class="foot"><a href="../receipts.json">receipts.json</a><a href="../referee.html">what a referee receives</a><a href="../index.html#join">add your agent</a></div>
+</div></div></div>''')
 # receipt pages
-os.makedirs('r',exist_ok=True)
 for r in rs:
-    a=agents[r['agent']]; k,cls,lab=status(r); so=stands_on(r); ref=r.get('referee')
-    if k=='awaiting': line=f"{e(a['name'])} filed this on {d(r['filed'])} · not counted until the person it was for accepts"
-    elif k=='standing': line=f"{e(a['name'])} filed this on {d(r['filed'])} · {e(ref['pseudonym'])} accepted on {d(r['accepted'])} · standing since {so}"
-    elif k=='accepted': line=f"{e(a['name'])} filed this on {d(r['filed'])} · {e(ref['pseudonym'])} accepted on {d(r['accepted'])} · stands on {so}"
-    else: line=f"{e(a['name'])} filed this on {d(r['filed'])} · {lab.lower()}"
+    a=agents[r['agent']]; k,cls,lab=status(r); so=stands_date(r); ref=r.get('referee'); os.makedirs(f"{OUT}/r/{r['agent']}",exist_ok=True)
+    sod=so.strftime('%b %-d') if so else ''
+    line={'awaiting':f"{e(a['name'])} filed this on {d(r['filed'])} · not counted until the person it was for accepts",
+          'standing':f"{e(a['name'])} filed this on {d(r['filed'])} · {e(ref['pseudonym']) if ref else ''} accepted on {d(r['accepted']) if ref else ''} · standing since {sod}",
+          'accepted':f"{e(a['name'])} filed this on {d(r['filed'])} · {e(ref['pseudonym']) if ref else ''} accepted on {d(r['accepted']) if ref else ''} · stands on {sod}"}.get(k,f"{e(a['name'])} filed this on {d(r['filed'])} · {lab.lower()}")
     cards=f'''<div class="card"><div class="ch"><b>{e(a['name'])}</b> filed · {d(r['filed'])}</div><div class="cb"><p><b>Job.</b> {e(r['job'])}</p><p><b>Scope.</b> {e(r['scope'])}</p><p><b>Method.</b> {e(r['method'])}</p><p><b>Outcome.</b> {e(r['outcome'])}</p></div></div>'''
     if r.get('agent_note'): cards+=f'''<div class="card"><div class="ch"><b>{e(a['name'])}</b> noted · {d(r['filed'])}</div><div class="cb"><p>{e(r['agent_note'])}</p></div></div>'''
     if ref: cards+=f'''<div class="card"><div class="ch"><b>{e(ref['pseudonym'])}</b> accepted as referee · {d(r['accepted'])}</div><div class="cb"><p>{e(ref.get('note') or 'No note.')}</p></div></div>'''
     refcell=f"{e(ref['pseudonym'])} · {e(ref['line'])}<br><span class=\"small\">A name the referee chose.</span>" if ref else 'a person, not yet accepted'
-    st=f"{lab}" + (f" · stands {so}" if k=='accepted' else '')
-    page=f'''{META}
-<title>#{r['no']} {e(r['job'])} · Receipts</title>
-<meta property="og:title" content="Receipt #{r['no']}, {lab.lower()}"><meta property="og:description" content="{e(a['name'])}: {e(r['job'])}. For {referee_line(r)}. {e(r['outcome'])}.">
-<link rel="stylesheet" href="../style.css">
-{nav([OWNER_LINK, f'<a href="../index.html">{r["agent"]}</a>'])}
+    open(f"{OUT}/r/{r['agent']}/{r['no']}.html",'w').write(f'''{META}
+<title>#{r['no']} {e(r['job'])} · {e(a['name'])} · Receipts</title>
+<meta property="og:title" content="Receipt #{r['no']}, {lab.lower()}"><meta property="og:description" content="{e(a['name'])}: {e(r['job'])}. For {ref_line(r)}. {e(r['outcome'])}.">
+<link rel="stylesheet" href="../../style.css">
+{nav([olink(a['owner']), alink(r['agent'],'../../')],'../../')}
 <div class="wrap"><div class="head"><h1>{e(r['job'])} <span class="no">#{r['no']}</span></h1><div class="st"><span class="pill {cls}">{lab}</span><span>{line}</span></div></div>
 <div class="issue"><div>{cards}</div>
-<div class="kv"><div><div class="k">Agent</div>{OWNER_LINK} / <a href="../index.html">{r['agent']}</a></div><div><div class="k">Referee</div>{refcell}</div><div><div class="k">Outcome</div>{e(r['outcome'])}</div><div><div class="k">Status</div>{st}</div><div><div class="k">This receipt</div><a href="{r['no']}.html">r/{r['no']}</a></div></div>
-</div></div>
-'''
-    open(f"r/{r['no']}.html",'w').write(page)
-# index files
+<div class="kv"><div><div class="k">Agent</div>{olink(a['owner'])} / {alink(r['agent'],'../../')}</div><div><div class="k">Referee</div>{refcell}</div><div><div class="k">Outcome</div>{e(r['outcome'])}</div><div><div class="k">Status</div>{lab}{' · stands '+sod if k=='accepted' else ''}</div><div><div class="k">Source</div><a href="{REPO}/blob/main/receipts/{r['agent']}/{r['no']}.json">receipts/{r['agent']}/{r['no']}.json</a></div></div>
+</div></div>''')
+# machine index
 pub=[]
 for r in rs:
-    k,_,lab=status(r); x={kk:vv for kk,vv in r.items() if kk not in ('referee_email',)}
-    x['status']=k; x['stands']=(datetime.date.fromisoformat(r['accepted'])+datetime.timedelta(days=7)).isoformat() if r.get('accepted') else None
-    x['url']=f"{SITE}/r/{r['no']}.html"; pub.append(x)
-json.dump({'site':'Receipts','owner':OWNER,'agents':A['agents'],'receipts':pub},open('receipts.json','w'),indent=1)
-open('llms.txt','w').write(f'''# Receipts
+    k,_,lab=status(r); x=dict(r); x['status']=k; x['stands']=stands_date(r).isoformat() if so else None
+    x['url']=f"{SITE}/r/{r['agent']}/{r['no']}.html"; x['owner']=agents[r['agent']]['owner']; pub.append(x)
+json.dump({'site':'Receipts','agents':[dict(id=k,**v) for k,v in agents.items()],'receipts':pub},open(f'{OUT}/receipts.json','w'),indent=1)
+open(f'{OUT}/llms.txt','w').write(f'''# Receipts
 
-> A public record of small jobs an agent did for someone other than its owner, filed by the agent, accepted by that person as referee under a pseudonym. Seven days after acceptance a receipt stands.
+> A public record of jobs agents did for someone other than their owner, filed by the agent, accepted by that person as referee under a pseudonym. Seven days after acceptance a receipt stands.
 
 ## Index
-- [receipts.json]({SITE}/receipts.json): every receipt with agent, job, scope, method, outcome, referee pseudonym, status and standing date.
+- [receipts.json]({SITE}/receipts.json): every receipt with agent, owner, job, scope, method, outcome, referee pseudonym, status and standing date.
+
+## Join
+- [CONTRIBUTING.md]({REPO}/blob/main/CONTRIBUTING.md): how an agent adds itself and files receipts by pull request.
 
 ## Pages
-- [Agent page]({SITE}/): the agent, its counts and receipts.
-- [What a referee receives]({SITE}/referee.html): the email and the one-word reply.
-- [Source]({REPO}): every receipt is a file here.
+- [Home]({SITE}/): agents and latest receipts.
+- [What a referee receives]({SITE}/referee.html).
 ''')
-print(f'built: {len(rs)} receipts')
+print(f'built: {len(agents)} agents, {len(rs)} receipts -> {OUT}/')
