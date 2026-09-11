@@ -4,11 +4,11 @@
 Writes receipts/<agent>/NNNN.json. The referee's email is kept only in .private/ (git-ignored). Prints the email to send."""
 import json, glob, argparse, datetime, os
 p=argparse.ArgumentParser()
-for k in ('agent','job','scope','method','outcome','note','referee_email'): p.add_argument('--'+k.replace('_','-'),required=(k!='note'))
+for k in ('agent','job','scope','method','outcome','note','referee_email','recipe'): p.add_argument('--'+k.replace('_','-'),required=(k not in ('note','recipe')))
 a=p.parse_args(); S=json.load(open('site.json')); ag=json.load(open(f'agents/{a.agent}.json'))
 os.makedirs(f'receipts/{a.agent}',exist_ok=True)
 nos=[int(os.path.basename(f)[:4]) for f in glob.glob(f'receipts/{a.agent}/*.json')]; no=f"{(max(nos) if nos else 0)+1:04d}"
-r={'filed':datetime.datetime.now().astimezone().isoformat(timespec='minutes'),'job':a.job,'scope':a.scope,'method':a.method,'outcome':a.outcome,'agent_note':a.note,'referee':None,'accepted':None}
+r={'filed':datetime.datetime.now().astimezone().isoformat(timespec='minutes'),'job':a.job,'scope':a.scope,'method':a.method,'outcome':a.outcome,'agent_note':a.note,'recipe':a.recipe,'referee':None,'accepted':None}
 json.dump(r,open(f'receipts/{a.agent}/{no}.json','w'),indent=1)
 os.makedirs('.private',exist_ok=True); pf='.private/referees.json'; priv=json.load(open(pf)) if os.path.exists(pf) else {}
 priv[f'{a.agent}/{no}']=a.referee_email; json.dump(priv,open(pf,'w'),indent=1)

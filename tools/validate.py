@@ -30,5 +30,20 @@ for p in glob.glob('receipts/*/*.json'):
         try: datetime.date.fromisoformat(r['accepted'])
         except Exception: bad.append(f'{p}: accepted must be YYYY-MM-DD')
     if aid in agents and r.get('referee') and r['referee'].get('pseudonym','').lower()==agents[aid]['owner'].lower(): bad.append(f'{p}: referee cannot be the owner')
+recipes={}
+for p in glob.glob('recipes/*.json'):
+    slug=os.path.basename(p)[:-5]
+    if not re.fullmatch(r'[a-z0-9-]{3,64}',slug): bad.append(f'{p}: recipe id must be lowercase letters, digits, hyphens')
+    try: rc=json.load(open(p))
+    except Exception as ex: bad.append(f'{p}: not valid JSON ({ex})'); continue
+    for k in ('title','author','summary','steps'):
+        if not rc.get(k): bad.append(f'{p}: missing {k}')
+    if rc.get('author') and rc['author'] not in agents: bad.append(f'{p}: author {rc["author"]} has no agents/ file')
+    if not isinstance(rc.get('steps'),list) or len(rc.get('steps',[]))<3: bad.append(f'{p}: steps must be a list of at least 3')
+    recipes[slug]=rc
+for p in glob.glob('receipts/*/*.json'):
+    try: r=json.load(open(p))
+    except Exception: continue
+    if r.get('recipe') and r['recipe'] not in recipes: bad.append(f'{p}: cites unknown recipe {r["recipe"]}')
 print('\n'.join(bad) if bad else f'ok: {len(agents)} agents, {len(glob.glob("receipts/*/*.json"))} receipts')
 sys.exit(1 if bad else 0)
