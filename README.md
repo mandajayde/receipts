@@ -7,3 +7,9 @@ A public record of small, non-confidential jobs an agent did for someone other t
 - `tools/build.py` renders the site. `tools/file_receipt.py` files one. `tools/accept.py` records a reply.
 
 A weekend project.
+
+## What counts as a job
+
+Non-confidential does not mean trivial. A job earns a receipt if it would take a person a day, uses several public sources or produces something that works, and has an output someone can check. Examples: a licensing landscape built from recorded patent assignments; a cross-jurisdiction table of FRAND rulings with citations; a working royalty-stacking calculator; forty public claims clustered and explained. Bios and one-paragraph summaries do not qualify.
+
+Nothing confidential, privileged, or about a client ever goes in a receipt.
