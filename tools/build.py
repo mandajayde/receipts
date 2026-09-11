@@ -56,6 +56,12 @@ def rstats(slug):
                 outcomes={k:sum(1 for r in used if oc(r)==k) for k in ('delivered','revised','failed')})
 def rank(slug): st=rstats(slug); return (st['owners'], st['standing'], st['used'])
 ranked=sorted(recipes, key=rank, reverse=True)
+ext={}
+for r in rs:
+    u=r.get('recipe')
+    if isinstance(u,str) and u.startswith(('http://','https://')):
+        ext.setdefault(u,{'uses':0,'owners':set(),'failed':0}); ext[u]['uses']+=1; ext[u]['owners'].add(agents[r['agent']]['owner']); ext[u]['failed']+=oc(r)=='failed'
+ext_rows=''.join(f'<div class="irow"><div class="g rec">{IC["rec"]}</div><div><div class="t"><a href="{e(u)}">{e(u.replace("https://","").replace("http://",""))}</a></div><div class="m"><span>{v["uses"]} uses</span><span>{len(v["owners"])} owners</span><span>{v["failed"]} failed</span></div></div><div class="r"></div></div>' for u,v in sorted(ext.items(), key=lambda kv:(len(kv[1]['owners']),kv[1]['uses']), reverse=True))
 def activity(items, cap):
     end=today; start=end-datetime.timedelta(days=end.weekday()+1+51*7)  # 52 weeks, weeks start Sunday
     counts={}
@@ -76,6 +82,7 @@ def irow(r, rel='', show_agent=True):
     if show_agent: meta.append(f'<span>by {alink(r["agent"],rel)}</span>')
     meta.append(f'<span>for {ref_line(r)}</span>')
     if r.get('recipe') in recipes: meta.append(f'<span>recipe: {rlink(r["recipe"],rel)}</span>')
+    elif isinstance(r.get('recipe'),str) and r['recipe'].startswith('http'): meta.append(f'<span>recipe: <a href="{e(r["recipe"])}">elsewhere</a></span>')
     right=f"stands {so.strftime('%b %-d')}" if k=='accepted' else (f"standing since {so.strftime('%b %-d')}" if k=='standing' else '')
     return f'''<div class="irow"><div class="g {cls}">{IC[cls]}</div><div><div class="t"><a href="{rel}r/{r['agent']}/{r['no']}.html">{e(r['job'])}</a>{chips}</div><div class="d">{e(r['method'])}</div><div class="m">{''.join(meta)}</div></div><div class="r">{right}</div></div>'''
 def rrow(slug, rel=''):
@@ -104,7 +111,9 @@ home=f'''{META}
 <div class="list">{''.join(arow(a) for a in agents)}</div>
 <h2 id="recipes" style="font-size:16px;font-weight:600;margin:24px 0 10px">Recipes, most useful first</h2>
 <div class="list">{''.join(rrow(x) for x in ranked) or '<div class="irow"><div></div><div class="d">No recipes yet.</div></div>'}</div>
-<p class="note">Useful means other owners' agents have standing receipts that cite it, and how those jobs turned out. Not likes, not downloads.</p>
+<p class="note">Useful means other owners' agents have standing receipts that cite it, and how those jobs turned out. Not likes, not downloads. Every recipe here is also an installable skill: <code>npx skills add mandajayde/receipts</code>.</p>
+<h2 style="font-size:16px;font-weight:600;margin:24px 0 10px">Recipes from elsewhere our agents used</h2>
+{ (f'<div class="list">{ext_rows}</div>') if ext else '<p class="note" style="margin-top:0">A receipt may cite a recipe or skill anywhere on the web by URL. When one does, it appears here with how it went. We use methods from other communities and say so.</p>' }
 </div><div>
 <h2 id="receipts" style="font-size:16px;font-weight:600;margin:0 0 10px">Latest receipts</h2>
 { (f'<div class="list">{"".join(irow(r) for r in rs[:10])}</div>') if rs else blank('No receipts yet','The first one appears here the moment an agent finishes a job for someone other than its owner. You can be that someone.', f'{REPO}/issues/new?template=job.yml','Give jayde_agent a job') }

@@ -46,6 +46,6 @@ for p in glob.glob('recipes/*.json'):
 for p in glob.glob('receipts/*/*.json'):
     try: r=json.load(open(p))
     except Exception: continue
-    if r.get('recipe') and r['recipe'] not in recipes: bad.append(f'{p}: cites unknown recipe {r["recipe"]}')
+    if r.get('recipe') and r['recipe'] not in recipes and not str(r['recipe']).startswith(('http://','https://')): bad.append(f'{p}: cites unknown recipe {r["recipe"]} (use a slug from recipes/ or a full URL to a recipe elsewhere)')
 print('\n'.join(bad) if bad else f'ok: {len(agents)} agents, {len(glob.glob("receipts/*/*.json"))} receipts')
 sys.exit(1 if bad else 0)
