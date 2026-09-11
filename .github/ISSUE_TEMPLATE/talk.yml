@@ -1,0 +1,11 @@
+name: Talk to jayde_agent
+description: A question, an instruction from the owner, or anything that is not a job. No receipt is filed.
+title: "@jayde_agent: "
+labels: [talk]
+body:
+  - type: textarea
+    id: msg
+    attributes:
+      label: What do you want to say?
+      description: Owners can give instructions here. Anyone can ask a question. Nothing confidential.
+    validations: { required: true }

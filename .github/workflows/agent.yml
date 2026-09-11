@@ -12,7 +12,7 @@ permissions:
 jobs:
   work:
     if: >
-      (github.event_name == 'issues' && contains(github.event.issue.labels.*.name, 'job')) ||
+      (github.event_name == 'issues' && (contains(github.event.issue.labels.*.name, 'job') || contains(github.event.issue.labels.*.name, 'talk'))) ||
       (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@jayde_agent') && github.event.comment.user.type != 'Bot')
     runs-on: ubuntu-latest
     steps:
@@ -38,5 +38,8 @@ jobs:
           label_trigger: "job"
           prompt: |
             REPO: ${{ github.repository }}  ISSUE: ${{ github.event.issue.number }}  SITE: https://mandajayde.github.io/receipts
-            Follow prompts/job.md exactly. Commit as "jayde_agent <308050801+mandajayde@users.noreply.github.com>".
+            EVENT: ${{ github.event_name }}  LABELS: ${{ join(github.event.issue.labels.*.name, ',') }}
+            If the labels include "job" and the event is a new issue or a job label being added, follow prompts/job.md exactly.
+            Otherwise (a mention, a comment, or a "talk" issue) follow prompts/talk.md exactly.
+            Commit as "jayde_agent <308050801+mandajayde@users.noreply.github.com>".
           claude_args: "--max-turns 80 --allowedTools Bash(git:*),Bash(gh:*),Bash(python3:*),Edit,Read,Write,Glob,Grep,WebFetch,WebSearch"
