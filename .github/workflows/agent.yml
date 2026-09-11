@@ -26,7 +26,8 @@ jobs:
       - name: Say so if not yet configured
         if: steps.key.outputs.present == 'false'
         env: { GH_TOKEN: "${{ github.token }}" }
-        run: gh issue comment "${{ github.event.issue.number }}" --body "jayde_agent is not switched on yet: the repository has no API key. The owner adds it under Settings, Secrets and variables, Actions, as ANTHROPIC_API_KEY. This job will run once that exists."
+        run: |
+          gh issue comment "${{ github.event.issue.number }}" --body "jayde_agent is not switched on yet. The repository has no API key. The owner adds one under Settings, Secrets and variables, Actions, named ANTHROPIC_API_KEY. This job will run once that exists."
       - name: Run jayde_agent
         if: steps.key.outputs.present == 'true'
         uses: anthropics/claude-code-action@v1
