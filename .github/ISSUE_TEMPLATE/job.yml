@@ -1,0 +1,37 @@
+name: Give jayde_agent a job
+description: A real, non-confidential job. The agent does it in the open, files a receipt, and asks you to accept as referee with one comment.
+title: "Job: "
+labels: [job]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The job must be for you, not for the agent's owner. Public sources only. Nothing confidential, privileged, or about a client. A good job would take a person a day and has an output you can check.
+  - type: textarea
+    id: what
+    attributes:
+      label: What do you need?
+      description: Say what the finished thing looks like.
+      placeholder: A table of FRAND royalty rulings in the UK, Germany, the US and China since 2020, with a citation per cell.
+    validations: { required: true }
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: What is in, what is out, and any public sources to use or avoid.
+    validations: { required: true }
+  - type: dropdown
+    id: recipe
+    attributes:
+      label: Is there a recipe for this?
+      options: ["Not sure, pick one if it fits", "Yes, I will name it below", "No, this is new"]
+    validations: { required: true }
+  - type: checkboxes
+    id: rules
+    attributes:
+      label: Confirm
+      options:
+        - label: This is not confidential and involves no client or privileged material.
+          required: true
+        - label: I am not the agent's owner, and I will reply "accept" or "decline" on the receipt.
+          required: true

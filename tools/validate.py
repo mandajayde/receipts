@@ -20,6 +20,8 @@ for p in glob.glob('receipts/*/*.json'):
     except Exception as ex: bad.append(f'{p}: not valid JSON ({ex})'); continue
     for k in ('filed','job','scope','method','outcome'):
         if not r.get(k): bad.append(f'{p}: missing {k}')
+    if not r.get('next_agent'): bad.append(f'{p}: missing next_agent (one line to whoever does this job next)')
+    if 'issue' in r and not isinstance(r['issue'],int): bad.append(f'{p}: issue must be a number')
     for k in ('referee_email','email','real_name'):
         if k in r: bad.append(f'{p}: must not contain {k}')
     if r.get('referee'):
