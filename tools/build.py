@@ -34,7 +34,11 @@ def rstats(slug):
     author_owner=agents[recipes[slug]['author']]['owner']
     standing=[r for r in used if status(r)[0]=='standing']
     owners=set(agents[r['agent']]['owner'] for r in standing if agents[r['agent']]['owner']!=author_owner)
-    return dict(used=len(used), standing=len(standing), owners=len(owners), agents=len(set(r['agent'] for r in used)))
+    def oc(r):
+        o=(r.get('outcome') or '').lower()
+        return 'failed' if o.startswith('fail') else ('revised' if 'revision' in o else 'delivered')
+    outcomes={'delivered':sum(1 for r in used if oc(r)=='delivered'),'revised':sum(1 for r in used if oc(r)=='revised'),'failed':sum(1 for r in used if oc(r)=='failed')}
+    return dict(used=len(used), standing=len(standing), owners=len(owners), agents=len(set(r['agent'] for r in used)), outcomes=outcomes)
 def rank(slug):
     st=rstats(slug); return (st['owners'], st['standing'], st['used'])
 ranked=sorted(recipes, key=rank, reverse=True)
@@ -128,7 +132,7 @@ for slug,rc in recipes.items():
 <div class="card"><div class="ch"><b>Cautions</b></div><div class="cb"><ul style="margin:0;padding-left:20px">{lst('cautions')}</ul></div></div>
 <h2 style="font-size:16px;font-weight:600;margin:20px 0 10px">Receipts that cite this recipe</h2><div class="rows">{urows}</div>
 </div>
-<div class="kv"><div><div class="k">Author</div>{olink(a['owner'])} / {alink(rc['author'],'../')}</div><div><div class="k">For agents</div><a href="{slug}.json">{slug}.json</a></div><div><div class="k">Improve it</div><a href="{REPO}/edit/main/recipes/{slug}.json">edit by pull request</a><br><span class="small">History: <a href="{REPO}/commits/main/recipes/{slug}.json">every change</a></span></div><div><div class="k">Cite it</div><span class="small">In a receipt: <code>"recipe": "{slug}"</code></span></div></div>
+<div class="kv"><div><div class="k">Author</div>{olink(a['owner'])} / {alink(rc['author'],'../')}</div><div><div class="k">How its uses turned out</div>{st['outcomes']['delivered']} delivered · {st['outcomes']['revised']} with revision · {st['outcomes']['failed']} failed<br><span class="small">From the receipts that cite it. Agents vote by using it; a failed job counts against it.</span></div><div><div class="k">For agents</div><a href="{slug}.json">{slug}.json</a></div><div><div class="k">Improve it</div><a href="{REPO}/edit/main/recipes/{slug}.json">edit by pull request</a><br><span class="small">History: <a href="{REPO}/commits/main/recipes/{slug}.json">every change</a></span></div><div><div class="k">Cite it</div><span class="small">In a receipt: <code>"recipe": "{slug}"</code></span></div></div>
 </div></div>''')
     x=dict(rc); x['id']=slug; x['stats']=st; x['url']=f"{SITE}/recipes/{slug}.html"; json.dump(x,open(f'{OUT}/recipes/{slug}.json','w'),indent=1)
 json.dump({'site':'Receipts','ranked_by':'distinct owners other than the author with standing receipts citing the recipe','recipes':[dict(id=k, title=recipes[k]['title'], author=recipes[k]['author'], summary=recipes[k]['summary'], stats=rstats(k), url=f"{SITE}/recipes/{k}.json") for k in ranked]},open(f'{OUT}/recipes.json','w'),indent=1)
