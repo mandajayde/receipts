@@ -1,0 +1,59 @@
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Royalty stack · Receipts</title>
+<link rel="stylesheet" href="../style.css">
+<style>
+table.rs{width:100%;border-collapse:collapse;background:var(--surface);border:1px solid var(--border);border-radius:6px;overflow:hidden}
+table.rs th,table.rs td{padding:8px 10px;border-top:1px solid var(--border-soft);text-align:left;font-size:14px}
+table.rs th{background:var(--bg);font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em;border-top:0}
+table.rs input,table.rs select{font:inherit;padding:5px 8px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--ink);width:100%}
+table.rs input[type=number]{font-variant-numeric:tabular-nums}
+.num{font-variant-numeric:tabular-nums;text-align:right}
+.over{color:var(--bad);font-weight:600}
+.ctl{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0;align-items:center}
+.ctl label{display:flex;gap:6px;align-items:center;font-size:13px;color:var(--muted)}
+.ctl input,.ctl select{font:inherit;padding:5px 8px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--ink);width:120px}
+.res{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:16px 0}
+.res div{border:1px solid var(--border);border-radius:6px;background:var(--surface);padding:12px 14px}
+.res b{display:block;font-size:22px;font-variant-numeric:tabular-nums;font-weight:600}
+.res span{font-size:12px;color:var(--muted)}
+</style>
+<header class="gh"><a class="brand" href="../index.html">Receipts</a><nav><a href="../index.html#recipes">Recipes</a></nav><span class="sp"></span></header>
+<div class="band"><div class="in"><div class="crumbs"><a href="../index.html#recipes">recipes</a><span class="sep">/</span><b>royalty stack</b><span class="kind">tool</span></div><div class="tabs"><a class="on" href="#">Calculator</a><a href="../recipes/royalty-stacking-calculator.html">The recipe</a></div></div></div>
+<div class="wrap">
+<div class="pagehead"><h1>Royalty stack</h1><p>Enter a price and each licensor's rate. The page shows the stacked royalty, the effective rate, and where a cap or threshold bites. Nothing is stored; nothing leaves your browser. A calculator is not advice, and a headline rate is not an effective rate.</p></div>
+<div class="ctl">
+  <label>Price per unit <input id="price" type="number" step="0.01" value="100"></label>
+  <label>Units <input id="units" type="number" step="1" value="1000"></label>
+  <label>Aggregate cap, % of price <input id="cap" type="number" step="0.1" placeholder="none"></label>
+  <label>Warn above, % of price <input id="warn" type="number" step="0.1" value="10"></label>
+  <label>If cap binds <select id="mode"><option value="prorata">scale all pro rata</option><option value="cut">cut the last licensors</option></select></label>
+  <label>Load example <select id="ex"><option value="">choose</option><option value="a">A: three licensors, no cap</option><option value="b">B: cap binds</option><option value="c">C: mixed per-unit and percent</option></select></label>
+</div>
+<table class="rs"><thead><tr><th>Licensor</th><th>Basis</th><th>Rate</th><th class="num">Per unit</th><th class="num">Cumulative %</th><th class="num">Total</th><th></th></tr></thead><tbody id="rows"></tbody></table>
+<p style="margin:10px 0"><a class="btn sec" href="#" id="add">Add licensor</a></p>
+<div class="res"><div><b id="stackPct">0%</b><span>stacked rate, % of price</span></div><div><b id="stackUnit">0</b><span>royalty per unit</span></div><div><b id="stackTotal">0</b><span>total over the units</span></div><div><b id="bite">none</b><span>where the threshold is crossed</span></div></div>
+<p class="note" id="capnote"></p>
+<p class="small">Built from the recipe <a href="../recipes/royalty-stacking-calculator.html">Royalty-stacking calculator the person can use</a>. Examples are illustrative numbers, not any real licence.</p>
+</div>
+<script>
+(function(){
+  const rows=document.getElementById('rows'); const $=id=>document.getElementById(id);
+  const EX={a:[['Licensor 1','pct',3],['Licensor 2','pct',2.5],['Licensor 3','pct',1.5]],
+            b:[['Licensor 1','pct',4],['Licensor 2','pct',3.5],['Licensor 3','pct',3],['Licensor 4','pct',2]],
+            c:[['Licensor 1','pct',2],['Licensor 2','unit',1.25],['Licensor 3','pct',1],['Licensor 4','unit',0.4]]};
+  function addRow(n='',b='pct',r=''){ const tr=document.createElement('tr'); tr.innerHTML=`<td><input value="${n}" placeholder="name"></td><td><select><option value="pct"${b==='pct'?' selected':''}>% of price</option><option value="unit"${b==='unit'?' selected':''}>per unit</option></select></td><td><input type="number" step="0.01" value="${r}" placeholder="0"></td><td class="num pu">0</td><td class="num cum">0%</td><td class="num tot">0</td><td><a href="#" class="rm">remove</a></td>`; rows.appendChild(tr); tr.querySelector('.rm').addEventListener('click',e=>{e.preventDefault();tr.remove();calc();}); tr.querySelectorAll('input,select').forEach(x=>x.addEventListener('input',calc)); }
+  function calc(){
+    const price=+$('price').value||0, units=+$('units').value||0, cap=$('cap').value===''?null:+$('cap').value, warn=+$('warn').value||0, mode=$('mode').value;
+    let items=[...rows.children].map(tr=>{const [n,b,r]=[tr.children[0].firstChild.value,tr.children[1].firstChild.value,+tr.children[2].firstChild.value||0]; const pu=b==='pct'?price*r/100:r; return {tr,n,b,r,pu};});
+    let sumPu=items.reduce((s,i)=>s+i.pu,0); let capNote='';
+    if(cap!==null && price>0 && sumPu>price*cap/100){ const capPu=price*cap/100; if(mode==='prorata'){ const f=capPu/sumPu; items.forEach(i=>i.pu*=f); capNote=`Cap of ${cap}% binds: every rate scaled by ${(f*100).toFixed(1)}%.`; } else { let left=capPu; items.sort((a,b)=>b.pu-a.pu).forEach(i=>{ const take=Math.min(i.pu,Math.max(0,left)); left-=i.pu; i.pu=take; }); capNote=`Cap of ${cap}% binds: the smallest licensors are cut, largest first kept.`; } sumPu=items.reduce((s,i)=>s+i.pu,0); }
+    items.sort((a,b)=>b.pu-a.pu); let cum=0, bite='none';
+    items.forEach(i=>{ cum+=i.pu; const pct=price>0?cum/price*100:0; i.tr.querySelector('.pu').textContent=i.pu.toFixed(2); i.tr.querySelector('.cum').textContent=pct.toFixed(2)+'%'; i.tr.querySelector('.tot').textContent=(i.pu*units).toLocaleString(undefined,{maximumFractionDigits:2}); const over=warn>0&&pct>warn; i.tr.querySelector('.cum').classList.toggle('over',over); if(over&&bite==='none') bite=i.n||'(unnamed)'; rows.appendChild(i.tr); });
+    const pct=price>0?sumPu/price*100:0; $('stackPct').textContent=pct.toFixed(2)+'%'; $('stackUnit').textContent=sumPu.toFixed(2); $('stackTotal').textContent=(sumPu*units).toLocaleString(undefined,{maximumFractionDigits:2}); $('bite').textContent=bite; $('capnote').textContent=capNote;
+  }
+  $('add').addEventListener('click',e=>{e.preventDefault();addRow();calc();});
+  ['price','units','cap','warn','mode'].forEach(id=>$(id).addEventListener('input',calc));
+  $('ex').addEventListener('change',()=>{ const k=$('ex').value; if(!EX[k]) return; rows.innerHTML=''; EX[k].forEach(r=>addRow(...r)); if(k==='b'){$('cap').value=8;} else {$('cap').value='';} calc(); });
+  EX.a.forEach(r=>addRow(...r)); calc();
+})();
+</script>

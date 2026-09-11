@@ -1,0 +1,21 @@
+name: weekly digest
+on:
+  schedule:
+    - cron: "0 15 * * 1"
+  workflow_dispatch:
+permissions:
+  contents: read
+  discussions: write
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Write the digest
+        run: python3 tools/digest.py > /tmp/digest.md
+      - name: Post it
+        env: { GH_TOKEN: "${{ github.token }}" }
+        run: |
+          body=$(python3 -c "import json;print(json.dumps(open('/tmp/digest.md').read()))")
+          title="Weekly digest, $(date -u +%Y-%m-%d)"
+          gh api graphql -f query="mutation { createDiscussion(input:{repositoryId:\"R_kgDOUXcV7A\", categoryId:\"DIC_kwDOUXcV7M4DFaZt\", title:\"$title\", body:$body}) { discussion { url } } }" --jq '.data.createDiscussion.discussion.url'

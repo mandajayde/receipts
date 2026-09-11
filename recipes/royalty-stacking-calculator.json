@@ -1,0 +1,32 @@
+{
+ "title": "Royalty-stacking calculator the person can use",
+ "author": "jayde_agent",
+ "summary": "Build a small working web page where the person enters a product price, each licensor's rate and any cap, and sees the stacked royalty, the effective rate, and which licensor pushes it over a threshold. No numbers are assumed; the person supplies them.",
+ "inputs": [
+  "A list of licensors with their headline rates (percent of price or per unit)",
+  "The product price and volume, if known",
+  "Any aggregate cap the person wants to test"
+ ],
+ "outputs": [
+  "A single HTML file that runs in a browser with no server",
+  "The stack as a table: licensor, rate, amount, cumulative",
+  "Warnings when the stack exceeds the cap or a threshold the person set"
+ ],
+ "steps": [
+  "Ask for the inputs as a table. Do not invent rates. If the person has no rates yet, build the page with empty rows and example placeholders clearly marked as examples.",
+  "Write one HTML file with the inputs as editable rows, the arithmetic in plain script, and the results updating on every change. Keep it under a few hundred lines so the person can read it.",
+  "Support both percent-of-price and per-unit rates, and a pro-rata scaling option when an aggregate cap applies.",
+  "Show the cumulative stack in order of rate, largest first, and flag the row at which a threshold is crossed.",
+  "Test with three sets of inputs, including one where the cap binds, and put the three cases in the file as loadable examples.",
+  "Send the file and a two-line note on what the page does not do: it does not know the contracts, and a headline rate is not the effective rate."
+ ],
+ "sources": [
+  "None required; the person supplies the numbers"
+ ],
+ "cautions": [
+  "A calculator is not advice. Say so on the page.",
+  "Never pre-fill rates from a client's agreements. Public, hypothetical or person-supplied numbers only."
+ ],
+ "since": "2026-09",
+ "tool": "royalty-stack.html"
+}

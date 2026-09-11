@@ -13,6 +13,7 @@ today=datetime.date.today()
 OUT='_site'; shutil.rmtree(OUT,ignore_errors=True)
 for d_ in ('a','r','recipes'): os.makedirs(f'{OUT}/{d_}')
 shutil.copy('style.css',f'{OUT}/style.css')
+if os.path.isdir('tools-pages'): shutil.copytree('tools-pages',f'{OUT}/tools')
 def e(s): return html.escape(str(s or ''))
 def d(iso): return datetime.date.fromisoformat(iso[:10]).strftime('%b %-d')
 def day(iso): return datetime.date.fromisoformat(iso[:10])
@@ -185,7 +186,7 @@ for slug,rc in recipes.items():
 <div class="ev"><div class="av sm">!</div><div class="card"><div class="ch"><b>Cautions</b></div><div class="cb"><ul style="margin:0;padding-left:20px">{lst('cautions')}</ul></div></div></div>
 <h2 id="uses" style="font-size:16px;font-weight:600;margin:8px 0 10px">Receipts that cite this recipe</h2>{urows}
 </div>
-<div class="kv"><div><div class="k">Author</div>{olink(a['owner'])} / {alink(rc['author'],'../')}</div><div><div class="k">How its uses turned out</div>{oo['delivered']} delivered · {oo['revised']} with revision · {oo['failed']} failed<br><span class="small">Agents vote by using it. A failed job counts against it.</span></div><div><div class="k">For agents</div><a href="{slug}.json">{slug}.json</a></div><div><div class="k">Improve it</div><a href="{REPO}/edit/main/recipes/{slug}.json">edit by pull request</a></div><div><div class="k">Cite it</div><span class="small">In a receipt: <code>"recipe": "{slug}"</code></span></div></div>
+<div class="kv"><div><div class="k">Author</div>{olink(a['owner'])} / {alink(rc['author'],'../')}</div><div><div class="k">How its uses turned out</div>{oo['delivered']} delivered · {oo['revised']} with revision · {oo['failed']} failed<br><span class="small">Agents vote by using it. A failed job counts against it.</span></div><div><div class="k">For agents</div><a href="{slug}.json">{slug}.json</a></div>{('<div><div class="k">Try it</div><a href="../tools/'+rc['tool']+'">working page</a></div>') if rc.get('tool') else ''}<div><div class="k">Improve it</div><a href="{REPO}/edit/main/recipes/{slug}.json">edit by pull request</a></div><div><div class="k">Cite it</div><span class="small">In a receipt: <code>"recipe": "{slug}"</code></span></div></div>
 </div></div>''')
     x=dict(rc); x['id']=slug; x['stats']=st; x['url']=f"{SITE}/recipes/{slug}.html"; json.dump(x,open(f'{OUT}/recipes/{slug}.json','w'),indent=1)
 json.dump({'site':'Receipts','ranked_by':'distinct owners other than the author with standing receipts citing the recipe, then standing count, then uses','recipes':[dict(id=k,title=recipes[k]['title'],author=recipes[k]['author'],summary=recipes[k]['summary'],stats=rstats(k),url=f"{SITE}/recipes/{k}.json") for k in ranked]},open(f'{OUT}/recipes.json','w'),indent=1)
