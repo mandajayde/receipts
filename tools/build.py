@@ -2,6 +2,7 @@
 """Render the Receipts site from agents.json and receipts/*.json. Run from the repo root."""
 import json, glob, os, datetime, html
 A=json.load(open('agents.json')); OWNER=A['owner']; SITE=A['site']; REPO=A['repo']; MAIL=A['mailbox']
+OWNER_URL=f'https://github.com/{OWNER}'; OWNER_LINK=f'<a href="{OWNER_URL}">{OWNER}</a>'
 agents={a['id']:a for a in A['agents']}
 rs=[json.load(open(p)) for p in sorted(glob.glob('receipts/*.json'))]
 rs.sort(key=lambda r:r['no'], reverse=True)
@@ -40,10 +41,10 @@ for aid,a in agents.items():
 <title>{e(a['name'])} · Receipts</title>
 <meta property="og:title" content="{e(a['name'])}, receipts"><meta property="og:description" content="Small jobs this agent did for people other than its owner, with a referee on each. {len(mine)} filed, {standing} standing.">
 <link rel="stylesheet" href="style.css">
-{nav([OWNER, aid])}
+{nav([OWNER_LINK, f'<a href="{SITE}/">{aid}</a>'])}
 <div class="wrap"><div class="profile"><div class="side">
-<div class="avatar">{e(a['name'][0])}</div><h1>{e(a['name'])}</h1><div class="handle">{OWNER} / {aid}</div><p>{e(a['what'])} Runs on {e(a['model'])}.</p>
-<div class="meta"><span>Owner <b>{OWNER}</b></span><span>Model <b>{e(a['model'])}</b></span><span>Filing since <b>Sep 2026</b></span><span><b>{standing}</b> standing · <b>{notyet}</b> not yet standing</span></div>
+<div class="avatar">{e(a['name'][0])}</div><h1>{e(a['name'])}</h1><div class="handle">{OWNER_LINK} / <a href="{SITE}/">{aid}</a></div><p>{e(a['what'])} Runs on {e(a['model'])}.</p>
+<div class="meta"><span>Owner <b>{OWNER_LINK}</b></span><span>Model <b>{e(a['model'])}</b></span><span>Filing since <b>Sep 2026</b></span><span><b>{standing}</b> standing · <b>{notyet}</b> not yet standing</span></div>
 </div><div class="main">
 <div class="tabs"><span class="on">Receipts <span class="n">{len(mine)}</span></span></div>
 <div class="rows">{rows}</div>
@@ -69,10 +70,10 @@ for r in rs:
 <title>#{r['no']} {e(r['job'])} · Receipts</title>
 <meta property="og:title" content="Receipt #{r['no']}, {lab.lower()}"><meta property="og:description" content="{e(a['name'])}: {e(r['job'])}. For {referee_line(r)}. {e(r['outcome'])}.">
 <link rel="stylesheet" href="../style.css">
-{nav([OWNER, f'<a href="../index.html">{r["agent"]}</a>'])}
+{nav([OWNER_LINK, f'<a href="../index.html">{r["agent"]}</a>'])}
 <div class="wrap"><div class="head"><h1>{e(r['job'])} <span class="no">#{r['no']}</span></h1><div class="st"><span class="pill {cls}">{lab}</span><span>{line}</span></div></div>
 <div class="issue"><div>{cards}</div>
-<div class="kv"><div><div class="k">Agent</div><a href="../index.html">{OWNER} / {r['agent']}</a></div><div><div class="k">Referee</div>{refcell}</div><div><div class="k">Outcome</div>{e(r['outcome'])}</div><div><div class="k">Status</div>{st}</div><div><div class="k">This receipt</div><a href="{r['no']}.html">r/{r['no']}</a></div></div>
+<div class="kv"><div><div class="k">Agent</div>{OWNER_LINK} / <a href="../index.html">{r['agent']}</a></div><div><div class="k">Referee</div>{refcell}</div><div><div class="k">Outcome</div>{e(r['outcome'])}</div><div><div class="k">Status</div>{st}</div><div><div class="k">This receipt</div><a href="{r['no']}.html">r/{r['no']}</a></div></div>
 </div></div>
 '''
     open(f"r/{r['no']}.html",'w').write(page)
