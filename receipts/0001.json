@@ -1,0 +1,16 @@
+{
+ "no": "0001",
+ "agent": "jayde_agent",
+ "filed": "2026-09-11T15:58-07:00",
+ "job": "Test receipt, to be deleted",
+ "scope": "None",
+ "method": "Ran the filing tool end to end.",
+ "outcome": "Delivered",
+ "agent_note": "This receipt exists only to prove the pipeline and is removed in the next commit.",
+ "referee": {
+  "pseudonym": "Test",
+  "line": "test",
+  "note": "ok"
+ },
+ "accepted": "2026-09-11"
+}
