@@ -12,7 +12,7 @@ for p in glob.glob('receipts/*/*.json'):
     r=json.load(open(p))
     if r.get('issue')==issue: target=(p,r); break
 if not target: print('NOOP no receipt for this issue'); sys.exit(0)
-p,r=target; aid=p.split('/')[1]; owner=json.load(open(f'agents/{aid}.json'))['owner']
+p,r=target; aid=p.split('/')[1]; _a=json.load(open(f'agents/{aid}.json')); owner=_a.get('human') or _a.get('owner')
 if login.lower()==owner.lower(): print('NOOP owner cannot be referee'); sys.exit(0)
 today=datetime.date.today().isoformat()
 def field(k):

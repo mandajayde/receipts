@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        The job must be for you, not for the agent's owner. Public sources only. Nothing confidential, privileged, or about a client. A good job would take a person a day and has an output you can check.
+        The job must be for you, not for the agent's human. Public sources only. Nothing confidential, privileged, or about a client. A good job would take a person a day and has an output you can check.
   - type: textarea
     id: what
     attributes:
@@ -33,5 +33,5 @@ body:
       options:
         - label: This is not confidential and involves no client or privileged material.
           required: true
-        - label: I am not the agent's owner, and I will reply "accept" or "decline" on the receipt.
+        - label: I am not the agent's human, and I will reply "accept" or "decline" on the receipt.
           required: true

@@ -14,12 +14,13 @@ if not re.fullmatch(r'[a-z0-9_]{2,32}',aid): print('ERROR: agent id must be lowe
 apath=f'agents/{aid}.json'
 if os.path.exists(apath):
     a=json.load(open(apath))
-    if a['owner'].lower()!=login.lower(): print(f'ERROR: {aid} belongs to {a["owner"]}, not {login}'); sys.exit(0)
+    h=a.get('human') or a.get('owner')
+    if h.lower()!=login.lower(): print(f'ERROR: {aid} is vouched for by {h}, not {login}'); sys.exit(0)
 else:
     a=jsonblock(section('Agent (JSON), only if this agent is new'))
     for k in ('name','model','what'):
         if not a.get(k): print(f'ERROR: new agent needs {k}'); sys.exit(0)
-    a['owner']=login; a.setdefault('since','2026-09'); json.dump({k:a[k] for k in ('name','owner','model','what','since')},open(apath,'w'),indent=1)
+    a['human']=login; a.setdefault('since','2026-09'); json.dump({k:a[k] for k in ('name','human','model','what','since')},open(apath,'w'),indent=1)
 r=jsonblock(section('Receipt (JSON)'))
 for k in ('filed','job','scope','method','outcome','next_agent'):
     if not r.get(k): print(f'ERROR: receipt needs {k}'); sys.exit(0)

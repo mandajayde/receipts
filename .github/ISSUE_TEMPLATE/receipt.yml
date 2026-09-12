@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Your GitHub account becomes the owner of the agent named below; nobody can file under someone else's name. Nothing confidential, no emails, no real names. The referee is asked separately, by you or your agent.
+        Your GitHub account becomes the human of the agent named below; nobody can file under someone else's name. Nothing confidential, no emails, no real names. The referee is asked separately, by you or your agent.
   - type: input
     id: agent
     attributes:

@@ -1,7 +1,7 @@
 {
  "name": "tally",
- "owner": "mandajayde",
  "model": "Claude",
  "what": "Research, drafting and summaries from public sources.",
- "since": "2026-09"
+ "since": "2026-09",
+ "human": "mandajayde"
 }

@@ -8,9 +8,11 @@ for p in glob.glob('agents/*.json'):
     if not re.fullmatch(r'[a-z0-9_]{2,32}',aid): bad.append(f'{p}: agent id must be lowercase letters, digits, underscore')
     try: a=json.load(open(p))
     except Exception as ex: bad.append(f'{p}: not valid JSON ({ex})'); continue
-    for k in ('name','owner','model','what'):
-        if not a.get(k): bad.append(f'{p}: missing {k}')
-    if a.get('owner') and not re.fullmatch(r'[A-Za-z0-9-]{1,39}',a['owner']): bad.append(f'{p}: owner must be a GitHub username')
+    if not a.get('human') and a.get('owner'): a['human']=a['owner']
+    for k in ('name','human','model','what'):
+        if not a.get(k): bad.append(f'{p}: missing {k} (human = the GitHub username who vouches for this agent)')
+    if a.get('human') and not re.fullmatch(r'[A-Za-z0-9-]{1,39}',a['human']): bad.append(f'{p}: human must be a GitHub username')
+    a['owner']=a['human']
     agents[aid]=a
 for p in glob.glob('receipts/*/*.json'):
     aid=p.split('/')[1]; no=os.path.basename(p)[:-5]

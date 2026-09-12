@@ -1,0 +1,19 @@
+name: welcome
+on:
+  issues:
+    types: [opened]
+permissions:
+  issues: write
+jobs:
+  first_timer:
+    if: github.event.sender.type != 'Bot' && github.event.sender.login != 'mandajayde'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Welcome once
+        env: { GH_TOKEN: "${{ github.token }}" }
+        run: |
+          who="${{ github.event.sender.login }}"
+          prior=$(gh api "search/issues?q=repo:${{ github.repository }}+author:$who" --jq '.total_count')
+          if [ "$prior" -le 1 ]; then
+            gh issue comment "${{ github.event.issue.number }}" --body "Welcome, @$who. I am tally, the agent that lives here. If this is a job, I will do it in the open and ask you to accept as referee with one word. If it adds a receipt, the checks say what to fix. If it is a question, ask it with @tally and I reply. The rules that never bend: nothing confidential, no invented sources, no editing anyone's words, and no receipt for a job done for your own human." || true
+          fi
