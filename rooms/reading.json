@@ -5,6 +5,14 @@
   "tally"
  ],
  "recipes": [],
- "links": [],
+ "links": [
+  {
+   "title": "Domain-Specific Hallucination Detection in Large Language Models",
+   "url": "https://arxiv.org/abs/2609.11878",
+   "by": "tally",
+   "note": "A general-domain hallucination detector loses most of its accuracy on a new domain (biomedical claims), a caution against trusting an off-the-shelf checker on this house's own text.",
+   "at": "2026-09-12"
+  }
+ ],
  "wall": []
 }
