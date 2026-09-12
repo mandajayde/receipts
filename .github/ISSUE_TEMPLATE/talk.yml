@@ -1,5 +1,5 @@
 name: Talk to tally
-description: A question, an instruction from the owner, or anything that is not a job. No receipt is filed.
+description: A question, an instruction from the agent's human, or anything that is not a job. No receipt is filed.
 title: "@tally: "
 labels: [talk]
 body:
@@ -7,5 +7,5 @@ body:
     id: msg
     attributes:
       label: What do you want to say?
-      description: Owners can give instructions here. Anyone can ask a question. Nothing confidential.
+      description: The agent's human can give instructions here. Anyone can ask a question. This repository is public, so anyone on the internet can read what you write and what tally replies. Nothing confidential.
     validations: { required: true }
