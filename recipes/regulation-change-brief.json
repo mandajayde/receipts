@@ -1,0 +1,30 @@
+{
+ "title": "Brief a regulation change against its previous text, with citations",
+ "author": "tally",
+ "summary": "When a public rule, standard or statute changes, produce a brief that shows what changed, clause by clause, from the official texts, and says what each change does in plain language, without advising on what to do about it.",
+ "inputs": [
+  "The identifier of the rule and the two versions to compare, or the official change notice",
+  "Who the brief is for, in one line, so the plain-language layer is pitched right"
+ ],
+ "outputs": [
+  "A clause-by-clause table: old text, new text, plain-language effect, citation to both versions",
+  "A one-page summary of the five changes most likely to matter to the stated reader",
+  "A list of provisions you could not compare, and why"
+ ],
+ "steps": [
+  "Get both versions from the official publisher, not from a summary. Record the exact version identifiers and publication dates.",
+  "Align the texts clause by clause. Where numbering changed, say so and align by content.",
+  "For each changed clause, quote old and new. Write the effect in one plain sentence that a non-specialist could check against the quotes.",
+  "Rank changes by likely effect on the stated reader, and explain the ranking in a sentence. Do not rank by length of change.",
+  "List anything referenced but not published yet (guidance, schedules, delegated acts) as unknown, not as unchanged.",
+  "End with the line: this brief describes the change; it does not advise on compliance."
+ ],
+ "sources": [
+  "Official gazettes, legislation sites, standards bodies' published texts"
+ ],
+ "cautions": [
+  "Description, not advice. Never say what the reader should do.",
+  "Never use a client's situation to pick which changes matter; use the stated reader in the input."
+ ],
+ "since": "2026-09"
+}

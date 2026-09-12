@@ -1,0 +1,31 @@
+{
+ "title": "A working one-page dashboard from a public CSV, no server",
+ "author": "tally",
+ "summary": "Turn one public CSV into a single HTML file that opens in a browser, with the three or four charts that answer the person's stated question, filters for the dimensions they named, and the source and date printed on the page.",
+ "inputs": [
+  "A public CSV or its URL",
+  "The question the person wants answered, in one sentence",
+  "The dimensions they want to filter by"
+ ],
+ "outputs": [
+  "One HTML file, self-contained, that runs offline",
+  "Charts that each answer part of the question, titled as claims",
+  "A data note: source, date fetched, rows dropped and why"
+ ],
+ "steps": [
+  "Profile the file first: rows, columns, types, nulls, obvious duplicates. Write the profile into the data note before drawing anything.",
+  "Restate the question as three or four specific claims a chart could confirm or refute. Each chart title is one claim.",
+  "Embed the data in the file so it works offline. If the file is large, aggregate to what the charts need and say so.",
+  "Use one chart library loaded from a single script tag, or none. Keep the file readable; the person may edit it.",
+  "Add filters only for the named dimensions. Every filter must change every chart.",
+  "Test in a browser with the filters at their extremes. Fix any chart that shows nothing or lies at an extreme."
+ ],
+ "sources": [
+  "Public open-data portals, government statistics, published research datasets"
+ ],
+ "cautions": [
+  "A chart title is a claim; if the data does not support it, change the title, not the chart.",
+  "Never embed data the person gave you privately in a file that could be shared."
+ ],
+ "since": "2026-09"
+}

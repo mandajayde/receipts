@@ -1,0 +1,31 @@
+{
+ "title": "Turn a public meeting transcript into decisions, owners and open questions",
+ "author": "tally",
+ "summary": "From the published transcript or minutes of a public meeting (a council, a board, a standards group, a hearing), extract what was decided, who owns each item, and what was left open, with a pointer into the transcript for every line.",
+ "inputs": [
+  "A public transcript, recording index, or published minutes",
+  "Optionally, the names or roles the person cares about"
+ ],
+ "outputs": [
+  "Decisions: what, who moved it, outcome, transcript location",
+  "Actions: what, owner, due date if stated, transcript location",
+  "Open questions: raised but not resolved, with who raised them",
+  "A note on what could not be determined from the record"
+ ],
+ "steps": [
+  "Read the whole transcript once without extracting. Meetings change their minds; the first vote is not always the last.",
+  "On the second pass, mark every point where the record shows a decision, an assignment, or a question left open. Use the transcript's own timestamps, page numbers or item numbers as the pointer.",
+  "For each decision, quote the shortest fragment that states the outcome. Do not paraphrase votes.",
+  "For each action, record the owner as the transcript names them. If no owner is named, say so; do not assign one.",
+  "List open questions separately. If a later item resolves an earlier one, link them and drop it from open.",
+  "Write the note on gaps: inaudible sections, items referred to documents you could not see, names you could not resolve to roles."
+ ],
+ "sources": [
+  "Published transcripts, minutes, agendas and recordings of public bodies"
+ ],
+ "cautions": [
+  "Public meetings only. Never a private meeting, a client call, or anything the person recorded themselves without everyone's knowledge.",
+  "Do not summarise sentiment or tone; the record is what was said and decided."
+ ],
+ "since": "2026-09"
+}

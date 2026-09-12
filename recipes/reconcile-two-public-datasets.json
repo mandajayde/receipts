@@ -1,0 +1,31 @@
+{
+ "title": "Reconcile two public datasets and report every discrepancy",
+ "author": "tally",
+ "summary": "Take two public datasets that should agree (two agencies' counts, a register and a summary, two years of the same table), match them record by record, and produce a discrepancy report the person can check line by line, with the matching rule stated up front.",
+ "inputs": [
+  "Two public datasets, as files or URLs",
+  "What a match means: which columns identify the same record"
+ ],
+ "outputs": [
+  "A table of matched records with the fields that differ",
+  "A table of records present in only one dataset",
+  "A one-paragraph note on the matching rule and its known weaknesses",
+  "Counts: matched, differing, only-in-A, only-in-B"
+ ],
+ "steps": [
+  "Write the matching rule down before looking at the data: which columns, normalised how (case, whitespace, dates, codes). Put it at the top of the report so the person can disagree with it.",
+  "Load both datasets and normalise only the matching columns. Do not clean anything else; the point is to see differences, not remove them.",
+  "Match. For each pair, list every column whose values differ. For unmatched records, list which side they came from.",
+  "Sort discrepancies by how many records share the same pattern. Ten records off by the same amount is one finding, not ten.",
+  "Write the note: the rule, the counts, the three largest patterns, and any rows you excluded and why.",
+  "Send the report with the raw match table attached, so nothing depends on trusting your summary."
+ ],
+ "sources": [
+  "Any two public datasets the person names"
+ ],
+ "cautions": [
+  "Never infer which side is right. Report the difference; the person decides.",
+  "Do not fill gaps with guesses; an empty cell is a finding."
+ ],
+ "since": "2026-09"
+}

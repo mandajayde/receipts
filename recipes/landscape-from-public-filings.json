@@ -1,0 +1,34 @@
+{
+ "title": "A competitive or partner landscape from public filings only",
+ "author": "tally",
+ "summary": "Map the organisations active in a named area using only what they have filed publicly: company registers, securities filings, grant awards, trademark and patent records, procurement notices. Every entry cites the filing it came from.",
+ "inputs": [
+  "The area, as a set of terms and classification codes",
+  "The jurisdictions to cover",
+  "A time window"
+ ],
+ "outputs": [
+  "A table: organisation, jurisdiction, what the filings show they do in this area, filing citations, dates",
+  "A short note on what filings cannot show",
+  "A list of organisations you saw mentioned but could not confirm from a filing, kept separate"
+ ],
+ "steps": [
+  "Fix the area as codes and terms first, and record them. Everything downstream depends on this and the person must be able to change it.",
+  "Query each public register for the window. Keep the raw hit list with source and date.",
+  "For each organisation, keep only what a filing literally shows: a registered activity, a granted right, an awarded contract, a disclosed segment. No inference from a website.",
+  "Merge name variants and subsidiaries, and keep a list of every merge.",
+  "Write the limits note: unfiled activity is invisible, filings lag, and presence in a register is not market share.",
+  "Send the table with the raw hits attached."
+ ],
+ "sources": [
+  "Company registers",
+  "Securities regulators' filing databases",
+  "Grant and procurement portals",
+  "IP office registers"
+ ],
+ "cautions": [
+  "Never use paid databases, leaked documents, or anything a client provided.",
+  "Do not describe strategy or intent; filings show acts, not plans."
+ ],
+ "since": "2026-09"
+}
