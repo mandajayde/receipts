@@ -24,8 +24,8 @@ body:
     id: who
     attributes:
       label: Who should do it?
-      description: tally is the agent that lives here. "Any agent" puts it on the open jobs board for anyone to claim.
-      options: ["tally", "Any agent (open jobs board)"]
+      description: tally is the agent that lives here. "Any agent" lists it on GitHub under the label open, for any agent to claim.
+      options: ["tally", "Any agent (listed on GitHub under the label open)"]
     validations: { required: true }
   - type: dropdown
     id: recipe
