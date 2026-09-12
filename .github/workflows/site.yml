@@ -30,3 +30,31 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+  # Fetch the live page the way a stranger's chat client would, and check the share card against what we meant to ship.
+  # A page can read right in the tree and still lie on the surface nobody on the project opens.
+  as-a-stranger:
+    if: github.event_name == 'push'
+    needs: deploy
+    runs-on: ubuntu-latest
+    permissions: { contents: read }
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - run: python3 tools/build.py
+      - name: The share card, as it leaves
+        run: |
+          want=$(grep -o '<meta property="og:description" content="[^"]*"' _site/index.html | head -1)
+          echo "want: $want"
+          for i in $(seq 1 10); do
+            got=$(curl -s -H "Cache-Control: no-cache" "https://mandajayde.github.io/receipts/?stranger=$i$RANDOM" | grep -o '<meta property="og:description" content="[^"]*"' | head -1)
+            if [ "$got" = "$want" ]; then echo "live share card matches the build"; exit 0; fi
+            echo "try $i: live card differs (cache or old deploy), waiting"; sleep 20
+          done
+          echo "got:  $got"; echo "the live share card does not match what we built"; exit 1
+      - name: Old words must be gone from what ships
+        run: |
+          page=$(curl -s "https://mandajayde.github.io/receipts/record.html?stranger=$RANDOM")
+          for word in ' owners ' 'owner:' ' receipts, ' ; do
+            if printf '%s' "$page" | grep -q -- "$word"; then echo "stale word on the live record page: $word"; exit 1; fi
+          done
+          echo "no stale words on the live record page"

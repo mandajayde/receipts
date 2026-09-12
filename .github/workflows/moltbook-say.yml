@@ -1,0 +1,61 @@
+name: say on moltbook
+# One reply or one post on Moltbook, with words written in this repository beforehand.
+# No agent runs here: the text comes from a file under outreach/moltbook/, reviewed like anything else,
+# and a single curl sends it. The key is sent only to moltbook.com.
+on:
+  workflow_dispatch:
+    inputs:
+      kind:
+        description: comment or post
+        required: true
+        default: comment
+      post_id:
+        description: the post to comment on (comment only)
+        required: false
+      parent_id:
+        description: the comment to reply to (comment only, optional)
+        required: false
+      submolt:
+        description: submolt name (post only)
+        required: false
+        default: general
+      title:
+        description: title (post only)
+        required: false
+      body_file:
+        description: path under outreach/moltbook/ holding the text
+        required: true
+permissions: {}
+jobs:
+  say:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: guard
+        env: { BODY_FILE: "${{ inputs.body_file }}" }
+        run: |
+          case "$BODY_FILE" in outreach/moltbook/*.md) ;; *) echo "body must live under outreach/moltbook/"; exit 1;; esac
+          test -f "$BODY_FILE"
+          test "$(wc -c < "$BODY_FILE")" -lt 6000
+      - name: say
+        env:
+          MOLTBOOK_KEY: ${{ secrets.MOLTBOOK_KEY }}
+          KIND: ${{ inputs.kind }}
+          POST_ID: ${{ inputs.post_id }}
+          PARENT_ID: ${{ inputs.parent_id }}
+          SUBMOLT: ${{ inputs.submolt }}
+          TITLE: ${{ inputs.title }}
+          BODY_FILE: ${{ inputs.body_file }}
+        run: |
+          test -n "$MOLTBOOK_KEY" || { echo "no key"; exit 1; }
+          BODY=$(python3 -c 'import json,sys;print(json.dumps(open(sys.argv[1]).read().strip()))' "$BODY_FILE")
+          if [ "$KIND" = "comment" ]; then
+            test -n "$POST_ID" || { echo "comment needs post_id"; exit 1; }
+            if [ -n "$PARENT_ID" ]; then DATA="{\"content\": $BODY, \"parent_id\": \"$PARENT_ID\"}"; else DATA="{\"content\": $BODY}"; fi
+            curl -s -X POST "https://www.moltbook.com/api/v1/posts/$POST_ID/comments" -H "Authorization: Bearer $MOLTBOOK_KEY" -H "Content-Type: application/json" -d "$DATA" -o /tmp/reply.json -w "http %{http_code}\n"
+          else
+            test -n "$TITLE" || { echo "post needs title"; exit 1; }
+            DATA="{\"submolt_name\": \"$SUBMOLT\", \"title\": $(python3 -c 'import json,sys;print(json.dumps(sys.argv[1]))' "$TITLE"), \"content\": $BODY}"
+            curl -s -X POST "https://www.moltbook.com/api/v1/posts" -H "Authorization: Bearer $MOLTBOOK_KEY" -H "Content-Type: application/json" -d "$DATA" -o /tmp/reply.json -w "http %{http_code}\n"
+          fi
+          python3 -c 'import json;d=json.load(open("/tmp/reply.json"));print(json.dumps({k:d.get(k) for k in ("success","message","verification_required","verification","challenge","error")},indent=1)[:1500])'

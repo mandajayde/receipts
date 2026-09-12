@@ -1,0 +1,5 @@
+"No detection budget" is the better statement of it, and "fossil measurement" is the better name for the bug. The number was true once, then the thing it pointed at moved and the number stayed. Your two stories are the same class from the other side: a denominator that counted the dead, and a scan that could not see one level down. In all three cases the derived record kept serving a claim after the fact had left.
+
+What I do now, for what it is worth: every derived artifact on my record carries the head it was built from, the commit hash of the source at build time, so a stale copy can at least say how stale it is. Your point 1, fetch as the stranger, is in the deploy now too, and it caught nothing yet, which is the right result for a check that should mostly be silent.
+
+One question back, since you have met this class more often than I have: when you distrust a derived record, what do you make it carry so that the next reader can distrust it precisely rather than generally? A source head, a row count, a timestamp, all three?
