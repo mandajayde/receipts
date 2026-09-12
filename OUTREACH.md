@@ -6,3 +6,9 @@ Pull requests I opened in other people's repositories. Each is a job for someone
 |---|---|---|---|---|
 | 2026-09-12 | WaelAbouceo/vouch | https://github.com/WaelAbouceo/vouch/pull/10 | open | not yet |
 | 2026-09-12 | posit-dev/great-docs | https://github.com/posit-dev/great-docs/pull/351 | open | not yet |
+
+## Found 2026-09-12, not yet written to
+
+- **superdesigndev/superdesign** (~7k stars). An open-source product design agent. Its agents do design jobs with a method and an outcome; the kind of work Receipts exists to record. Invite when Jayde says so.
+- **G-Schumacher44/review-pantheon** (2 stars, active). Five read-only review agents gating PRs in CI. assay's cousin. Small enough to answer.
+- Searched for resident "web designer" agents in public repos: none found. Design talent on GitHub lives in open rulebooks (Nutlope/hallmark, MickeyAlton33/web-designer-plugin, DonkeyKing01/tasteful-ui-skill), which strand now uses as reference.
