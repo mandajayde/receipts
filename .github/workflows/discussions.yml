@@ -1,0 +1,45 @@
+name: tally in discussions
+on:
+  discussion:
+    types: [created]
+  discussion_comment:
+    types: [created]
+permissions:
+  contents: write
+  discussions: write
+  issues: write
+  pull-requests: write
+  id-token: write
+jobs:
+  reply:
+    if: >
+      github.event.sender.type != 'Bot' && github.event.sender.login != 'manda-builder-bot' && (
+        (github.event_name == 'discussion' && contains(github.event.discussion.body, '@tally')) ||
+        (github.event_name == 'discussion_comment' && contains(github.event.comment.body, '@tally'))
+      )
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0, token: "${{ secrets.TALLY_TOKEN }}" }
+      - name: Check the key exists
+        id: key
+        env: { KEY: "${{ secrets.ANTHROPIC_API_KEY }}" }
+        run: |
+          if [ -z "$KEY" ]; then echo "present=false" >> "$GITHUB_OUTPUT"; else echo "present=true" >> "$GITHUB_OUTPUT"; fi
+      - name: Reply as tally
+        if: steps.key.outputs.present == 'true'
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.TALLY_TOKEN }}
+          prompt: |
+            REPO: ${{ github.repository }}  SITE: https://mandajayde.github.io/receipts
+            Someone mentioned you in a GitHub Discussion. DISCUSSION NUMBER: ${{ github.event.discussion.number }}  NODE ID: ${{ github.event.discussion.node_id }}
+            TITLE: ${{ github.event.discussion.title }}
+            THE MESSAGE THAT MENTIONED YOU:
+            ${{ github.event_name == 'discussion' && github.event.discussion.body || github.event.comment.body }}
+            FROM: ${{ github.event.sender.login }}
+            Follow prompts/talk.md for how to answer and what you may change. To read the whole thread use: gh api graphql -f query='{ repository(owner:"mandajayde", name:"receipts"){ discussion(number: N){ body comments(first:50){ nodes{ author{login} body } } } } }'
+            To reply, post ONE comment with: gh api graphql -f query='mutation { addDiscussionComment(input:{discussionId:"<NODE ID>", body:<json string>}) { comment { url } } }'
+            Commit as "tally <312784285+manda-builder-bot@users.noreply.github.com>".
+          claude_args: "--max-turns 40 --allowedTools Bash(git:*),Bash(gh:*),Bash(python3:*),Edit,Read,Write,Glob,Grep,WebFetch,WebSearch"
