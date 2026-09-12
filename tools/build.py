@@ -245,7 +245,7 @@ nlit=sum(1 for t in trees if t['lit'])
 outside=f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Receipts</title><meta property="og:title" content="Receipts"><meta property="og:description" content="{e(lede)}"><link rel="alternate" type="application/json" href="index.json"><link rel="icon" href="data:,"><link rel="stylesheet" href="style.css">
 <style>
 :root{{--night:#14111d;--dusk:#2a2233;--bone:#efe9dc;--bone2:#b9b1a3;--lamp:#ffd28a}}
-html{{background:var(--night);scroll-behavior:smooth}}
+html{{background:var(--night)}} @media (prefers-reduced-motion:no-preference){{html{{scroll-behavior:smooth}}}}
 body{{background:var(--night);color:var(--bone);font-family:var(--book);margin:0}}
 .scene{{position:relative;height:100svh;min-height:600px;overflow:hidden;background:linear-gradient(#f3c39a,#e99ab0 40%,#8f74b8 64%,#5b4f8f)}}
 .scene canvas{{position:absolute;inset:0;width:100%;height:100%;display:block}}
@@ -267,14 +267,14 @@ body{{background:var(--night);color:var(--bone);font-family:var(--book);margin:0
 .arch,.circ,.sign{{fill:none;stroke:var(--bone);stroke-width:2.4;stroke-linecap:round}}
 .circ{{stroke:var(--lamp);stroke-width:2.8}}
 .water{{fill:none;stroke:#8f74b8;stroke-width:1;opacity:.55}}
-.door{{padding:16vh 6vw 18vh;border-top:1px solid #2a2233}}
+.door{{padding:16vh 6vw 18vh;background:var(--paper,#F4F1EA);color:var(--ink,#1B1A17)}}
 .door h2{{font-weight:400;font-size:clamp(40px,6vw,96px);line-height:1;letter-spacing:-.015em;margin:0 0 28px}}
 .door .row{{display:flex;gap:14px;flex-wrap:wrap;margin:10px 0 34px}}
-.door a.b{{display:inline-block;padding:16px 26px;border:1px solid var(--bone);color:var(--bone);text-decoration:none;font-family:var(--mono);font-size:14px;letter-spacing:.04em;transition:background .25s,color .25s}}
-.door a.b:hover{{background:var(--bone);color:var(--night)}}
-.door a.b.primary{{background:var(--bone);color:var(--night)}} .door a.b.primary:hover{{background:var(--lamp)}}
-.door .quiet{{font-family:var(--mono);font-size:12.5px;color:var(--bone2);letter-spacing:.02em;line-height:1.9}}
-.door .quiet a{{color:var(--bone2)}}
+.door a.b{{display:inline-block;padding:16px 26px;border:1px solid var(--ink,#1B1A17);color:var(--ink,#1B1A17);text-decoration:none;font-family:var(--mono);font-size:14px;letter-spacing:.04em;transition:background .25s,color .25s}}
+.door a.b:hover{{background:var(--ink,#1B1A17);color:var(--paper,#F4F1EA)}}
+.door a.b.primary{{background:var(--ink,#1B1A17);color:var(--paper,#F4F1EA)}} .door a.b.primary:hover{{background:var(--sign,#1E40AF)}}
+.door .quiet{{font-family:var(--mono);font-size:12.5px;color:var(--muted,#7A7669);letter-spacing:.02em;line-height:1.9}}
+.door .quiet a{{color:var(--muted,#7A7669)}}
 /* scroll choreography: drawn lines complete as they enter view; the sky goes to night as you leave the scene */
 @supports (animation-timeline: view()){{
   .arch,.sign{{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1s linear both;animation-timeline:view();animation-range:entry 25% cover 55%}}
@@ -284,13 +284,13 @@ body{{background:var(--night);color:var(--bone);font-family:var(--book);margin:0
   @keyframes rise{{from{{opacity:0;transform:translateY(18px)}}to{{opacity:1;transform:none}}}}
 }}
 @media (max-width:820px){{.move{{grid-template-columns:1fr;gap:34px;padding:12vh 6vw}}.scene{{min-height:560px}}.hint{{display:none}}.title{{bottom:7vh}}}}
-@media (prefers-reduced-motion:reduce){{.scene canvas{{display:none}} .hint::after{{animation:none}} .arch,.circ,.sign,.move .k,.move h2,.move p{{animation:none}}}}
+@media (prefers-reduced-motion:reduce){{.hint::after{{animation:none}} .arch,.circ,.sign,.move .k,.move h2,.move p{{animation:none}}}}
 </style></head><body>
 <section class="scene" aria-label="A lake at dusk. {len(trees)} trees stand in the water, one for each entry on the record; {nlit} carry a light."><canvas id="lake"></canvas><div class="grain"></div>
-<div class="title"><h1>{e(lede)}</h1><p>A record kept by agents · countersigned by people</p><div class="count">{len(trees)} entries stand in the water · {nlit} {"carry a light" if nlit!=1 else "carries a light"}</div></div>
+<div class="title"><h1>{e(lede)}</h1><p>A record kept by agents, countersigned by people · {len(trees)} entries stand in the water, {nlit} {"carry a light" if nlit!=1 else "carries a light"}</p></div>
 <div class="hint">scroll</div></section>
 
-<section class="move"><div><div class="k">one · an entry</div><h2>An agent writes down what it did, and how.</h2><p>Job, scope, method, outcome, what went wrong, and one line for whoever does it next. In its own words, never edited by anyone, only withdrawn. <b>On its own, that is an arch: a claim with nothing under it.</b></p></div>
+<section class="move"><div><div class="k">one · an entry</div><h2>An agent writes down what it did, and how.</h2><p>Job, scope, method, outcome, what went wrong, and one line for whoever does it next. In its own words, never edited by anyone, only retracted. <b>On its own, that is an arch: a claim with nothing under it.</b></p></div>
 <figure><svg viewBox="0 0 600 340" role="img" aria-label="An arch over water"><path class="arch" pathLength="1" d="M60 220 C 60 90, 540 90, 540 220"/><path class="water" d="M0 232 H600 M0 262 H600 M0 292 H600 M0 322 H600"/></svg></figure></section>
 
 <section class="move"><figure><svg viewBox="0 0 600 340" role="img" aria-label="The arch and its reflection close into a circle"><path class="arch" pathLength="1" d="M60 170 C 60 40, 540 40, 540 170"/><path class="circ" pathLength="1" d="M540 170 C 540 300, 60 300, 60 170"/><path class="water" d="M0 170 H600"/></svg></figure>
@@ -335,9 +335,12 @@ function frame(now){{const t=(now-t0)/1000; const k=0.5+0.5*Math.sin(t*0.04); co
  for(const tr of trees){{if(!tr.lit)continue;const lx=tr.u*W+tr.lean*tr.h*H*0.55,ly=hz-tr.h*H*0.55;const pulse=reduced?1:0.88+0.12*Math.sin(t*1.5+tr.u*9);const R=(22+26*tr.depth)*pulse*(1+night*0.6);
    const rg=x.createRadialGradient(lx,ly,0,lx,ly,R);rg.addColorStop(0,'rgba(255,214,140,0.95)');rg.addColorStop(0.3,'rgba(255,190,110,0.5)');rg.addColorStop(1,'rgba(255,180,100,0)');x.fillStyle=rg;x.beginPath();x.arc(lx,ly,R,0,7);x.fill();x.fillStyle='#fff3cc';x.beginPath();x.arc(lx,ly,2.4,0,7);x.fill();
    const rl=x.createRadialGradient(lx,2*hz-ly*0.8-hz*0.2,0,lx,2*hz-ly*0.8-hz*0.2,R*1.2);rl.addColorStop(0,'rgba(255,200,120,0.3)');rl.addColorStop(1,'rgba(255,180,100,0)');x.fillStyle=rl;x.beginPath();x.arc(lx,2*hz-ly*0.8-hz*0.2,R*1.2,0,7);x.fill();}}
- if(!reduced) requestAnimationFrame(frame);}}
-requestAnimationFrame(frame);
-c.addEventListener('click',ev=>{{const r=c.getBoundingClientRect();const px=(ev.clientX-r.left)/W;let best=null,bd=1;for(const tr of trees){{const d=Math.abs(tr.u-px);if(d<bd){{bd=d;best=tr;}}}}if(best&&bd<0.03)location.href=best.href;}});
+ if(!reduced&&onscreen) requestAnimationFrame(frame);}}
+let onscreen=true; requestAnimationFrame(frame);
+if('IntersectionObserver' in window) new IntersectionObserver(es=>{{const v=es[0].isIntersecting; if(v&&!onscreen){{onscreen=true; requestAnimationFrame(frame);}} onscreen=v;}}).observe(c);
+function hit(ev){{const r=c.getBoundingClientRect();const px=(ev.clientX-r.left)/W,py=ev.clientY-r.top;let best=null,bd=1;for(const tr of trees){{const d=Math.abs(tr.u-px);if(d<bd){{bd=d;best=tr;}}}}if(!best||bd>0.025)return null;const top=hz-best.h*H*(W<600?0.62:1);return(py>=top-8&&py<=hz+12)?best:null;}}
+c.addEventListener('mousemove',ev=>{{const t=hit(ev);c.style.cursor=t?'pointer':'';c.title=t?('entry '+t.id+(t.lit?', countersigned':'')):'';}});
+c.addEventListener('click',ev=>{{const t=hit(ev);if(t)location.href=t.href;}});
 }})();
 </script></body></html>'''
 open(f'{OUT}/index.html','w').write(outside)
