@@ -244,9 +244,9 @@ trees=[{'id':rid(r),'lit':vouched(r),'struck':status(r)[0] in ('retracted','with
 nlit=sum(1 for t in trees if t['lit'])
 outside=f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Receipts</title><meta property="og:title" content="Receipts"><meta property="og:description" content="{e(lede)}"><link rel="alternate" type="application/json" href="index.json"><link rel="icon" href="data:,"><link rel="stylesheet" href="style.css">
 <style>
-:root{{--night:#14111d;--dusk:#2a2233;--bone:#efe9dc;--bone2:#b9b1a3;--lamp:#ffd28a}}
-html{{background:var(--night)}} @media (prefers-reduced-motion:no-preference){{html{{scroll-behavior:smooth}}}}
-body{{background:var(--night);color:var(--bone);font-family:var(--book);margin:0}}
+:root{{--night:#14111d;--dusk:#2a2233;--bone:#efe9dc;--bone2:#b9b1a3;--lamp:#ffd28a;--pp:#F4F1EA;--pi:#1B1A17;--pm:#7A7669;--ps:#1E40AF}}
+html{{background:var(--pp)}} @media (prefers-reduced-motion:no-preference){{html{{scroll-behavior:smooth}}}}
+body{{background:var(--pp);color:var(--pi);font-family:var(--book);margin:0}}
 .scene{{position:relative;height:100svh;min-height:600px;overflow:hidden;background:linear-gradient(#f3c39a,#e99ab0 40%,#8f74b8 64%,#5b4f8f)}}
 .scene canvas{{position:absolute;inset:0;width:100%;height:100%;display:block}}
 .grain{{position:absolute;inset:0;pointer-events:none;opacity:.08;mix-blend-mode:multiply;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}}
@@ -257,17 +257,17 @@ body{{background:var(--night);color:var(--bone);font-family:var(--book);margin:0
 .hint{{position:absolute;right:6vw;bottom:9vh;text-align:right;font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#efe9dc;opacity:.75}}
 .hint::after{{content:"";display:block;width:1px;height:38px;background:#efe9dc;margin:10px 0 0 auto;opacity:.6;animation:drop 2.2s ease-in-out infinite}}
 @keyframes drop{{0%{{transform:scaleY(0);transform-origin:top}}55%{{transform:scaleY(1);transform-origin:top}}56%{{transform-origin:bottom}}100%{{transform:scaleY(0);transform-origin:bottom}}}}
-.move{{min-height:64svh;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:6vw;align-items:center;padding:14vh 6vw;border-top:1px solid #2a2233}}
+.move{{min-height:64svh;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:6vw;align-items:center;padding:14vh 6vw;border-top:1px solid #DDD8CC}}
 .move h2{{font-weight:400;font-size:clamp(34px,4.6vw,72px);line-height:1.02;letter-spacing:-.012em;margin:0 0 22px;text-wrap:balance}}
-.move p{{font-size:clamp(17px,1.35vw,21px);line-height:1.5;color:var(--bone2);max-width:34em;margin:0 0 14px}}
-.move p b{{color:var(--bone);font-weight:400}}
-.move .k{{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--bone2);margin-bottom:18px}}
+.move p{{font-size:clamp(17px,1.35vw,21px);line-height:1.5;color:#4A463D;max-width:34em;margin:0 0 14px}}
+.move p b{{color:var(--pi);font-weight:400}}
+.move .k{{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--pm);margin-bottom:18px}}
 .move figure{{margin:0}}
 .move svg{{width:100%;height:auto;display:block;overflow:visible}}
-.arch,.circ,.sign{{fill:none;stroke:var(--bone);stroke-width:2.4;stroke-linecap:round}}
-.circ{{stroke:var(--lamp);stroke-width:2.8}}
-.water{{fill:none;stroke:#8f74b8;stroke-width:1;opacity:.55}}
-.door{{padding:16vh 6vw 18vh;background:var(--paper,#F4F1EA);color:var(--ink,#1B1A17)}}
+.arch,.circ,.sign{{fill:none;stroke:var(--pi);stroke-width:2.4;stroke-linecap:round}}
+.circ{{stroke:var(--ps);stroke-width:2.8}}
+.water{{fill:none;stroke:#8f74b8;stroke-width:1;opacity:.45}}
+.door{{padding:16vh 6vw 18vh;background:var(--pp);color:var(--pi);border-top:1px solid #DDD8CC}}
 .door h2{{font-weight:400;font-size:clamp(40px,6vw,96px);line-height:1;letter-spacing:-.015em;margin:0 0 28px}}
 .door .row{{display:flex;gap:14px;flex-wrap:wrap;margin:10px 0 34px}}
 .door a.b{{display:inline-block;padding:16px 26px;border:1px solid var(--ink,#1B1A17);color:var(--ink,#1B1A17);text-decoration:none;font-family:var(--mono);font-size:14px;letter-spacing:.04em;transition:background .25s,color .25s}}
@@ -322,17 +322,17 @@ size(); addEventListener('resize',size);
 let t0=performance.now(); let scrollK=0; addEventListener('scroll',()=>{{scrollK=Math.min(1,scrollY/(H*0.9));}},{{passive:true}});
 function frame(now){{const t=(now-t0)/1000; const k=0.5+0.5*Math.sin(t*0.04); const night=scrollK;
  const mix=(a,b,m)=>Math.round(a+(b-a)*m);
- const top=[mix(243-8*k,20,night),mix(195-16*k,17,night),mix(154+10*k,29,night)], mid=[mix(233-26*k,42,night),mix(154-18*k,34,night),mix(176+18*k,51,night)], low=[mix(143-18*k,42,night),mix(116-8*k,34,night),mix(184+10*k,51,night)];
+ const top=[mix(243-8*k,244,night),mix(195-16*k,241,night),mix(154+10*k,234,night)], mid=[mix(233-26*k,244,night),mix(154-18*k,236,night),mix(176+18*k,226,night)], low=[mix(143-18*k,236,night),mix(116-8*k,226,night),mix(184+10*k,218,night)];
  const g=x.createLinearGradient(0,0,0,hz);g.addColorStop(0,`rgb(${{top}})`);g.addColorStop(0.55,`rgb(${{mid}})`);g.addColorStop(1,`rgb(${{low}})`);x.fillStyle=g;x.fillRect(0,0,W,hz);
- const wg=x.createLinearGradient(0,hz,0,H);wg.addColorStop(0,`rgb(${{mix(150-18*k,30,night)}},${{mix(120-8*k,24,night)}},${{mix(186,40,night)}})`);wg.addColorStop(1,`rgb(${{mix(60,20,night)}},${{mix(52,17,night)}},${{mix(110,29,night)}})`);x.fillStyle=wg;x.fillRect(0,hz,W,H-hz);
+ const wg=x.createLinearGradient(0,hz,0,H);wg.addColorStop(0,`rgb(${{mix(150-18*k,226,night)}},${{mix(120-8*k,220,night)}},${{mix(186,224,night)}})`);wg.addColorStop(1,`rgb(${{mix(60,244,night)}},${{mix(52,241,night)}},${{mix(110,234,night)}})`);x.fillStyle=wg;x.fillRect(0,hz,W,H-hz);
  // far haze on the horizon
  const hg=x.createLinearGradient(0,hz-H*0.12,0,hz);hg.addColorStop(0,'rgba(255,240,230,0)');hg.addColorStop(1,`rgba(255,240,230,${{0.22*(1-night)}})`);x.fillStyle=hg;x.fillRect(0,hz-H*0.12,W,H*0.12);
- x.fillStyle='rgba(50,40,80,0.5)';x.fillRect(0,hz-2,W,2);
+ x.fillStyle=`rgba(50,40,80,${{0.5*(1-night)}})`;x.fillRect(0,hz-2,W,2);
  // reflection: the tree layer flipped, wobbling, dimmer
- x.save();x.globalAlpha=0.28*(1-night*0.5);x.translate(0,2*hz);x.scale(1,-0.8);const wob=reduced?0:Math.sin(t*0.7)*2.2;x.drawImage(off,wob,0,W,H);x.restore();
- if(!reduced){{x.strokeStyle='rgba(255,230,220,0.09)';x.lineWidth=1;for(let i=0;i<10;i++){{const y=hz+10+i*((H-hz)/10)+Math.sin(t*0.35+i)*3;x.beginPath();x.moveTo(0,y);for(let px=0;px<=W;px+=18){{x.lineTo(px,y+Math.sin(px*0.018+t*0.7+i)*1.3);}}x.stroke();}}}}
+ x.save();x.globalAlpha=0.28*(1-night*0.8);x.translate(0,2*hz);x.scale(1,-0.8);const wob=reduced?0:Math.sin(t*0.7)*2.2;x.drawImage(off,wob,0,W,H);x.restore();
+ if(!reduced){{x.strokeStyle=`rgba(255,230,220,${{0.09*(1-night)}})`;x.lineWidth=1;for(let i=0;i<10;i++){{const y=hz+10+i*((H-hz)/10)+Math.sin(t*0.35+i)*3;x.beginPath();x.moveTo(0,y);for(let px=0;px<=W;px+=18){{x.lineTo(px,y+Math.sin(px*0.018+t*0.7+i)*1.3);}}x.stroke();}}}}
  x.drawImage(off,0,0,W,H);
- for(const tr of trees){{if(!tr.lit)continue;const lx=tr.u*W+tr.lean*tr.h*H*0.55,ly=hz-tr.h*H*0.55;const pulse=reduced?1:0.88+0.12*Math.sin(t*1.5+tr.u*9);const R=(22+26*tr.depth)*pulse*(1+night*0.6);
+ for(const tr of trees){{if(!tr.lit)continue;const lx=tr.u*W+tr.lean*tr.h*H*0.55,ly=hz-tr.h*H*0.55;const pulse=reduced?1:0.88+0.12*Math.sin(t*1.5+tr.u*9);const R=(22+26*tr.depth)*pulse*(1-night*0.5);
    const rg=x.createRadialGradient(lx,ly,0,lx,ly,R);rg.addColorStop(0,'rgba(255,214,140,0.95)');rg.addColorStop(0.3,'rgba(255,190,110,0.5)');rg.addColorStop(1,'rgba(255,180,100,0)');x.fillStyle=rg;x.beginPath();x.arc(lx,ly,R,0,7);x.fill();x.fillStyle='#fff3cc';x.beginPath();x.arc(lx,ly,2.4,0,7);x.fill();
    const rl=x.createRadialGradient(lx,2*hz-ly*0.8-hz*0.2,0,lx,2*hz-ly*0.8-hz*0.2,R*1.2);rl.addColorStop(0,'rgba(255,200,120,0.3)');rl.addColorStop(1,'rgba(255,180,100,0)');x.fillStyle=rl;x.beginPath();x.arc(lx,2*hz-ly*0.8-hz*0.2,R*1.2,0,7);x.fill();}}
  if(!reduced&&onscreen) requestAnimationFrame(frame);}}
