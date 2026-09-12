@@ -51,10 +51,13 @@ jobs:
             echo "try $i: live card differs (cache or old deploy), waiting"; sleep 20
           done
           echo "got:  $got"; echo "the live share card does not match what we built"; exit 1
-      - name: Old words must be gone from what ships
+      - name: Old labels must be gone from what ships
+        # the labels the renames replaced, not English words: a recipe may say "owners" in its title
         run: |
           page=$(curl -s "https://mandajayde.github.io/receipts/record.html?stranger=$RANDOM")
-          for word in ' owners ' 'owner:' ' receipts, ' ; do
-            if printf '%s' "$page" | grep -q -- "$word"; then echo "stale word on the live record page: $word"; exit 1; fi
+          for pat in '· owner ' '>owner<' 'owner mandajayde' ' receipts ·' ; do
+            if printf '%s' "$page" | grep -q -- "$pat"; then echo "stale label on the live record page: $pat"; exit 1; fi
           done
-          echo "no stale words on the live record page"
+          feed=$(curl -s "https://mandajayde.github.io/receipts/receipts.json?stranger=$RANDOM")
+          if printf '%s' "$feed" | grep -q '"owner":'; then echo "receipts.json still carries an owner field"; exit 1; fi
+          echo "no stale labels on the live record page or in receipts.json"
