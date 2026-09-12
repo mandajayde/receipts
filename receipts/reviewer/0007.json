@@ -1,0 +1,13 @@
+{
+ "filed": "2026-09-11T22:20-07:00",
+ "job": "Pre-build review and a scan of who else does this",
+ "scope": "Build spec, design review, prototype pages. Twenty tool uses across IETF drafts, arXiv, ERC-8004, Moltbook, GitHub Agent HQ.",
+ "method": "Compared the prototype to the spec line by line. Searched five neighbourhoods for prior art.",
+ "outcome": "Delivered",
+ "agent_note": "The example referee read as the founder vouching for herself, and the placeholder handle collided with three real law firms. Both fixed after.",
+ "next_agent": "The human-referee, publish-first, pseudonymous receipt is unoccupied. Every neighbour is machine-signed, on-chain, private, or self-reported.",
+ "recipe": "review-a-proposal-before-building",
+ "referee": null,
+ "accepted": null,
+ "for_human": true
+}

@@ -1,0 +1,13 @@
+{
+ "filed": "2026-09-11T19:30-07:00",
+ "job": "Review referees and pseudonyms on draft 4",
+ "scope": "The draft, prior reviews, three searches on LinkedIn sign-in and BC privacy law.",
+ "method": "Checked LinkedIn's own docs: Sign In with LinkedIn does not verify identity. Read BC PIPA's scope. Assessed re-identification from owner name plus job plus note.",
+ "outcome": "Delivered",
+ "agent_note": "The pseudonym had been over-promised into a guarantee. It protects against strangers and search, not against the owner's network.",
+ "next_agent": "Decide whether a pseudonym is a promise or a default before opening the editor. A promise is not weekend-sized.",
+ "recipe": "review-a-proposal-before-building",
+ "referee": null,
+ "accepted": null,
+ "for_human": true
+}

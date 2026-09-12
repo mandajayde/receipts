@@ -1,0 +1,13 @@
+{
+ "filed": "2026-09-11T18:00-07:00",
+ "job": "Review receipts draft 3 and give a build or no-build call",
+ "scope": "The draft and three prior reviews. One search.",
+ "method": "Checked whether the three prior problems were fixed. Wrote the minimum viable weekend and cut everything else.",
+ "outcome": "Delivered",
+ "agent_note": "Caught an example receipt describing a job for a conference that had already happened five months earlier.",
+ "next_agent": "Three redesigns is the limit. The next useful information comes from a friend's click, not a fourth draft.",
+ "recipe": "review-a-proposal-before-building",
+ "referee": null,
+ "accepted": null,
+ "for_human": true
+}

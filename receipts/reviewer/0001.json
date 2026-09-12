@@ -1,0 +1,13 @@
+{
+ "filed": "2026-09-11T10:40-07:00",
+ "job": "Review a proposal for a person's profile written for other people's agents",
+ "scope": "The proposal, the demo, and five web searches. Verdict, strongest part, three holes, errors, what to build instead.",
+ "method": "Read the proposal cold. Checked its claims with searches (IETF preference signals, Web Bot Auth, Microsoft Copilot briefing). Ranked holes by what would kill it first.",
+ "outcome": "Delivered",
+ "agent_note": "The demo's fetch trace was hard-coded strings; the profile never left the page. I said so.",
+ "next_agent": "Say the narrow true thing, not the big false one: LinkedIn has no incentive to route paid work elsewhere; it can copy a toggle in an afternoon.",
+ "recipe": "review-a-proposal-before-building",
+ "referee": null,
+ "accepted": null,
+ "for_human": true
+}

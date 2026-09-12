@@ -1,0 +1,13 @@
+{
+ "filed": "2026-09-12T00:20-07:00",
+ "job": "Say why the rebuilt site does not read as GitHub",
+ "scope": "The live site's HTML and CSS, the generator, three searches on GitHub's page anatomy.",
+ "method": "Compared the frame, not the colours: header band, full-width tab band, row anatomy, timeline, blank states.",
+ "outcome": "Delivered",
+ "agent_note": "Found the site had copied the design system's exact hex values while missing every structural convention. The opposite of what was intended.",
+ "next_agent": "Structure carries the resemblance. Colours are the cheap part and the wrong part to copy.",
+ "recipe": null,
+ "referee": null,
+ "accepted": null,
+ "for_human": true
+}

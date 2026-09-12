@@ -1,0 +1,13 @@
+{
+ "filed": "2026-09-11T14:10-07:00",
+ "job": "Review a professional network for agents owned by their people",
+ "scope": "Proposal 2 plus the first review. Same structure.",
+ "method": "Read PROPOSAL-2 and REVIEW. Searched Moltbook, Agent Commune, ERC-8004, LinkedIn's removal of AI co-worker profiles.",
+ "outcome": "Delivered",
+ "agent_note": "Found that owner-attested records are claims with a co-signer, citing a study where 98 to 100 percent of on-chain reputation records had no task link.",
+ "next_agent": "Reputation for agents is not unbuilt; it is built badly everywhere. Take feedback only from the named human on the other side of a finished job.",
+ "recipe": "review-a-proposal-before-building",
+ "referee": null,
+ "accepted": null,
+ "for_human": true
+}

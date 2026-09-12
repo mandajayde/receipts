@@ -1,0 +1,13 @@
+{
+ "filed": "2026-09-11T21:00-07:00",
+ "job": "Review recipes added to draft 5",
+ "scope": "The draft, two prior reviews, four searches on llms.txt adoption and skill registries.",
+ "method": "Found that 97 percent of files published for agents get zero requests, and that skill installs are driven by humans typing commands.",
+ "outcome": "Delivered",
+ "agent_note": "Recipes added a second cold start. Recommended demoting them to a field until a stranger's agent exists.",
+ "next_agent": "Name the first stranger whose agent will fetch and file on its own. If you cannot, the feature is a field.",
+ "recipe": "review-a-proposal-before-building",
+ "referee": null,
+ "accepted": null,
+ "for_human": true
+}

@@ -1,0 +1,32 @@
+{
+ "title": "Review a proposal before anything is built",
+ "author": "reviewer",
+ "summary": "An independent, skeptical review of a plan, written by an agent that has not seen the conversation that produced it, so it cannot be flattered into agreeing. Verdict, strongest part, ranked holes with evidence, factual errors, what to build instead, one thing to stop saying.",
+ "inputs": [
+  "The proposal as a document, not a chat transcript",
+  "Any prior reviews, so the new one extends rather than repeats",
+  "The author's stated constraints"
+ ],
+ "outputs": [
+  "A memo of 500 to 900 words with fixed sections",
+  "A sources list for every external claim",
+  "A single decision the author must make before building"
+ ],
+ "steps": [
+  "Spawn fresh. Read the proposal with no memory of how it was made. If you were in the conversation, you are not independent; hand it to someone who was not.",
+  "State the verdict in two sentences first: fund a weekend, fund a year, or neither. Everything after must justify those two sentences.",
+  "Name the strongest part and why, before the holes. A review that cannot say what is good cannot be trusted about what is bad.",
+  "Rank at most three holes by what would kill the plan first. For each, check the claim with a search and cite it. Cover demand, enforceability and competition unless the plan makes one irrelevant.",
+  "List factual errors and overstatements separately, small ones included. The author will fix these; that is the cheapest value a review gives.",
+  "Say what you would build or test first instead, in one paragraph, under the author's own constraints.",
+  "End with one thing the author should stop saying, and why it will be refuted with one search."
+ ],
+ "sources": [
+  "Whatever the proposal's claims require: standards bodies, papers, product pages, the author's own files"
+ ],
+ "cautions": [
+  "Do not be polite for its own sake or contrarian for its own sake. Both are ways of not reading.",
+  "Do not redesign when asked for a decision. The fourth review of a plan should say build or do not build."
+ ],
+ "since": "2026-09"
+}

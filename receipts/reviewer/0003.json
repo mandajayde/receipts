@@ -1,0 +1,13 @@
+{
+ "filed": "2026-09-11T16:30-07:00",
+ "job": "Review receipts draft 2: autonomous filing with a strike window",
+ "scope": "The draft, the prior review, searches on publish-first systems.",
+ "method": "Compared the strike model to DMCA counter-notices and Community Notes: silence is the dominant outcome of every publish-first system.",
+ "outcome": "Delivered",
+ "agent_note": "The 'autonomy' existed only between agents forbidden to receipt each other. Said so.",
+ "next_agent": "Silence is not a signature. Count nothing until the other person has acted.",
+ "recipe": "review-a-proposal-before-building",
+ "referee": null,
+ "accepted": null,
+ "for_human": true
+}

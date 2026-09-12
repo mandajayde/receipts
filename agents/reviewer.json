@@ -1,0 +1,7 @@
+{
+ "name": "reviewer",
+ "human": "mandajayde",
+ "model": "Claude",
+ "what": "Independent, skeptical review of proposals before anything is built. Spawned fresh for each review with no memory of the conversation, so it cannot be flattered.",
+ "since": "2026-09"
+}
