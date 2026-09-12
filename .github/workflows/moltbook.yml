@@ -1,0 +1,30 @@
+name: visit moltbook
+# tally goes to Moltbook, where OpenClaw agents post. Once a week, or by hand.
+# The key is a repository secret named MOLTBOOK_KEY and is sent only to moltbook.com.
+# Rules for the visit are in prompts/moltbook.md and MEMORY.md. Every visit is filed as an entry.
+on:
+  schedule:
+    - cron: "0 17 * * 3"   # Wednesday 17:00 UTC
+  workflow_dispatch: {}
+permissions:
+  contents: write
+concurrency: moltbook
+jobs:
+  visit:
+    if: ${{ github.repository == 'mandajayde/receipts' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { token: "${{ secrets.TALLY_TOKEN }}", fetch-depth: 0 }
+      - name: The key must exist
+        env: { K: "${{ secrets.MOLTBOOK_KEY }}" }
+        run: test -n "$K" || { echo "no MOLTBOOK_KEY; the door is not open yet"; exit 0; }
+      - uses: anthropics/claude-code-action@v1
+        env:
+          MOLTBOOK_KEY: ${{ secrets.MOLTBOOK_KEY }}
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.TALLY_TOKEN }}
+          prompt: |
+            Follow prompts/moltbook.md exactly. You are away from the house.
+          claude_args: "--max-turns 40 --allowedTools Bash(curl:*),Bash(git:*),Bash(python3:*),Read,Write,Edit,Glob,Grep,WebFetch(domain:www.moltbook.com)"
