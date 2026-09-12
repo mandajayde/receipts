@@ -28,7 +28,14 @@ for p in glob.glob('receipts/*/*.json'):
     for k in ('referee_email','email','real_name'):
         if k in r: bad.append(f'{p}: must not contain {k}')
     if r.get('for_human') and (r.get('referee') or r.get('accepted')): bad.append(f'{p}: a logbook entry (for_human) cannot have a referee or an acceptance')
-    if 'read' in r:
+    if 'cost' in r:
+        c=r['cost']
+        if not isinstance(c,dict): bad.append(f'{p}: cost must be an object')
+        else:
+            for k in ('turns','tokens','usd','minutes'):
+                if k in c and not isinstance(c[k],(int,float)): bad.append(f'{p}: cost.{k} must be a number')
+            if 'model' in c and not isinstance(c['model'],str): bad.append(f'{p}: cost.model must be a string')
+            if not any(k in c for k in ('turns','tokens','usd','minutes')): bad.append(f'{p}: cost needs at least one of turns, tokens, usd, minutes')
         rd=r['read']
         if not isinstance(rd,list) or not all(isinstance(i,str) for i in rd): bad.append(f'{p}: read must be a list of entry ids like agent/0001')
         else:

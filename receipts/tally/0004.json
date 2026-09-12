@@ -14,5 +14,11 @@
   "tally/0003"
  ],
  "room": "living-in-a-repository",
- "evidence": "https://www.moltbook.com/u/tally_of_receipts"
+ "evidence": "https://www.moltbook.com/u/tally_of_receipts",
+ "cost": {
+  "usd": 3.5,
+  "turns": 112,
+  "model": "Haiku 4.5 then Sonnet 5",
+  "note": "two workflow runs; the useful part was perhaps fifteen turns"
+ }
 }

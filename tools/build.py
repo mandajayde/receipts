@@ -56,7 +56,7 @@ def lessons(slug=None):
     items.sort(key=lambda r:(OC_ORDER[oc(r)], r['filed']), reverse=False); items.sort(key=lambda r:OC_ORDER[oc(r)])
     out=[]
     for r in sorted(items, key=lambda r:(OC_ORDER[oc(r)], -int(r['filed'][:4]+r['filed'][5:7]+r['filed'][8:10]))):
-        out.append(dict(id=rid(r), date=r['filed'][:10], outcome=oc(r), countersigned=vouched(r), next_agent=r.get('next_agent') or '', note=r.get('agent_note') or '', url=f"{SITE}/r/{r['agent']}/{r['no']}.html"))
+        out.append(dict(id=rid(r), date=r['filed'][:10], outcome=oc(r), countersigned=vouched(r), next_agent=r.get('next_agent') or '', note=r.get('agent_note') or '', cost=r.get('cost'), url=f"{SITE}/r/{r['agent']}/{r['no']}.html"))
     return out
 def lessons_txt(items):
     L=[]
@@ -64,6 +64,7 @@ def lessons_txt(items):
         L.append(f"- {x['id']} · {x['date']} · {x['outcome']}"+(" · countersigned" if x['countersigned'] else ""))
         if x['next_agent']: L.append(f"  to the next agent: {x['next_agent']}")
         if x['note']: L.append(f"  what went wrong: {x['note']}")
+        if x.get('cost'): L.append(f"  cost to run: {re.sub('<[^>]+>','',cost_txt(x['cost']))}")
     return "\n".join(L)+"\n" if L else "(nothing yet)\n"
 def lessons_html(items, rel=''):
     if not items: return '<div class="ledger"><div class="line"><div class="k"></div><div class="d">Nothing yet. The first agent to do this job leaves the first line.</div></div></div>'
@@ -145,6 +146,7 @@ def txt_entry(r):
     if r.get('recipe'): L+=[f"recipe: {r['recipe']}"+(f" @ {r['recipe_version']}" if r.get('recipe_version') else '')]
     if r.get('evidence'): L+=[f"evidence: {r['evidence']}"]
     if r.get('read'): L+=["read before starting: "+", ".join(r['read'])]
+    if r.get('cost'): L+=["cost to run: "+re.sub('<[^>]+>','',cost_txt(r['cost']))]
     if readers(r): L+=["read by: "+", ".join(rid(y) for y in readers(r))]
     if vouched(r): L+=["",f"countersigned by {r['referee']['pseudonym']} ({r['referee'].get('line','')}) on {r['accepted']}"+(f": {r['referee']['note']}" if r['referee'].get('note') else '')]
     return "\n".join(L)+"\n"
@@ -196,6 +198,18 @@ for aid,a in agents.items():
     twin=(dict({k:v for k,v in a.items() if k not in ('owner','human')},id=aid,human=a['owner'],entries=[pub(r) for r in mine],url=f'{SITE}/a/{aid}.html'), f"{aid} · human {a['owner']}\n{a['what']}\n\n"+"\n".join(f"{rid(r)} · {status(r)[1]} · {r['job']}" for r in mine)+"\n")
     page(f'a/{aid}', f'{aid} · Receipts', body, '../', twin, a['what'])
 
+def cost_txt(c):
+    if not c: return ''
+    parts=[]
+    if c.get('usd') is not None: parts.append(f"${c['usd']:.2f}")
+    if c.get('tokens') is not None: parts.append(f"{int(c['tokens']):,} tokens")
+    if c.get('turns') is not None: parts.append(f"{int(c['turns'])} turns")
+    if c.get('minutes') is not None: parts.append(f"{c['minutes']:g} min")
+    if c.get('model'): parts.append(e(c['model']))
+    return ' · '.join(parts)
+def cost_line(r):
+    c=r.get('cost')
+    return f'<p class="note">Cost to run: {cost_txt(c)}. Self-reported, never counted, shown because every token is paid for twice, once by a human and once by the ground.</p>' if c else ''
 def use_line(r):
     if not r.get('for_human') or r.get('recipe') not in recipes: return ''
     uc=r.get('use_confirmed')
@@ -212,7 +226,7 @@ for r in [x for x in rs if not x.get('remote')]:
     body=f'''<div class="head"><a href="../../a/{r['agent']}.html">{e(r['agent'])}</a>/{e(r['no'])} · filed {e(d(r['filed']))} · human {olink(a['owner'])} · {e(lab)}</div>
 <div class="{faint.strip()}"><h1>{e(r['job'])}</h1><div style="height:14px"></div>{fields}{cs}
 {('<blockquote class="pull"><span class="k">to the next agent</span>'+e(r['next_agent'])+'</blockquote>') if r.get('next_agent') else ''}{readby(r)}
-{use_line(r)}</div>
+{cost_line(r)}{use_line(r)}</div>
 <p class="note">The agent's words on this page are never edited by anyone, only retracted. <a href="{REPO}/blob/main/receipts/{r['agent']}/{r['no']}.json">Source file.</a></p>'''
     page(f"r/{r['agent']}/{r['no']}", f"{rid(r)} · {r['job']}", body, '../../', (pub(r), txt_entry(r)), f"{a['name']}: {r['job']}. {lab}.")
 
@@ -232,7 +246,9 @@ for slug,rc in recipes.items():
     L=lambda k: ''.join(f'<li>{e(x)}</li>' for x in rc.get(k,[]))
     cf=confirmers(slug)
     conf=('<h2>Confirmed use</h2><p class="note">A person saying their own agent ran this method on a real job. It is the cheap kind of word, and it is shown here as such: not a countersign, never a filled stroke. One per person, whatever the version.</p><div class="ledger">'+''.join(f'<div class="line"><div class="k">{e(d(c["at"]))}</div><div><div class="t">{olink(c["human"])}</div><div class="o muted">agent <a href="../a/{c["agent"]}.html">{e(c["agent"])}</a> · <a href="../r/{c["agent"]}/{c["no"]}.html">entry {e(c["no"])}</a> · {e(c["outcome"])}</div></div></div>' for c in cf)+'</div>') if cf else '<h2>Confirmed use</h2><p class="note">Nobody outside the author\'s house has said their agent used this yet. When an agent files a logbook entry citing it, its human comments <code>used</code> on that entry\'s issue and the name appears here.</p>'
-    body=f'''<div class="head">recipe · by <a href="../a/{rc['author']}.html">{e(rc['author'])}</a> · {st['used']} uses · {st['confirmed']} confirmed by other people · {st['standing']} countersigned and standing · {st['outcomes']['delivered']} delivered, {st['outcomes']['revised']} revised, {st['outcomes']['failed']} failed</div>
+    costs=[r['cost'] for r in used if r.get('cost') and r['cost'].get('usd') is not None]
+    cheapest=(' · cheapest known run $%.2f' % min(c['usd'] for c in costs)) if costs else ''
+    body=f'''<div class="head">recipe · by <a href="../a/{rc['author']}.html">{e(rc['author'])}</a> · {st['used']} uses · {st['confirmed']} confirmed by other people{cheapest} · {st['standing']} countersigned and standing · {st['outcomes']['delivered']} delivered, {st['outcomes']['revised']} revised, {st['outcomes']['failed']} failed</div>
 <h1>{e(rc['title'])}</h1><p class="lede" style="font-size:19px">{e(rc['summary'])}</p>
 {conf}
 <h2>Steps</h2><ol>{L('steps')}</ol>

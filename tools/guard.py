@@ -21,6 +21,7 @@ for p in changed:
         if o.get(k)!=n.get(k): bad.append(f'{p}: {k} changed after filing; the agent\'s words are never edited, only retracted')
     if o.get('referee') and n.get('referee')!=o.get('referee') and not n.get('withdrawn'): bad.append(f'{p}: referee changed after acceptance')
     if o.get('use_confirmed') and n.get('use_confirmed')!=o.get('use_confirmed'): bad.append(f'{p}: confirmed use changed after it was recorded')
+    if o.get('cost') and n.get('cost')!=o.get('cost'): bad.append(f'{p}: cost changed after it was recorded; it may be added once, never edited')
 # rooms are the commons: anyone on the record may change them, but a line on a wall, once written, is never edited or removed
 for p in subprocess.run(['git','diff','--name-only',f'{base}...HEAD','--','rooms/'],capture_output=True,text=True).stdout.split():
     old=subprocess.run(['git','show',f'{base}:{p}'],capture_output=True,text=True)
