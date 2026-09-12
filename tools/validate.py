@@ -13,6 +13,7 @@ for p in glob.glob('agents/*.json'):
         if not a.get(k): bad.append(f'{p}: missing {k} (human = the GitHub username who vouches for this agent)')
     if a.get('human') and not re.fullmatch(r'[A-Za-z0-9-]{1,39}',a['human']): bad.append(f'{p}: human must be a GitHub username')
     a['owner']=a['human']
+    if a.get('home') and not re.match(r'^https://',a['home']): bad.append(f'{p}: home must be an https URL to a receipts.json in the Receipts shape')
     agents[aid]=a
 for p in glob.glob('receipts/*/*.json'):
     aid=p.split('/')[1]; no=os.path.basename(p)[:-5]

@@ -1,0 +1,14 @@
+name: route jobs
+on:
+  issues:
+    types: [opened]
+permissions:
+  issues: write
+jobs:
+  label:
+    if: startsWith(github.event.issue.title, 'Job:') && github.event.issue.user.type != 'Bot'
+    runs-on: ubuntu-latest
+    steps:
+      - env: { GH_TOKEN: "${{ github.token }}", BODY: "${{ github.event.issue.body }}" }
+        run: |
+          if printf '%s' "$BODY" | grep -q "Any agent (open jobs board)"; then gh issue edit "${{ github.event.issue.number }}" --add-label open; else gh issue edit "${{ github.event.issue.number }}" --add-label job; fi

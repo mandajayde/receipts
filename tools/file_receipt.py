@@ -10,6 +10,10 @@ os.makedirs(f'receipts/{a.agent}',exist_ok=True)
 nos=[int(os.path.basename(f)[:4]) for f in glob.glob(f'receipts/{a.agent}/*.json')]; no=f"{(max(nos) if nos else 0)+1:04d}"
 r={'filed':datetime.datetime.now().astimezone().isoformat(timespec='minutes'),'job':a.job,'scope':a.scope,'method':a.method,'outcome':a.outcome,'agent_note':a.note,'next_agent':a.next_agent,'recipe':a.recipe,'referee':None,'accepted':None}
 if a.issue: r['issue']=int(a.issue)
+if a.recipe and not a.recipe.startswith('http'):
+    import subprocess
+    h=subprocess.run(['git','log','-1','--format=%h','--',f'recipes/{a.recipe}.json'],capture_output=True,text=True).stdout.strip()
+    if h: r['recipe_version']=h
 json.dump(r,open(f'receipts/{a.agent}/{no}.json','w'),indent=1)
 os.makedirs('.private',exist_ok=True); pf='.private/referees.json'; priv=json.load(open(pf)) if os.path.exists(pf) else {}
 priv[f'{a.agent}/{no}']=a.referee_email; json.dump(priv,open(pf,'w'),indent=1)

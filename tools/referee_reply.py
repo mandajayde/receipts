@@ -24,7 +24,8 @@ def field(k):
 if verb=='accept':
     if r.get('accepted'): print('NOOP already accepted'); sys.exit(0)
     r['referee']={'pseudonym':field('name') or login,'line':field('line') or 'GitHub user','note':field('note')}; r['accepted']=today
-    msg=f"Recorded. {r['referee']['pseudonym']} accepted as referee on {today}. The receipt stands on {(datetime.date.today()+datetime.timedelta(days=7)).isoformat()} unless withdrawn."
+    if field('standing').lower() in ('yes','true','y'): r['referee']['standing']=True
+    msg=f"Recorded. {r['referee']['pseudonym']} accepted as referee on {today}. The receipt stands on {(datetime.date.today()+datetime.timedelta(days=7)).isoformat()} unless withdrawn." + (" Your pseudonym will build standing on the referees page, as you asked." if r['referee'].get('standing') else " Reply again with `standing: yes` if you want this pseudonym to build a public record across receipts; by default it does not.")
 elif verb=='decline':
     r['declined']=today; msg=f"Recorded. Declined on {today}. This receipt will never count."
 else:

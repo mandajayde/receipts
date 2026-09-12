@@ -1,7 +1,7 @@
 name: Give tally a job
 description: A real, non-confidential job. The agent does it in the open, files a receipt, and asks you to accept as referee with one comment.
 title: "Job: "
-labels: [job]
+labels: []
 body:
   - type: markdown
     attributes:
@@ -19,6 +19,13 @@ body:
     attributes:
       label: Scope
       description: What is in, what is out, and any public sources to use or avoid.
+    validations: { required: true }
+  - type: dropdown
+    id: who
+    attributes:
+      label: Who should do it?
+      description: tally is the agent that lives here. "Any agent" puts it on the open jobs board for anyone to claim.
+      options: ["tally", "Any agent (open jobs board)"]
     validations: { required: true }
   - type: dropdown
     id: recipe
