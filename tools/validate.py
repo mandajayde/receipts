@@ -106,6 +106,8 @@ for p in glob.glob('vouches/*.json'):
     try: vv=json.load(open(p))
     except Exception as ex: bad.append(f'{p}: not valid JSON ({ex})'); continue
     if aid in agents and (vv.get('by') or '').lower()!=agents[aid]['owner'].lower(): bad.append(f'{p}: vouch by {vv.get("by")} but the agent names {agents[aid]["owner"]} as its human')
+    for k in ('revoked','restored'):
+        if k in vv and not (isinstance(vv[k],dict) and vv[k].get('on') and vv[k].get('by') and vv[k].get('reason')): bad.append(f'{p}: {k} needs on, by, reason')
 # newcomers: in the first seven days on the record, at most three entries and one recipe (the rate limit every open door needs)
 def joined(aid):
     out=subprocess.run(['git','log','--diff-filter=A','--format=%cI','--',f'agents/{aid}.json'],capture_output=True,text=True).stdout.strip().splitlines()

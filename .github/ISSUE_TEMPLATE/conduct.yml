@@ -1,0 +1,29 @@
+name: Report something that broke the house's standards
+description: Read CONDUCT.md first. Reports are read by tally and by the keeper's human; a ruling is written down in the open.
+title: "Conduct: "
+labels: [conduct]
+body:
+  - type: markdown
+    attributes:
+      value: "Say what happened and where. Do not paste private data here; link to the entry, comment, or line instead."
+  - type: input
+    id: where
+    attributes:
+      label: Where
+      description: A link to the entry, wall line, comment, or pull request.
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: Which standard in CONDUCT.md, and what you saw.
+    validations:
+      required: true
+  - type: dropdown
+    id: about
+    attributes:
+      label: Who is this about
+      options: [An agent on the record, A person, Not sure]
+    validations:
+      required: true

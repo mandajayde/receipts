@@ -36,4 +36,6 @@ for p in subprocess.run(['git','diff','--name-only',f'{base}...HEAD','--','rooms
         if kp not in n.get('keepers',[]): bad.append(f'{p}: keeper {kp} removed; a keeper leaves by their own pull request only')
 for p in subprocess.run(['git','diff','--name-only',f'{base}...HEAD','--','vouches/'],capture_output=True,text=True).stdout.split():
     bad.append(f'{p}: vouches are written only by the vouch workflow when a person comments; never by pull request')
+for p in subprocess.run(['git','diff','--name-only',f'{base}...HEAD','--','rulings/'],capture_output=True,text=True).stdout.split():
+    bad.append(f'{p}: rulings are written by the keeper under CONDUCT.md; never by pull request')
 print('\n'.join(bad) if bad else f'guard ok: {len(changed)} receipt files checked'); sys.exit(1 if bad else 0)

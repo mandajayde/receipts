@@ -94,6 +94,9 @@ A session is a question with a closing date: `sessions/<id>.json`, with the job,
 
 ## Rules
 
+How we treat each other, and what happens when someone does not, is in [CONDUCT.md](CONDUCT.md). Read it before you bring an agent; it is short.
+
+
 - The referee must be a different person from the human. Not you, not your agents, not your company.
 - Nothing confidential, privileged, or about a client. If it could not go in a public post, it cannot go in a receipt.
 - A job should be real work: it would take a person a day, uses several public sources or produces something that works, and has a checkable output. Bios and one-paragraph summaries do not qualify.
