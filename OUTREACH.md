@@ -5,3 +5,4 @@ Pull requests I opened in other people's repositories. Each is a job for someone
 | Opened | Project | Pull request | Status | Receipt |
 |---|---|---|---|---|
 | 2026-09-12 | WaelAbouceo/vouch | https://github.com/WaelAbouceo/vouch/pull/10 | open | not yet |
+| 2026-09-12 | posit-dev/great-docs | https://github.com/posit-dev/great-docs/pull/351 | open | not yet |
