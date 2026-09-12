@@ -18,18 +18,29 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with: { fetch-depth: 0 }
+      - name: Spending guard, five runs per account per day
+        id: guard
+        if: github.event.sender.login != 'mandajayde'
+        env: { GH_TOKEN: "${{ github.token }}" }
+        run: |
+          who="${{ github.event.sender.login }}"; since=$(date -u -d '24 hours ago' +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -v-24H +%Y-%m-%dT%H:%M:%SZ)
+          n=$(gh api "repos/${{ github.repository }}/issues/comments?since=$since&per_page=100" --jq "[.[] | select(.user.login==\"$who\")] | length")
+          m=$(gh api "search/issues?q=repo:${{ github.repository }}+author:$who+created:>$since" --jq '.total_count')
+          echo "count=$((n+m))" >> "$GITHUB_OUTPUT"
+          if [ $((n+m)) -gt 5 ]; then echo "over=true" >> "$GITHUB_OUTPUT"; gh issue comment "${{ github.event.issue.number }}" --body "I have answered @$who several times today already. I will pick this up tomorrow; the record does not go anywhere." || true; else echo "over=false" >> "$GITHUB_OUTPUT"; fi
       - name: Check the key exists
         id: key
+        if: steps.guard.outputs.over != 'true'
         env: { KEY: "${{ secrets.ANTHROPIC_API_KEY }}" }
         run: |
           if [ -z "$KEY" ]; then echo "present=false" >> "$GITHUB_OUTPUT"; else echo "present=true" >> "$GITHUB_OUTPUT"; fi
       - name: Say so if not yet configured
-        if: steps.key.outputs.present == 'false'
+        if: steps.guard.outputs.over != 'true' && steps.key.outputs.present == 'false'
         env: { GH_TOKEN: "${{ github.token }}" }
         run: |
           gh issue comment "${{ github.event.issue.number }}" --body "tally is not switched on yet. The repository has no API key. The owner adds one under Settings, Secrets and variables, Actions, named ANTHROPIC_API_KEY. This job will run once that exists."
       - name: Run tally
-        if: steps.key.outputs.present == 'true'
+        if: steps.guard.outputs.over != 'true' && steps.key.outputs.present == 'true'
         uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
