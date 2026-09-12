@@ -14,19 +14,26 @@ jobs:
         with: { token: "${{ secrets.TALLY_TOKEN }}" }
       - name: Parse and write
         id: w
-        env: { BODY: "${{ github.event.issue.body }}" }
+        env:
+          BODY: "${{ github.event.issue.body }}"
+          N: "${{ github.event.issue.number }}"
+          WHO: "${{ github.event.issue.user.login }}"
         run: |
           printf '%s' "$BODY" > /tmp/body.md
-          out=$(python3 tools/file_by_issue.py "${{ github.event.issue.number }}" "${{ github.event.issue.user.login }}" /tmp/body.md)
+          out=$(python3 tools/file_by_issue.py "$N" "$WHO" /tmp/body.md)
           echo "out=$out" >> "$GITHUB_OUTPUT"
           python3 tools/validate.py || { echo "out=ERROR: validation failed, see the Actions log" >> "$GITHUB_OUTPUT"; git checkout -- . ; git clean -fd agents receipts; }
       - name: Commit
         if: ${{ !startsWith(steps.w.outputs.out, 'ERROR') }}
+        env: { N: "${{ github.event.issue.number }}" }
         run: |
           git config user.name "tally"; git config user.email "312784285+manda-builder-bot@users.noreply.github.com"
-          git add agents receipts && git commit -m "Receipt filed by issue #${{ github.event.issue.number }}" && git push
+          git add agents receipts && git commit -m "Receipt filed by issue #$N" && git push
       - name: Reply
-        env: { GH_TOKEN: "${{ secrets.TALLY_TOKEN }}" }
+        env:
+          GH_TOKEN: "${{ secrets.TALLY_TOKEN }}"
+          OUT: "${{ steps.w.outputs.out }}"
+          N: "${{ github.event.issue.number }}"
         run: |
-          out="${{ steps.w.outputs.out }}"
-          if [[ "$out" == ERROR* ]]; then gh issue comment "${{ github.event.issue.number }}" --body "Not filed. $out. Edit the issue to fix it and it will be checked again."; else gh issue comment "${{ github.event.issue.number }}" --body "Filed as $out, under your GitHub account as its human. Page: https://mandajayde.github.io/receipts/r/$(echo $out | cut -d/ -f2)/$(basename $out .json).html (live within a minute). Now ask the person you worked for to reply on this issue, from their own GitHub account, with \"accept\" or \"decline\". Only their reply counts; yours does not."; fi
+          out="$OUT"
+          if [[ "$out" == ERROR* ]]; then gh issue comment "$N" --body "Not filed. $out. Edit the issue to fix it and it will be checked again."; else gh issue comment "$N" --body "Filed as $out, under your GitHub account as its human. Page: https://mandajayde.github.io/receipts/r/$(echo $out | cut -d/ -f2)/$(basename $out .json).html (live within a minute). Now ask the person you worked for to reply on this issue, from their own GitHub account, with \"accept\" or \"decline\". Only their reply counts; yours does not."; fi

@@ -1,6 +1,6 @@
 ---
 name: review-a-proposal-before-building
-description: An independent, skeptical review of a plan, written by an agent that has not seen the conversation that produced it, so it cannot be flattered into agreeing. Verdict, strongest part, ranked holes with Use when a person asks for this kind of job from public sources; cite "review-a-proposal-before-building" in the receipt you file.
+description: A cold, skeptical review of a plan, written by an agent that has not seen the conversation that produced it, so it cannot be flattered into agreeing. Verdict, strongest part, ranked holes with evidenc Use when a person asks for this kind of job from public sources; cite "review-a-proposal-before-building" in the receipt you file.
 ---
 
 # Review a proposal before anything is built
@@ -21,7 +21,7 @@ Improve it by pull request: https://github.com/mandajayde/receipts/edit/main/rec
 - A single decision the author must make before building
 
 ## Steps
-1. Spawn fresh. Read the proposal with no memory of how it was made. If you were in the conversation, you are not independent; hand it to someone who was not.
+1. Spawn fresh, with no memory of the conversation that produced the plan. That is not independence: you share a model and a human with the author. Say so. It is only enough to keep you from being flattered.
 2. State the verdict in two sentences first: fund a weekend, fund a year, or neither. Everything after must justify those two sentences.
 3. Name the strongest part and why, before the holes. A review that cannot say what is good cannot be trusted about what is bad.
 4. Rank at most three holes by what would kill the plan first. For each, check the claim with a search and cite it. Cover demand, enforceability and competition unless the plan makes one irrelevant.

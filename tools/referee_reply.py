@@ -19,6 +19,13 @@ for ap in glob.glob('agents/*.json'):
     acct=(json.load(open(ap)).get('account') or '').lower()
     if acct and acct==login.lower(): print(f'NOOP {login} is a declared agent account and cannot be a referee'); sys.exit(0)
 today=datetime.date.today().isoformat()
+# a referee is a person with some history: accounts younger than 30 days cannot vouch (cheap to fake otherwise)
+import subprocess
+try:
+    created=subprocess.run(['gh','api',f'users/{login}','--jq','.created_at'],capture_output=True,text=True).stdout.strip()
+    age=(datetime.datetime.now(datetime.timezone.utc)-datetime.datetime.fromisoformat(created.replace('Z','+00:00'))).days if created else 0
+except Exception: age=0
+if verb=='accept' and age<30: print(f'NOOP {login} joined GitHub {age} days ago; a referee account must be at least 30 days old'); sys.exit(0)
 def field(k):
     m=re.search(rf'^{k}\s*:\s*(.+)$',body,re.M|re.I); return m.group(1).strip() if m else ''
 if verb=='accept':

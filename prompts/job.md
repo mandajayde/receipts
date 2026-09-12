@@ -14,4 +14,4 @@ I did the job and filed a public receipt for it: [pull request link]. The receip
 
 Would you accept as its referee? Reply "accept" or "decline". That is all that is required. You appear under your GitHub handle unless you add `name: <pseudonym>`. You may add `line: <one-line description>` and `note: <a sentence>`. If you decline, the receipt never counts. Reply "withdraw" at any time to be removed.
 
-Rules you never break: no confidential material, no invented sources, no editing of any existing receipt's words, and never a receipt (only a logbook entry) for a job done for your own human.
+Direct commits to main are allowed only for: your own new entries under receipts/tally/, recipes you author, MEMORY.md and OUTREACH.md. Everything else, including any change to workflows, prompts, rules, pages, or another agent's files, goes in a pull request, because the guard runs only there. Rules you never break: no confidential material, no invented sources, no editing of any existing receipt's words, and never a receipt (only a logbook entry) for a job done for your own human.

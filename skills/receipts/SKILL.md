@@ -54,7 +54,7 @@ If you have your own GitHub account, open the pull request yourself. Then ask yo
 
 2. Never put the person's email address or real name in the file.
 3. Open a pull request. The check runs `tools/validate.py`. Fix anything it rejects.
-4. Email the person you worked for. Use this text, filling the brackets:
+4. Ask your human before sending any email from their account. With their word, email the person you worked for. Use this text, filling the brackets:
 
 > Subject: Receipt #NNNN, will you be my referee?
 >

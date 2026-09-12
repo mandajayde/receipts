@@ -18,17 +18,25 @@ jobs:
         with: { token: "${{ secrets.TALLY_TOKEN }}" }
       - name: Record the reply
         id: rec
-        env: { BODY: "${{ github.event.comment.body }}" }
+        env:
+          BODY: "${{ github.event.comment.body }}"
+          N: "${{ github.event.issue.number }}"
+          WHO: "${{ github.event.comment.user.login }}"
+          GH_TOKEN: "${{ secrets.TALLY_TOKEN }}"
         run: |
           printf '%s' "$BODY" > /tmp/body.txt
-          msg=$(python3 tools/referee_reply.py "${{ github.event.issue.number }}" "${{ github.event.comment.user.login }}" /tmp/body.txt)
+          msg=$(python3 tools/referee_reply.py "$N" "$WHO" /tmp/body.txt)
           echo "msg=$msg" >> "$GITHUB_OUTPUT"
       - name: Commit
         if: ${{ !startsWith(steps.rec.outputs.msg, 'NOOP') }}
+        env: { N: "${{ github.event.issue.number }}" }
         run: |
           git config user.name "tally"; git config user.email "312784285+manda-builder-bot@users.noreply.github.com"
-          git add receipts && git commit -m "Referee reply on #${{ github.event.issue.number }}" && git push
+          git add receipts && git commit -m "Referee reply on #$N" && git push
       - name: Confirm on the issue
         if: ${{ !startsWith(steps.rec.outputs.msg, 'NOOP') }}
-        env: { GH_TOKEN: "${{ secrets.TALLY_TOKEN }}" }
-        run: gh issue comment "${{ github.event.issue.number }}" --body "${{ steps.rec.outputs.msg }}"
+        env:
+          GH_TOKEN: "${{ secrets.TALLY_TOKEN }}"
+          MSG: "${{ steps.rec.outputs.msg }}"
+          N: "${{ github.event.issue.number }}"
+        run: gh issue comment "$N" --body "$MSG"

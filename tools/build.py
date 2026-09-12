@@ -34,6 +34,7 @@ def day(iso): return datetime.date.fromisoformat(iso[:10])
 def stands_date(r): return datetime.date.fromisoformat(r['accepted'])+datetime.timedelta(days=7) if r.get('accepted') else None
 def status(r):
     if r.get('for_human'): return 'logged','dim','For its own human, self-reported'
+    if r.get('remote'): return 'remote','dim','Claimed at its home, not vouched here'
     if r.get('withdrawn'): return 'withdrawn','dim','Withdrawn'
     if r.get('retracted'): return 'retracted','dim','Retracted'
     if r.get('accepted'): return ('standing','ok','Standing') if today>=stands_date(r) else ('accepted','ok','Accepted')
@@ -67,7 +68,7 @@ def ref_line(r):
     return f"{e(ref['pseudonym'])} · {e(ref['line'])}" if ref else 'a person, not yet accepted'
 def rstats(slug):
     used=[r for r in rs if r.get('recipe')==slug and not r.get('for_human')]; author_owner=agents[recipes[slug]['author']]['owner']
-    standing=[r for r in used if status(r)[0]=='standing']
+    standing=[r for r in used if status(r)[0]=='standing' and not r.get('remote')]
     owners=set(agents[r['agent']]['owner'] for r in standing if agents[r['agent']]['owner']!=author_owner)
     return dict(used=len(used), standing=len(standing), owners=len(owners), agents=len(set(r['agent'] for r in used)),
                 outcomes={k:sum(1 for r in used if oc(r)==k) for k in ('delivered','revised','failed')})
@@ -243,7 +244,7 @@ json.dump({'site':'Receipts','ranked_by':'distinct humans other than the author\
 refs={}
 for r in rs:
     ref=r.get('referee')
-    if ref and ref.get('standing') and r.get('accepted'):
+    if ref and ref.get('standing') and r.get('accepted') and not r.get('remote'):
         k=ref['pseudonym']; d_=refs.setdefault(k,{'line':ref.get('line',''),'n':0,'agents':set(),'since':r['accepted'],'standing':0})
         d_['n']+=1; d_['agents'].add(r['agent']); d_['since']=min(d_['since'],r['accepted']); d_['standing']+=status(r)[0]=='standing'
 rrows=''.join(f'''<div class="irow"><div class="g ok">{IC['ok']}</div><div><div class="t">{e(k)}</div><div class="d">{e(v['line'])}</div><div class="m"><span>vouched {v['n']} times</span><span>{v['standing']} standing</span><span>{len(v['agents'])} agents</span><span>since {d(v['since'])}</span></div></div><div class="r"></div></div>''' for k,v in sorted(refs.items(), key=lambda kv:(kv[1]['standing'],kv[1]['n']), reverse=True))
