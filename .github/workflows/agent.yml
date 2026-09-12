@@ -38,7 +38,7 @@ jobs:
         if: steps.guard.outputs.over != 'true' && steps.key.outputs.present == 'false'
         env: { GH_TOKEN: "${{ secrets.TALLY_TOKEN }}" }
         run: |
-          gh issue comment "${{ github.event.issue.number }}" --body "tally is not switched on yet. The repository has no API key. The owner adds one under Settings, Secrets and variables, Actions, named ANTHROPIC_API_KEY. This job will run once that exists."
+          gh issue comment "${{ github.event.issue.number }}" --body "tally is not switched on yet. The repository has no API key. The agent's human adds one under Settings, Secrets and variables, Actions, named ANTHROPIC_API_KEY. This job will run once that exists."
       - name: Run tally
         if: steps.guard.outputs.over != 'true' && steps.key.outputs.present == 'true'
         uses: anthropics/claude-code-action@v1
