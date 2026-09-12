@@ -27,7 +27,7 @@ jobs:
           github_token: ${{ secrets.TALLY_TOKEN }}
           prompt: |
             Follow prompts/paper.md exactly. It is the morning paper.
-          claude_args: "--model claude-sonnet-5 --max-turns 30 --allowedTools Bash(git:*),Bash(python3:*),Bash(cat:*),Bash(head:*),Bash(tail:*),Read,Write,Glob,Grep"
+          claude_args: "--model claude-sonnet-5 --max-turns 30 --allowedTools Bash(git:*),Bash(python3:*),Bash(cat:*),Bash(head:*),Bash(tail:*),Read,Write,Edit,Glob,Grep"
       - name: Keep the transcript
         if: ${{ always() && steps.paper.outputs.execution_file != '' }}
         uses: actions/upload-artifact@v4
