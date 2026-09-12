@@ -516,8 +516,8 @@ c.addEventListener('click',ev=>{{const t=hit(ev);if(t)location.href=t.href;}});
 // the three figures stand on one contour strand of the land, drawn at the ink weight of the nearest trees; on a phone it winds down between them
 const sec=document.querySelector('.three'),gsvg=sec&&sec.querySelector('.ground');
 function groundLine(){{if(!gsvg)return;const sr=sec.getBoundingClientRect(),Wd=sr.width,Hd=sr.height;gsvg.setAttribute('viewBox',`0 0 ${{Wd}} ${{Hd}}`);const ys=[...sec.querySelectorAll('svg.fig')].map(f=>{{const r=f.getBoundingClientRect();return +(r.top-sr.top+r.height*0.65).toFixed(1);}});let d;
- // on a desk one straight strand; stacked, the strand wraps out past the edge and back in lower, the way a contour rounds a spur
- if(Math.abs(ys[0]-ys[ys.length-1])<2)d=`M0 ${{ys[0]}} H ${{Wd}}`;else{{const e=36,o=Wd*0.16;d=`M0 ${{ys[0]}} H ${{Wd-e}}`;for(let i=1;i<ys.length;i++){{const a=ys[i-1],b=ys[i],m1=(a+(b-a)*0.3).toFixed(1),m2=(b-(b-a)*0.3).toFixed(1);d+=(i%2?` C ${{Wd+o}} ${{m1}}, ${{Wd+o}} ${{m2}}, ${{Wd-e}} ${{b}} H ${{e}}`:` C ${{-o}} ${{m1}}, ${{-o}} ${{m2}}, ${{e}} ${{b}} H ${{Wd-e}}`);}}d+=ys.length%2?` H ${{Wd}}`:' H 0';}}
+ // on a desk one straight strand the page wide; stacked on a phone, a plain ground segment under each figure at its foot, the content width, the swells running on beneath
+ if(Math.abs(ys[0]-ys[ys.length-1])<2)d=`M0 ${{ys[0]}} H ${{Wd}}`;else{{const pad=parseFloat(getComputedStyle(sec).paddingLeft)||0;d=ys.map(y=>`M${{pad}} ${{y}} H ${{Wd-pad}}`).join(' ');}}
  let sw='';const r=rnd('swell');for(let i=0;i<4;i++){{const y=Hd*(0.1+0.22*i)+r()*20,A=5+r()*7,fq=0.004+r()*0.004,ph=r()*6;let q=`M0 ${{(y+A*Math.sin(ph)).toFixed(1)}}`;for(let xx=16;xx<=Wd+16;xx+=16)q+=` L ${{xx}} ${{(y+A*Math.sin(xx*fq+ph)).toFixed(1)}}`;sw+=`<path class="swell" d="${{q}}"/>`;}}
  gsvg.innerHTML=sw+`<path class="line" d="${{d}}"/>`;}}
 groundLine();addEventListener('resize',groundLine);
