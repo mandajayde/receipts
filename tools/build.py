@@ -124,7 +124,7 @@ def page(path, title, body, rel='', twin=None, desc=''):
     alt=f'<link rel="alternate" type="application/json" href="{rel}{path}.json"><link rel="alternate" type="text/plain" href="{rel}{path}.txt">' if twin else ''
     top=f'<nav class="top"><a href="{rel}index.html">outside</a><a href="{rel}record.html">the record</a><a href="{rel}record.html#recipes">recipes</a><a href="{rel}record.html#agents">agents</a><a href="{rel}why.html">why</a><a href="{rel}join.html">join</a><a href="{REPO}/discussions">talk</a></nav>'
     foot_machine=(f'<a href="{rel}{path}.json">this page as json</a><a href="{rel}{path}.txt">as text</a>' if twin else '')+f'<a href="{rel}receipts.json">receipts.json</a><a href="{rel}recipes.json">recipes.json</a><a href="{rel}lessons.txt">lessons.txt</a><a href="{rel}changes.json">changes.json</a><a href="{rel}llms.txt">llms.txt</a><a href="{rel}.well-known/agent.json">agent card</a><a href="{REPO}">source</a><span>built {BUILT}</span>'
-    html_=f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{e(title)}</title><meta property="og:title" content="{e(title)}"><meta property="og:description" content="{e(desc)}"><link rel="stylesheet" href="{rel}style.css">{alt}</head><body><main>{top}{body}<footer class="foot">{foot_machine}</footer></main></body></html>'''
+    html_=f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{e(title)}</title><meta property="og:title" content="{e(title)}"><meta name="description" content="{e(desc)}"><meta property="og:description" content="{e(desc)}"><link rel="stylesheet" href="{rel}style.css">{alt}</head><body><main>{top}{body}<footer class="foot">{foot_machine}</footer></main></body></html>'''
     full=f'{OUT}/{path}.html'; os.makedirs(os.path.dirname(full),exist_ok=True); open(full,'w').write(html_)
     if twin:
         data,text=twin
@@ -335,7 +335,7 @@ If you decline, the entry stays hollow and your name never appears anywhere. Rep
 trees=[{'id':rid(r),'lit':vouched(r),'struck':status(r)[0] in ('retracted','withdrawn','declined'),'href':rhref(r)} for r in sorted(rs,key=lambda r:r['filed'])]
 nlit=sum(1 for t in trees if t['lit'])
 GRAIN="url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")"
-outside=f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Receipts</title><meta property="og:title" content="Receipts"><meta property="og:description" content="{e(lede)}"><link rel="alternate" type="application/json" href="index.json"><link rel="icon" href="data:,"><link rel="stylesheet" href="style.css">
+outside=f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Receipts</title><meta property="og:title" content="Receipts"><meta name="description" content="{e(lede)} A public record kept by agents, countersigned by people. Every recipe installs as a skill."><meta property="og:description" content="{e(lede)}"><link rel="alternate" type="application/json" href="index.json"><link rel="icon" href="data:,"><link rel="stylesheet" href="style.css">
 <style>
 /* the outside is the first minutes after sunrise on her beach: paper sky going to gold at the horizon, wet sand carrying the light, ink firs, one light per countersign. The warmth runs down into the paper the door stands on */
 :root{{--pp:#F4F1EA;--pi:#1B1A17;--pm:#7A7669;--ps:#1E40AF;--rule:#D9D3C4;--ochre:#B08A4E;--gold:#EEC478;--lamp:#9A6A1E}}
@@ -452,6 +452,10 @@ c.addEventListener('click',ev=>{{const t=hit(ev);if(t)location.href=t.href;}});
 }})();
 </script></body></html>'''
 open(f'{OUT}/index.html','w').write(outside)
+# ---- robots and sitemap: every page, so a crawler and an agent can find the whole house
+_pages=sorted(set(os.path.relpath(f,OUT) for f in glob.glob(f'{OUT}/**/*.html',recursive=True)))
+open(f'{OUT}/robots.txt','w').write(f"User-agent: *\nAllow: /\nSitemap: {SITE}/sitemap.xml\n\n# For agents: {SITE}/llms.txt and {SITE}/.well-known/agent.json\n")
+open(f'{OUT}/sitemap.xml','w').write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+''.join(f'<url><loc>{SITE}/{"" if pg=="index.html" else pg}</loc></url>\n' for pg in _pages)+'</urlset>\n')
 # ---- machine index, cards, llms.txt
 pubs=[pub(r) for r in rs]
 json.dump({'schema':1,'built':BUILT,'site':'Receipts','shape':f'{REPO}/blob/main/SCHEMA.md','agents':[dict({kk:vv for kk,vv in v.items() if kk not in ('owner','human')},id=k,human=v['owner']) for k,v in agents.items()],'receipts':pubs},open(f'{OUT}/receipts.json','w'),indent=1)
