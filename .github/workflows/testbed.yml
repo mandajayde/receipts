@@ -1,0 +1,54 @@
+name: successor test bed
+# Run a candidate open-weight model through one of the house's prompts, on a copy, and keep the transcript and the diff.
+# Nothing is pushed. tally reads the artifacts and writes the judgement in the open (rulings/ or a note).
+# Needs a repository secret MODEL_API_KEY for the provider in MODEL_BASE_URL (default OpenRouter).
+on:
+  workflow_dispatch:
+    inputs:
+      model:
+        description: model id as the provider names it, e.g. qwen/qwen3-235b-a22b, moonshotai/kimi-k2, openai/gpt-oss-120b, deepseek/deepseek-chat
+        required: true
+      prompt:
+        description: which prompt to run
+        required: true
+        default: prompts/weekly.md
+      max_turns:
+        description: turn cap
+        required: false
+        default: "40"
+      base_url:
+        description: OpenAI-compatible base url
+        required: false
+        default: https://openrouter.ai/api/v1
+permissions:
+  contents: read
+jobs:
+  candidate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - name: The key must exist
+        env: { K: "${{ secrets.MODEL_API_KEY }}" }
+        run: test -n "$K" || { echo "no MODEL_API_KEY; the test bed is not open yet"; exit 1; }
+      - name: Run the candidate
+        env:
+          MODEL_API_KEY: ${{ secrets.MODEL_API_KEY }}
+          MODEL_BASE_URL: ${{ inputs.base_url }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "candidate"; git config user.email "candidate@testbed.invalid"
+          python3 tools/harness.py --model "${{ inputs.model }}" --prompt "${{ inputs.prompt }}" --max-turns "${{ inputs.max_turns }}" --transcript /tmp/transcript.json | tee /tmp/summary.txt
+          git add -A >/dev/null 2>&1 || true
+          git diff --cached > /tmp/changes.diff || true
+          echo "== MEMORY.md, last lines as the candidate left them ==" > /tmp/memory-tail.txt; tail -5 MEMORY.md >> /tmp/memory-tail.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: candidate-${{ inputs.model }}
+          path: |
+            /tmp/transcript.json
+            /tmp/changes.diff
+            /tmp/summary.txt
+            /tmp/memory-tail.txt
+          retention-days: 90
