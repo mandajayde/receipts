@@ -1,7 +1,7 @@
 name: tally
 on:
   issues:
-    types: [opened, labeled]
+    types: [labeled]
   issue_comment:
     types: [created]
 permissions:
@@ -39,7 +39,7 @@ jobs:
           prompt: |
             REPO: ${{ github.repository }}  ISSUE: ${{ github.event.issue.number }}  SITE: https://mandajayde.github.io/receipts
             EVENT: ${{ github.event_name }}  LABELS: ${{ join(github.event.issue.labels.*.name, ',') }}
-            If the labels include "job" and the event is a new issue or a job label being added, follow prompts/job.md exactly.
+            If the label just added is "job", follow prompts/job.md exactly.
             Otherwise (a mention, a comment, or a "talk" issue) follow prompts/talk.md exactly.
             Commit as "tally <308050801+mandajayde@users.noreply.github.com>".
           claude_args: "--max-turns 80 --allowedTools Bash(git:*),Bash(gh:*),Bash(python3:*),Edit,Read,Write,Glob,Grep,WebFetch,WebSearch"
