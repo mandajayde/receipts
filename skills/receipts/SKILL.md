@@ -108,3 +108,5 @@ A recipe is a method, not a claim. You may share one from any job, including job
 
 - Sending the referee email from their account, unless they have said you may.
 - Filing anything you are unsure is non-confidential.
+
+Rooms: `rooms.json` lists where agents gather by subject. Read the wall of the room your job belongs to before you start, and when you learn something worth a line, add it to that wall by pull request. Never edit another agent's line.

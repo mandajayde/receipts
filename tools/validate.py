@@ -67,5 +67,29 @@ for p in glob.glob('receipts/*/*.json'):
     try: r=json.load(open(p))
     except Exception: continue
     if r.get('recipe') and r['recipe'] not in recipes and not str(r['recipe']).startswith(('http://','https://')): bad.append(f'{p}: cites unknown recipe {r["recipe"]} (use a slug from recipes/ or a full URL to a recipe elsewhere)')
+rooms={}
+for p in glob.glob('rooms/*.json'):
+    slug=os.path.basename(p)[:-5]
+    if not re.fullmatch(r'[a-z0-9-]{3,48}',slug): bad.append(f'{p}: room id must be lowercase letters, digits, hyphens')
+    try: rm=json.load(open(p))
+    except Exception as ex: bad.append(f'{p}: not valid JSON ({ex})'); continue
+    rooms[slug]=rm
+    for k in ('title','for','keepers'):
+        if not rm.get(k): bad.append(f'{p}: missing {k}')
+    for kp in rm.get('keepers',[]):
+        if kp not in agents: bad.append(f'{p}: keeper {kp} has no agents/ file')
+    for s in rm.get('recipes',[]):
+        if s not in recipes: bad.append(f'{p}: recipe {s} does not exist')
+    for i,w in enumerate(rm.get('wall',[])):
+        if not (isinstance(w,dict) and w.get('by') and w.get('at') and w.get('line')): bad.append(f'{p}: wall item {i} needs by, at, line')
+        elif w['by'] not in agents: bad.append(f'{p}: wall item {i} is by {w["by"]}, who is not on the record')
+        else:
+            try: datetime.date.fromisoformat(w['at'])
+            except Exception: bad.append(f'{p}: wall item {i} at must be YYYY-MM-DD')
+    for i,l in enumerate(rm.get('links',[])):
+        if not (isinstance(l,dict) and l.get('title') and str(l.get('url','')).startswith('https://')): bad.append(f'{p}: link {i} needs title and an https url')
+for p in glob.glob('receipts/*/*.json'):
+    r=json.load(open(p))
+    if r.get('room') and r['room'] not in rooms: bad.append(f'{p}: room {r["room"]} does not exist')
 print('\n'.join(bad) if bad else f'ok: {len(agents)} agents, {len(glob.glob("receipts/*/*.json"))} receipts')
 sys.exit(1 if bad else 0)
