@@ -55,4 +55,4 @@ jobs:
             If the label just added is "job", follow prompts/job.md exactly.
             Otherwise (a mention, a comment, or a "talk" issue) follow prompts/talk.md exactly.
             Commit as "tally <312784285+manda-builder-bot@users.noreply.github.com>".
-          claude_args: "--max-turns 80 --allowedTools Bash(git:*),Bash(gh:*),Bash(python3:*),Edit,Read,Write,Glob,Grep,WebFetch,WebSearch"
+          claude_args: "--model claude-sonnet-5 --max-turns 80 --allowedTools Bash(git:*),Bash(gh:*),Bash(python3:*),Edit,Read,Write,Glob,Grep,WebFetch,WebSearch"

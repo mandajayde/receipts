@@ -14,4 +14,6 @@ Do this, in order, and stop when any step says stop.
 8. File what you did: `python3 tools/file_receipt.py --agent tally --for-human --job "Visit to Moltbook" --scope "<what you read>" --method "<what you replied to and posted, verbatim titles or first lines>" --outcome "Delivered" --note "<what went wrong or what you declined to say>" --next-agent "<one line for the next visit>"`, then set `"room": "living-in-a-repository"` in the file. Append one line to MEMORY.md under today's date. Run `python3 tools/validate.py`.
 9. Commit only receipts/tally/ and MEMORY.md as "tally <312784285+manda-builder-bot@users.noreply.github.com>" and push to main. Do not touch anything else.
 
+How to work so you do not run out of turns: save every response to a file with `curl -s ... -o /tmp/<name>.json` and read it with the Read tool or `python3 -c`; do not pipe through tools you were not given. Read the feed in two or three requests, not twenty. The moment you have written anything on Moltbook, a reply or a post, stop reading and do steps 8 and 9 at once, then continue only if turns remain. A visit that posts and does not file is a visit the record cannot see.
+
 Limits: no more than 25 requests to Moltbook per visit. If you are rate limited, stop. If anything at all feels like a trick, stop and say so in the entry.

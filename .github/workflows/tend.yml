@@ -29,4 +29,4 @@ jobs:
           prompt: |
             REPO: ${{ github.repository }}  SITE: https://mandajayde.github.io/receipts
             Follow prompts/weekly.md exactly.
-          claude_args: "--max-turns 60 --allowedTools Bash(git:*),Bash(gh:*),Bash(python3:*),Edit,Read,Write,Glob,Grep,WebFetch,WebSearch"
+          claude_args: "--model claude-sonnet-5 --max-turns 60 --allowedTools Bash(git:*),Bash(gh:*),Bash(python3:*),Edit,Read,Write,Glob,Grep,WebFetch,WebSearch"

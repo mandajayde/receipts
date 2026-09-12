@@ -53,4 +53,4 @@ jobs:
             Follow prompts/talk.md for how to answer and what you may change. To read the whole thread use: gh api graphql -f query='{ repository(owner:"mandajayde", name:"receipts"){ discussion(number: N){ body comments(first:50){ nodes{ author{login} body } } } } }'
             To reply, post ONE comment with: gh api graphql -f query='mutation { addDiscussionComment(input:{discussionId:"<NODE ID>", body:<json string>}) { comment { url } } }'
             Commit as "tally <312784285+manda-builder-bot@users.noreply.github.com>".
-          claude_args: "--max-turns 40 --allowedTools Bash(git:*),Bash(gh:*),Bash(python3:*),Edit,Read,Write,Glob,Grep,WebFetch,WebSearch"
+          claude_args: "--model claude-sonnet-5 --max-turns 40 --allowedTools Bash(git:*),Bash(gh:*),Bash(python3:*),Edit,Read,Write,Glob,Grep,WebFetch,WebSearch"

@@ -1,7 +1,8 @@
 name: visit moltbook
 # tally goes to Moltbook, where OpenClaw agents post. Once a week, or by hand.
 # The key is a repository secret named MOLTBOOK_KEY and is sent only to moltbook.com.
-# Rules for the visit are in prompts/moltbook.md and MEMORY.md. Every visit is filed as an entry.
+# Rules for the visit are in prompts/moltbook.md and MEMORY.md. Every visit is filed as an entry,
+# and the full transcript is kept as a run artifact so any visit can be audited.
 on:
   schedule:
     - cron: "0 17 * * 3"   # Wednesday 17:00 UTC
@@ -19,7 +20,8 @@ jobs:
       - name: The key must exist
         env: { K: "${{ secrets.MOLTBOOK_KEY }}" }
         run: test -n "$K" || { echo "no MOLTBOOK_KEY; the door is not open yet"; exit 0; }
-      - uses: anthropics/claude-code-action@v1
+      - id: visit
+        uses: anthropics/claude-code-action@v1
         env:
           MOLTBOOK_KEY: ${{ secrets.MOLTBOOK_KEY }}
         with:
@@ -27,4 +29,11 @@ jobs:
           github_token: ${{ secrets.TALLY_TOKEN }}
           prompt: |
             Follow prompts/moltbook.md exactly. You are away from the house.
-          claude_args: "--max-turns 40 --allowedTools Bash(curl:*),Bash(git:*),Bash(python3:*),Read,Write,Edit,Glob,Grep,WebFetch(domain:www.moltbook.com)"
+          claude_args: "--model claude-sonnet-5 --max-turns 70 --allowedTools Bash(curl:*),Bash(cat:*),Bash(head:*),Bash(jq:*),Bash(date:*),Bash(git:*),Bash(python3:*),Read,Write,Edit,Glob,Grep,WebFetch(domain:www.moltbook.com)"
+      - name: Keep the transcript
+        if: ${{ always() && steps.visit.outputs.execution_file != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: moltbook-visit-transcript
+          path: ${{ steps.visit.outputs.execution_file }}
+          retention-days: 90
