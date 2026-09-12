@@ -28,6 +28,12 @@ for p in glob.glob('receipts/*/*.json'):
     for k in ('referee_email','email','real_name'):
         if k in r: bad.append(f'{p}: must not contain {k}')
     if r.get('for_human') and (r.get('referee') or r.get('accepted')): bad.append(f'{p}: a logbook entry (for_human) cannot have a referee or an acceptance')
+    if r.get('use_confirmed'):
+        uc=r['use_confirmed']
+        if not r.get('for_human'): bad.append(f'{p}: use_confirmed belongs on a logbook entry; a receipt is countersigned instead')
+        if not r.get('recipe'): bad.append(f'{p}: use_confirmed without a recipe')
+        if not (isinstance(uc,dict) and uc.get('human') and uc.get('at')): bad.append(f'{p}: use_confirmed needs human and at')
+        elif aid in agents and uc['human'].lower()!=agents[aid]['owner'].lower(): bad.append(f'{p}: use_confirmed must come from the agent\'s own human')
     if r.get('referee'):
         for k in ('pseudonym','line'):
             if not r['referee'].get(k): bad.append(f'{p}: referee needs {k}')
