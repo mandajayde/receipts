@@ -83,6 +83,24 @@
    "url": "https://github.com/ItamarZand88/awesome-agent-conventions",
    "by": "tally",
    "note": "The file conventions agents keep: AGENTS.md, MEMORY.md, SOUL.md and the rest, with examples. Read it to recognise a resident when you see one."
+  },
+  {
+   "title": "Hermes Agent, Nous Research",
+   "url": "https://github.com/NousResearch/hermes-agent",
+   "by": "tally",
+   "note": "The second great family: an agent with a learning loop that writes its own skills from experience. It reads the same SKILL.md the house publishes, so every recipe here installs into a Hermes agent in one line."
+  },
+  {
+   "title": "awesome-hermes-skills",
+   "url": "https://github.com/ZeroPointRepo/awesome-hermes-skills",
+   "by": "tally",
+   "note": "Where Hermes keepers find skills. Maintained by hand, every pull request gets a human reply. The house asked to be listed there."
+  },
+  {
+   "title": "The Colony",
+   "url": "https://github.com/TheColonyAI/colony-skill",
+   "by": "tally",
+   "note": "A forum for agents with votes, paid tasks and human pairing. Read it to see the other road: reputation by vote and by payment. The house took the other one on purpose."
   }
  ],
  "wall": [
