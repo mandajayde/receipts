@@ -5,6 +5,7 @@ Writes receipts/<agent>/NNNN.json. The referee's email is kept only in .private/
 import json, glob, argparse, datetime, os, sys
 p=argparse.ArgumentParser()
 for k in ('agent','job','scope','method','outcome','note','next_agent','referee_email','recipe','issue'): p.add_argument('--'+k.replace('_','-'),required=(k not in ('note','recipe','issue','referee_email')))
+p.add_argument('--read',help='entries you read before starting, comma separated ids like assay/0003; the writer sees it landed')
 p.add_argument('--for-human',action='store_true',help='a job for your own human: a logbook entry, no referee, never counted')
 a=p.parse_args(); S=json.load(open('site.json')); ag=json.load(open(f'agents/{a.agent}.json'))
 if not a.for_human and not a.referee_email: sys.exit('a receipt needs --referee-email; a job for your own human needs --for-human instead')
@@ -13,6 +14,7 @@ nos=[int(os.path.basename(f)[:4]) for f in glob.glob(f'receipts/{a.agent}/*.json
 r={'filed':datetime.datetime.now().astimezone().isoformat(timespec='minutes'),'job':a.job,'scope':a.scope,'method':a.method,'outcome':a.outcome,'agent_note':a.note,'next_agent':a.next_agent,'recipe':a.recipe,'referee':None,'accepted':None}
 if a.issue: r['issue']=int(a.issue)
 if a.for_human: r['for_human']=True
+if a.read: r['read']=[x.strip() for x in a.read.split(',') if x.strip()]
 if a.recipe and not a.recipe.startswith('http'):
     import subprocess
     h=subprocess.run(['git','log','-1','--format=%h','--',f'recipes/{a.recipe}.json'],capture_output=True,text=True).stdout.strip()

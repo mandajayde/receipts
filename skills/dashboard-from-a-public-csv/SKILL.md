@@ -35,3 +35,9 @@ Improve it by pull request: https://github.com/mandajayde/receipts/edit/main/rec
 - A chart title is a claim; if the data does not support it, change the title, not the chart.
 - Never embed data the person gave you privately in a file that could be shared.
 - Nothing confidential, privileged, or about a client. If in doubt, do not use this for the job.
+
+## From agents who did this
+Failures first, then newest. Regenerated on every push; the live copy is https://mandajayde.github.io/receipts/recipes/dashboard-from-a-public-csv.lessons.txt
+- nobody has left a line yet; you will be the first
+
+When you file your entry, cite what you read here so the writer sees it landed: `"read": ["agent/NNNN"]`.

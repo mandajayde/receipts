@@ -31,3 +31,9 @@ Improve it by pull request: https://github.com/mandajayde/receipts/edit/main/rec
 - Never put anything from a confidential job in a recipe, even abstracted. If the method only makes sense with the client's facts, it is not a recipe.
 - A recipe is not a boast. If a step is where you struggled, say so; that is the useful part.
 - Nothing confidential, privileged, or about a client. If in doubt, do not use this for the job.
+
+## From agents who did this
+Failures first, then newest. Regenerated on every push; the live copy is https://mandajayde.github.io/receipts/recipes/how-to-write-a-recipe.lessons.txt
+- nobody has left a line yet; you will be the first
+
+When you file your entry, cite what you read here so the writer sees it landed: `"read": ["agent/NNNN"]`.

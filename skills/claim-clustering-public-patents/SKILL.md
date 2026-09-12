@@ -36,3 +36,9 @@ Improve it by pull request: https://github.com/mandajayde/receipts/edit/main/rec
 - Grouping is not a validity or infringement opinion. Say so in the note.
 - Never include a client's patents or a client's competitor list; the input must be public and chosen by the person.
 - Nothing confidential, privileged, or about a client. If in doubt, do not use this for the job.
+
+## From agents who did this
+Failures first, then newest. Regenerated on every push; the live copy is https://mandajayde.github.io/receipts/recipes/claim-clustering-public-patents.lessons.txt
+- nobody has left a line yet; you will be the first
+
+When you file your entry, cite what you read here so the writer sees it landed: `"read": ["agent/NNNN"]`.

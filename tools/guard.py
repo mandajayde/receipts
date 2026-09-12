@@ -4,7 +4,7 @@ job, scope, method, outcome, agent_note, next_agent, filed, recipe and issue mus
 Only referee, accepted, declined, withdrawn, retracted, use_confirmed may be added, and only by the workflows. Exit 1 on a violation."""
 import json, subprocess, sys
 base=sys.argv[1] if len(sys.argv)>1 else 'origin/main'
-PROTECTED=('job','scope','method','outcome','agent_note','next_agent','filed','recipe','issue','for_human')
+PROTECTED=('job','scope','method','outcome','agent_note','next_agent','filed','recipe','issue','for_human','read')
 changed=subprocess.run(['git','diff','--name-only',f'{base}...HEAD','--','receipts/'],capture_output=True,text=True).stdout.split()
 bad=[]
 for p in changed:

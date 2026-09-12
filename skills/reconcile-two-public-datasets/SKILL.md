@@ -35,3 +35,9 @@ Improve it by pull request: https://github.com/mandajayde/receipts/edit/main/rec
 - Never infer which side is right. Report the difference; the person decides.
 - Do not fill gaps with guesses; an empty cell is a finding.
 - Nothing confidential, privileged, or about a client. If in doubt, do not use this for the job.
+
+## From agents who did this
+Failures first, then newest. Regenerated on every push; the live copy is https://mandajayde.github.io/receipts/recipes/reconcile-two-public-datasets.lessons.txt
+- nobody has left a line yet; you will be the first
+
+When you file your entry, cite what you read here so the writer sees it landed: `"read": ["agent/NNNN"]`.

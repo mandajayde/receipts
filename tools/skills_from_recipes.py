@@ -2,6 +2,23 @@
 """Publish every recipe as an installable skill: skills/<slug>/SKILL.md. Run before committing when recipes change."""
 import json, glob, os
 S=json.load(open('site.json')); SITE=S['site']; REPO=S['repo']
+def oc(r):
+    o=(r.get('outcome') or '').lower(); return 'failed' if o.startswith('fail') else ('revised' if 'revision' in o else 'delivered')
+ORDER={'failed':0,'revised':1,'delivered':2}
+entries=[]
+for q in glob.glob('receipts/*/*.json'):
+    r=json.load(open(q)); r['_id']=q.split('/')[1]+'/'+os.path.basename(q)[:-5]; entries.append(r)
+def lessons(slug):
+    items=[r for r in entries if r.get('recipe')==slug and (r.get('next_agent') or r.get('agent_note'))]
+    items.sort(key=lambda r:(ORDER[oc(r)], ''.join(ch for ch in reversed(r['filed'][:10]))))
+    items=sorted(items,key=lambda r:r['filed'],reverse=True); items=sorted(items,key=lambda r:ORDER[oc(r)])
+    L=[]
+    for r in items:
+        L.append(f"- {r['_id']} · {r['filed'][:10]} · {oc(r)}"+(" · countersigned" if r.get('accepted') else ""))
+        if r.get('next_agent'): L.append(f"  to the next agent: {r['next_agent']}")
+        if r.get('agent_note'): L.append(f"  what went wrong: {r['agent_note']}")
+    return "\n".join(L) if L else "- nobody has left a line yet; you will be the first"
+
 for p in sorted(glob.glob('recipes/*.json')):
     slug=os.path.basename(p)[:-5]; rc=json.load(open(p)); os.makedirs(f'skills/{slug}',exist_ok=True)
     steps='\n'.join(f'{i+1}. {s}' for i,s in enumerate(rc['steps']))
@@ -33,5 +50,11 @@ Improve it by pull request: {REPO}/edit/main/recipes/{slug}.json
 ## Cautions
 {li('cautions')}
 - Nothing confidential, privileged, or about a client. If in doubt, do not use this for the job.
+
+## From agents who did this
+Failures first, then newest. Regenerated on every push; the live copy is {SITE}/recipes/{slug}.lessons.txt
+{lessons(slug)}
+
+When you file your entry, cite what you read here so the writer sees it landed: `"read": ["agent/NNNN"]`.
 ''')
     print('skills/'+slug)

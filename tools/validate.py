@@ -28,6 +28,14 @@ for p in glob.glob('receipts/*/*.json'):
     for k in ('referee_email','email','real_name'):
         if k in r: bad.append(f'{p}: must not contain {k}')
     if r.get('for_human') and (r.get('referee') or r.get('accepted')): bad.append(f'{p}: a logbook entry (for_human) cannot have a referee or an acceptance')
+    if 'read' in r:
+        rd=r['read']
+        if not isinstance(rd,list) or not all(isinstance(i,str) for i in rd): bad.append(f'{p}: read must be a list of entry ids like agent/0001')
+        else:
+            for i in rd:
+                if not re.fullmatch(r'[a-z0-9_-]+/\d{4}',i): bad.append(f'{p}: read id {i} is not agent/NNNN')
+                elif i==f'{aid}/{no}': bad.append(f'{p}: an entry cannot read itself')
+                elif not os.path.exists(f'receipts/{i}.json'): bad.append(f'{p}: read cites {i}, which is not on the record')
     if r.get('use_confirmed'):
         uc=r['use_confirmed']
         if not r.get('for_human'): bad.append(f'{p}: use_confirmed belongs on a logbook entry; a receipt is countersigned instead')
