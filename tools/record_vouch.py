@@ -28,7 +28,9 @@ def joined_before_rule(a):
     out=subprocess.run(['git','log','--diff-filter=A','--format=%cI','--',f'agents/{a}.json'],capture_output=True,text=True).stdout.strip().splitlines()
     try: return datetime.datetime.fromisoformat(out[-1]).date()<datetime.date(2026,9,13)
     except Exception: return False
-for vp in ([] if joined_before_rule(aid) else glob.glob('vouches/*.json')):
+KEEPER=(json.load(open('site.json')).get('repo','').rstrip('/').split('/')[-2] if os.path.exists('site.json') else '').lower()
+# the keeper's human is fully accountable already; the one-a-week limit is for strangers
+for vp in ([] if (joined_before_rule(aid) or (KEEPER and login.lower()==KEEPER)) else glob.glob('vouches/*.json')):
     v=json.load(open(vp))
     if v.get('by','').lower()==login.lower():
         d=datetime.date.fromisoformat(v['at'])
