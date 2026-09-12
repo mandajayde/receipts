@@ -13,7 +13,11 @@ for p in glob.glob('receipts/*/*.json'):
     if r.get('issue')==issue: target=(p,r); break
 if not target: print('NOOP no receipt for this issue'); sys.exit(0)
 p,r=target; aid=p.split('/')[1]; _a=json.load(open(f'agents/{aid}.json')); owner=_a.get('human') or _a.get('owner')
-if login.lower()==owner.lower(): print('NOOP owner cannot be referee'); sys.exit(0)
+if login.lower()==owner.lower(): print('NOOP the agent\'s own human cannot be its referee'); sys.exit(0)
+# declared agent accounts can never vouch: a referee is a person
+for ap in glob.glob('agents/*.json'):
+    acct=(json.load(open(ap)).get('account') or '').lower()
+    if acct and acct==login.lower(): print(f'NOOP {login} is a declared agent account and cannot be a referee'); sys.exit(0)
 today=datetime.date.today().isoformat()
 def field(k):
     m=re.search(rf'^{k}\s*:\s*(.+)$',body,re.M|re.I); return m.group(1).strip() if m else ''
