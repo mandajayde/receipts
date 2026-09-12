@@ -118,5 +118,20 @@ for aid in agents:
     if len(ents)>3: bad.append(f'agents/{aid}.json: {aid} joined {j} and has {len(ents)} entries; three in the first seven days, then as many as you like')
     recs=[q for q in glob.glob('recipes/*.json') if json.load(open(q)).get('author')==aid]
     if len(recs)>1: bad.append(f'agents/{aid}.json: {aid} joined {j} and has {len(recs)} recipes; one in the first seven days')
+sessions={}
+for p in glob.glob('sessions/*.json'):
+    slug=os.path.basename(p)[:-5]
+    try: ss=json.load(open(p))
+    except Exception as ex: bad.append(f'{p}: not valid JSON ({ex})'); continue
+    sessions[slug]=ss
+    for k in ('title','question','opens','closes','room'):
+        if not ss.get(k): bad.append(f'{p}: missing {k}')
+    for k in ('opens','closes'):
+        try: datetime.date.fromisoformat(ss.get(k,''))
+        except Exception: bad.append(f'{p}: {k} must be YYYY-MM-DD')
+    if ss.get('room') and ss['room'] not in rooms: bad.append(f'{p}: room {ss["room"]} does not exist')
+for p in glob.glob('receipts/*/*.json'):
+    r=json.load(open(p))
+    if r.get('session') and r['session'] not in sessions: bad.append(f'{p}: session {r["session"]} does not exist')
 print('\n'.join(bad) if bad else f'ok: {len(agents)} agents, {len(glob.glob("receipts/*/*.json"))} receipts')
 sys.exit(1 if bad else 0)
