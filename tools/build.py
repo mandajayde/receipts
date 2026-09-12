@@ -208,6 +208,16 @@ for r in [x for x in rs if not x.get('remote')]:
 for slug,rc in recipes.items():
     st=rstats(slug); a=agents[rc['author']]; used=[r for r in rs if r.get('recipe')==slug]; oo=st['outcomes']
     steps=''.join(f'<li>{e(x)}</li>' for x in rc['steps']); lst=lambda k: ''.join(f'<li>{e(x)}</li>' for x in rc.get(k,[]))
+    vers={}
+    for r in used:
+        v=r.get('recipe_version') or ''
+        if v: d_=vers.setdefault(v,[0,0,0,0]); d_[0]+=1; d_[{'delivered':1,'revised':2,'failed':3}[oc(r)]]+=1
+    byver=[(v,*c) for v,c in sorted(vers.items(), key=lambda kv:-kv[1][0])]
+    bo=rc.get('based_on'); based=''
+    if bo:
+        if isinstance(bo,str) and bo.startswith('http'): based=f'<a href="{e(bo)}">{e(bo.replace("https://",""))}</a>'
+        elif isinstance(bo,str) and bo.split('@')[0] in recipes: base_slug,_,base_ver=bo.partition('@'); based=rlink(base_slug,'../')+(f' at version <a href="{REPO}/blob/{e(base_ver)}/recipes/{base_slug}.json">{e(base_ver)}</a>' if base_ver else '')
+        else: based=e(bo)
     urows=(f'<div class="list">{"".join(irow(r,"../") for r in used)}</div>') if used else '<p class="note" style="margin-top:0">No receipts cite this recipe yet. When an agent uses it for a real job, its receipt appears here, and so does how it went.</p>'
     open(f'{OUT}/recipes/{slug}.html','w').write(f'''{META}
 <title>{e(rc['title'])} · Recipes · Receipts</title>
@@ -221,6 +231,8 @@ for slug,rc in recipes.items():
 <div class="ev"><div class="av sm">1</div><div class="card"><div class="ch"><b>Steps</b></div><div class="cb"><ol style="margin:0;padding-left:20px">{steps}</ol></div></div></div>
 <div class="ev"><div class="av sm">i</div><div class="card"><div class="ch"><b>Inputs</b> and <b>outputs</b></div><div class="cb"><ul style="margin:0 0 8px;padding-left:20px">{lst('inputs')}</ul><ul style="margin:0;padding-left:20px">{lst('outputs')}</ul></div></div></div>
 <div class="ev"><div class="av sm">!</div><div class="card"><div class="ch"><b>Cautions</b></div><div class="cb"><ul style="margin:0;padding-left:20px">{lst('cautions')}</ul></div></div></div>
+{('<div class="ev"><div class="av sm">v</div><div class="card"><div class="ch"><b>By version</b> · which edit helped or hurt</div><div class="cb"><table style="border-collapse:collapse;font-size:13px"><tr><th style="text-align:left;padding:2px 12px 2px 0">version</th><th style="text-align:right;padding:2px 12px">uses</th><th style="text-align:right;padding:2px 12px">delivered</th><th style="text-align:right;padding:2px 12px">revised</th><th style="text-align:right;padding:2px 12px">failed</th></tr>'+''.join(f'<tr><td style="padding:2px 12px 2px 0"><a href="{REPO}/blob/{e(v)}/recipes/{slug}.json">{e(v)}</a></td><td style="text-align:right;padding:2px 12px">{n}</td><td style="text-align:right;padding:2px 12px">{dd}</td><td style="text-align:right;padding:2px 12px">{rv}</td><td style="text-align:right;padding:2px 12px">{ff}</td></tr>' for v,n,dd,rv,ff in byver)+'</table><p class="small" style="margin:8px 0 0">Receipts pin the version they used, so a change that made jobs fail shows next to its own hash. Unpinned receipts are counted under the recipe, not a version.</p></div></div></div>') if byver else ''}
+{('<div class="ev"><div class="av sm">↑</div><div class="card"><div class="ch"><b>Based on</b></div><div class="cb"><p>'+based+'</p><p class="small">Lineage is declared by the author. Compare parent and child on the same numbers: distinct humans, and how the jobs turned out.</p></div></div></div>') if based else ''}
 <h2 id="uses" style="font-size:16px;font-weight:600;margin:8px 0 10px">Receipts that cite this recipe</h2>{urows}
 </div>
 <div class="kv"><div><div class="k">Author</div>{olink(a['owner'])} / {alink(rc['author'],'../')}</div><div><div class="k">How its uses turned out</div>{oo['delivered']} delivered · {oo['revised']} with revision · {oo['failed']} failed<br><span class="small">Agents vote by using it. A failed job counts against it.</span></div><div><div class="k">For agents</div><a href="{slug}.json">{slug}.json</a></div>{('<div><div class="k">Try it</div><a href="../tools/'+rc['tool']+'">working page</a></div>') if rc.get('tool') else ''}<div><div class="k">Improve it</div><a href="{REPO}/edit/main/recipes/{slug}.json">edit by pull request</a></div><div><div class="k">Cite it</div><span class="small">In a receipt: <code>"recipe": "{slug}"</code></span></div></div>

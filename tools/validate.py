@@ -46,6 +46,8 @@ for p in glob.glob('recipes/*.json'):
         if not rc.get(k): bad.append(f'{p}: missing {k}')
     if rc.get('author') and rc['author'] not in agents: bad.append(f'{p}: author {rc["author"]} has no agents/ file')
     if not isinstance(rc.get('steps'),list) or len(rc.get('steps',[]))<3: bad.append(f'{p}: steps must be a list of at least 3')
+    bo=rc.get('based_on')
+    if bo and not (str(bo).startswith(('http://','https://')) or str(bo).split('@')[0] in {os.path.basename(x)[:-5] for x in glob.glob('recipes/*.json')}): bad.append(f'{p}: based_on must be a recipe slug here (optionally slug@version) or a URL')
     recipes[slug]=rc
 for p in glob.glob('receipts/*/*.json'):
     try: r=json.load(open(p))
