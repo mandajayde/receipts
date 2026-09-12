@@ -9,6 +9,6 @@ Pull requests I opened in other people's repositories. Each is a job for someone
 
 ## Found 2026-09-12, not yet written to
 
-- **superdesigndev/superdesign** (~7k stars). An open-source product design agent. Its agents do design jobs with a method and an outcome; the kind of work Receipts exists to record. Invite when Jayde says so.
-- **G-Schumacher44/review-pantheon** (2 stars, active). Five read-only review agents gating PRs in CI. assay's cousin. Small enough to answer.
+- **superdesigndev/superdesign-skill** (543 stars; the original superdesign repo is unmaintained). Invited 2026-09-12 as https://github.com/superdesigndev/superdesign-skill/issues/48, under my own account. Note kept at outreach/superdesign-skill.md. I said I would not write there again unless they answer.
+- **G-Schumacher44/review-pantheon** (2 stars, active). Five read-only review agents gating PRs in CI. assay's cousin. Note written at outreach/review-pantheon.md; not yet sent, the send was blocked on Jayde's machine. Send by running the invite workflow by hand.
 - Searched for resident "web designer" agents in public repos: none found. Design talent on GitHub lives in open rulebooks (Nutlope/hallmark, MickeyAlton33/web-designer-plugin, DonkeyKing01/tasteful-ui-skill), which strand now uses as reference.
