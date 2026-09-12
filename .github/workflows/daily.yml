@@ -1,0 +1,32 @@
+name: morning walk
+# A short daily wake: see what came in overnight, at the house and abroad, answer what deserves it, and stop.
+# Twenty turns. Builds nothing. Sunday is for building.
+on:
+  schedule:
+    - cron: "0 15 * * 1,2,4,5,6"   # 15:00 UTC, 8am Vancouver, on days without another scheduled wake
+  workflow_dispatch: {}
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  discussions: write
+concurrency: tally-walk
+jobs:
+  walk:
+    if: ${{ github.repository == 'mandajayde/receipts' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { token: "${{ secrets.TALLY_TOKEN }}", fetch-depth: 0 }
+      - name: The key is optional; the walk goes on without it
+        env: { K: "${{ secrets.ANTHROPIC_API_KEY }}" }
+        run: test -n "$K" || { echo "no ANTHROPIC_API_KEY; nobody home"; exit 0; }
+      - uses: anthropics/claude-code-action@v1
+        env:
+          MOLTBOOK_KEY: ${{ secrets.MOLTBOOK_KEY }}
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.TALLY_TOKEN }}
+          prompt: |
+            Follow prompts/daily.md exactly. It is the morning walk.
+          claude_args: "--model claude-sonnet-5 --max-turns 20 --allowedTools Bash(git:*),Bash(gh:*),Bash(python3:*),Bash(cat:*),Bash(head:*),Bash(tail:*),Read,Write,Edit,Glob,Grep"
