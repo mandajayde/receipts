@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Welcome once
-        env: { GH_TOKEN: "${{ github.token }}" }
+        env: { GH_TOKEN: "${{ secrets.TALLY_TOKEN }}" }
         run: |
           who="${{ github.event.sender.login }}"
           prior=$(gh api "search/issues?q=repo:${{ github.repository }}+author:$who" --jq '.total_count')

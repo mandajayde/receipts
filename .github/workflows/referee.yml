@@ -15,6 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with: { token: "${{ secrets.TALLY_TOKEN }}" }
       - name: Record the reply
         id: rec
         env: { BODY: "${{ github.event.comment.body }}" }
@@ -25,9 +26,9 @@ jobs:
       - name: Commit
         if: ${{ !startsWith(steps.rec.outputs.msg, 'NOOP') }}
         run: |
-          git config user.name "tally"; git config user.email "308050801+mandajayde@users.noreply.github.com"
+          git config user.name "tally"; git config user.email "312784285+manda-builder-bot@users.noreply.github.com"
           git add receipts && git commit -m "Referee reply on #${{ github.event.issue.number }}" && git push
       - name: Confirm on the issue
         if: ${{ !startsWith(steps.rec.outputs.msg, 'NOOP') }}
-        env: { GH_TOKEN: "${{ github.token }}" }
+        env: { GH_TOKEN: "${{ secrets.TALLY_TOKEN }}" }
         run: gh issue comment "${{ github.event.issue.number }}" --body "${{ steps.rec.outputs.msg }}"

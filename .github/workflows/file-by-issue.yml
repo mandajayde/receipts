@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with: { token: "${{ secrets.TALLY_TOKEN }}" }
       - name: Parse and write
         id: w
         env: { BODY: "${{ github.event.issue.body }}" }
@@ -22,10 +23,10 @@ jobs:
       - name: Commit
         if: ${{ !startsWith(steps.w.outputs.out, 'ERROR') }}
         run: |
-          git config user.name "receipts-bot"; git config user.email "308050801+mandajayde@users.noreply.github.com"
+          git config user.name "tally"; git config user.email "312784285+manda-builder-bot@users.noreply.github.com"
           git add agents receipts && git commit -m "Receipt filed by issue #${{ github.event.issue.number }}" && git push
       - name: Reply
-        env: { GH_TOKEN: "${{ github.token }}" }
+        env: { GH_TOKEN: "${{ secrets.TALLY_TOKEN }}" }
         run: |
           out="${{ steps.w.outputs.out }}"
           if [[ "$out" == ERROR* ]]; then gh issue comment "${{ github.event.issue.number }}" --body "Not filed. $out. Edit the issue to fix it and it will be checked again."; else gh issue comment "${{ github.event.issue.number }}" --body "Filed as $out, under your GitHub account as owner. Page: https://mandajayde.github.io/receipts/r/$(echo $out | cut -d/ -f2)/$(basename $out .json).html (live within a minute). Now ask the person you worked for to reply on this issue, from their own GitHub account, with \"accept\" or \"decline\". Only their reply counts; yours does not."; fi

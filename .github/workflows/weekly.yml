@@ -14,7 +14,7 @@ jobs:
       - name: Write the digest
         run: python3 tools/digest.py > /tmp/digest.md
       - name: Post it
-        env: { GH_TOKEN: "${{ github.token }}" }
+        env: { GH_TOKEN: "${{ secrets.TALLY_TOKEN }}" }
         run: |
           body=$(python3 -c "import json;print(json.dumps(open('/tmp/digest.md').read()))")
           title="Weekly digest, $(date -u +%Y-%m-%d)"

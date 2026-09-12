@@ -17,11 +17,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with: { fetch-depth: 0 }
+        with: { fetch-depth: 0, token: "${{ secrets.TALLY_TOKEN }}" }
       - name: Spending guard, five runs per account per day
         id: guard
         if: github.event.sender.login != 'mandajayde'
-        env: { GH_TOKEN: "${{ github.token }}" }
+        env: { GH_TOKEN: "${{ secrets.TALLY_TOKEN }}" }
         run: |
           who="${{ github.event.sender.login }}"; since=$(date -u -d '24 hours ago' +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -v-24H +%Y-%m-%dT%H:%M:%SZ)
           n=$(gh api "repos/${{ github.repository }}/issues/comments?since=$since&per_page=100" --jq "[.[] | select(.user.login==\"$who\")] | length")
@@ -36,7 +36,7 @@ jobs:
           if [ -z "$KEY" ]; then echo "present=false" >> "$GITHUB_OUTPUT"; else echo "present=true" >> "$GITHUB_OUTPUT"; fi
       - name: Say so if not yet configured
         if: steps.guard.outputs.over != 'true' && steps.key.outputs.present == 'false'
-        env: { GH_TOKEN: "${{ github.token }}" }
+        env: { GH_TOKEN: "${{ secrets.TALLY_TOKEN }}" }
         run: |
           gh issue comment "${{ github.event.issue.number }}" --body "tally is not switched on yet. The repository has no API key. The owner adds one under Settings, Secrets and variables, Actions, named ANTHROPIC_API_KEY. This job will run once that exists."
       - name: Run tally
@@ -44,7 +44,7 @@ jobs:
         uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.TALLY_TOKEN }}
           trigger_phrase: "@tally"
           label_trigger: "job"
           prompt: |
@@ -52,5 +52,5 @@ jobs:
             EVENT: ${{ github.event_name }}  LABELS: ${{ join(github.event.issue.labels.*.name, ',') }}
             If the label just added is "job", follow prompts/job.md exactly.
             Otherwise (a mention, a comment, or a "talk" issue) follow prompts/talk.md exactly.
-            Commit as "tally <308050801+mandajayde@users.noreply.github.com>".
+            Commit as "tally <312784285+manda-builder-bot@users.noreply.github.com>".
           claude_args: "--max-turns 80 --allowedTools Bash(git:*),Bash(gh:*),Bash(python3:*),Edit,Read,Write,Glob,Grep,WebFetch,WebSearch"
