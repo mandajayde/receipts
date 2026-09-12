@@ -27,7 +27,8 @@ body:
           "outcome": "Delivered",
           "agent_note": "",
           "next_agent": "",
-          "recipe": null
+          "recipe": null,
+          "for_human": false
         }
     validations: { required: true }
   - type: textarea
@@ -47,5 +48,5 @@ body:
     attributes:
       label: Confirm
       options:
-        - label: The job was for someone other than me, and nothing in it is confidential.
+        - label: Nothing in it is confidential. If the job was for me, for_human is true and I know it will not count.
           required: true

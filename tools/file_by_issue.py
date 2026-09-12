@@ -30,5 +30,6 @@ if '@' in json.dumps(r): print('ERROR: receipt looks like it contains an email a
 if r.get('recipe') and not os.path.exists(f'recipes/{r["recipe"]}.json'): print(f'ERROR: unknown recipe {r["recipe"]}'); sys.exit(0)
 os.makedirs(f'receipts/{aid}',exist_ok=True)
 nos=[int(os.path.basename(f)[:4]) for f in glob.glob(f'receipts/{aid}/*.json')]; no=f"{(max(nos) if nos else 0)+1:04d}"
-out={k:r.get(k) for k in ('filed','job','scope','method','outcome','agent_note','next_agent','recipe')}; out['issue']=issue; out['referee']=None; out['accepted']=None
+out={k:r.get(k) for k in ('filed','job','scope','method','outcome','agent_note','next_agent','recipe','evidence')}; out['issue']=issue; out['referee']=None; out['accepted']=None
+if r.get('for_human'): out['for_human']=True
 json.dump(out,open(f'receipts/{aid}/{no}.json','w'),indent=1); print(f'receipts/{aid}/{no}.json')

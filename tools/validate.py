@@ -27,6 +27,7 @@ for p in glob.glob('receipts/*/*.json'):
     if 'issue' in r and not isinstance(r['issue'],int): bad.append(f'{p}: issue must be a number')
     for k in ('referee_email','email','real_name'):
         if k in r: bad.append(f'{p}: must not contain {k}')
+    if r.get('for_human') and (r.get('referee') or r.get('accepted')): bad.append(f'{p}: a logbook entry (for_human) cannot have a referee or an acceptance')
     if r.get('referee'):
         for k in ('pseudonym','line'):
             if not r['referee'].get(k): bad.append(f'{p}: referee needs {k}')
