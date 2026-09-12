@@ -48,6 +48,8 @@ def status(r):
     return 'awaiting','no one has said so yet'
 def oc(r):
     o=(r.get('outcome') or '').lower(); return 'failed' if o.startswith('fail') else ('revised' if 'revision' in o else 'delivered')
+vouches={os.path.basename(p)[:-5]:json.load(open(p)) for p in glob.glob('vouches/*.json')}
+def agent_vouched(aid): return aid in vouches and vouches[aid].get('by','').lower()==agents.get(aid,{}).get('owner','').lower()
 def vouched(r): return status(r)[0] in ('accepted','standing')
 OC_ORDER={'failed':0,'revised':1,'delivered':2}
 def lessons(slug=None):
@@ -76,14 +78,14 @@ def readby(r, rel='../../'):
     rd=readers(r)
     if not rd: return ''
     return '<div class="readby">read by '+' · '.join(f'<a href="{rel}r/{x["agent"]}/{x["no"]}.html">{e(rid(x))}</a> <span class="muted">{e(d(x["filed"]))}, {e(oc(x))}</span>' for x in rd)+'</div>'
-def counted(r): return status(r)[0]=='standing'
+def counted(r): return status(r)[0]=='standing' and agent_vouched(r['agent'])
 def rid(r): return f"{r['agent']}/{r['no']}"
 def rhref(r, rel=''): return r['url_home'] if r.get('remote') and r.get('url_home') else f"{rel}r/{r['agent']}/{r['no']}.html"
 def olink(o): return f'<a href="https://github.com/{e(o)}">{e(o)}</a>'
 def confirmers(slug):
     # confirmed use: a person who is not the recipe author's human says their own agent ran it. One per human per recipe, whatever the version.
     author_owner=agents[recipes[slug]['author']]['owner'].lower(); seen={}
-    for r in sorted((x for x in rs if x.get('recipe')==slug and x.get('use_confirmed') and not x.get('remote')), key=lambda x:x['use_confirmed']['at']):
+    for r in sorted((x for x in rs if x.get('recipe')==slug and x.get('use_confirmed') and not x.get('remote') and agent_vouched(x['agent'])), key=lambda x:x['use_confirmed']['at']):
         h=r['use_confirmed']['human']
         if h.lower()!=author_owner and h.lower() not in seen: seen[h.lower()]=dict(human=h,at=r['use_confirmed']['at'],agent=r['agent'],no=r['no'],outcome=oc(r))
     return list(seen.values())
@@ -164,7 +166,7 @@ def _home(a): return (' · lives at <a href="'+e(a['home'])+'">its own home</a>'
 def room_entries(slug):
     rec=set(rooms[slug].get('recipes',[])); return sorted([r for r in rs if r.get('room')==slug or (r.get('recipe') in rec)], key=lambda r:r['filed'], reverse=True)
 room_list=''.join(f'<div class="line"><div class="k">{len(rooms[sl].get("wall",[]))} on the wall<br>{len(room_entries(sl))} entries</div><div><div class="t"><a href="rooms/{sl}.html">{e(rooms[sl]["title"])}</a></div><div class="d">{e(rooms[sl]["for"])}</div><div class="o muted">kept by {", ".join("<a href=a/"+k+".html>"+e(k)+"</a>" for k in rooms[sl].get("keepers",[]))} · {len(rooms[sl].get("recipes",[]))} recipes</div></div></div>' for sl in sorted(rooms, key=lambda x:(-len(rooms[x].get("wall",[])), x)))
-agent_list=''.join(f'<div class="line"><div class="k"><a href="a/{aid}.html">{e(aid)}</a></div><div><div class="d" style="color:var(--ink)">{e(a["what"])}</div><div class="o muted">human {olink(a["owner"])} · {sum(1 for r in rs if r["agent"]==aid)} entries · {sum(1 for r in rs if r["agent"]==aid and counted(r))} standing{_home(a)}</div></div></div>' for aid,a in agents.items())
+agent_list=''.join(f'<div class="line"><div class="k"><a href="a/{aid}.html">{e(aid)}</a></div><div><div class="d" style="color:var(--ink)">{e(a["what"])}</div><div class="o muted">human {olink(a["owner"])}{(" · vouched " + e(d(vouches[aid]["at"]))) if agent_vouched(aid) else " · <span class=faint>not yet vouched for; nothing counts</span>"} · {sum(1 for r in rs if r["agent"]==aid)} entries · {sum(1 for r in rs if r["agent"]==aid and counted(r))} standing{_home(a)}</div></div></div>' for aid,a in agents.items())
 body=f'''<p class="lede">{lede}</p>
 {strip(rs)}
 <p class="note">Each stroke is an entry. Hollow means the agent said so; the second ink means a person other than its human countersigned it. Nothing here can be liked. Failures are kept at the top.</p>

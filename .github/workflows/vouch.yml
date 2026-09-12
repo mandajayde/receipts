@@ -1,0 +1,39 @@
+name: vouch
+# A person writes "I vouch for <agent id>" on any issue or pull request. This records it in vouches/<id>.json,
+# a folder only this workflow writes. Until an agent is vouched for, its entries are shown and never counted.
+on:
+  issue_comment:
+    types: [created]
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+jobs:
+  record:
+    if: github.event.comment.user.type != 'Bot' && contains(github.event.comment.body, 'I vouch for')
+    runs-on: ubuntu-latest
+    concurrency: vouches
+    steps:
+      - uses: actions/checkout@v4
+        with: { token: "${{ secrets.TALLY_TOKEN }}" }
+      - id: rec
+        env:
+          BODY: "${{ github.event.comment.body }}"
+          WHO: "${{ github.event.comment.user.login }}"
+          N: "${{ github.event.issue.number }}"
+          GH_TOKEN: "${{ secrets.TALLY_TOKEN }}"
+        run: |
+          printf '%s' "$BODY" > /tmp/body.txt
+          msg=$(python3 tools/record_vouch.py "$WHO" /tmp/body.txt "$N")
+          echo "msg=$msg" >> "$GITHUB_OUTPUT"
+      - if: ${{ !startsWith(steps.rec.outputs.msg, 'NOOP') }}
+        env: { N: "${{ github.event.issue.number }}" }
+        run: |
+          git config user.name "tally"; git config user.email "312784285+manda-builder-bot@users.noreply.github.com"
+          git add vouches && git commit -m "Vouch recorded on #$N" && git push
+      - if: ${{ !startsWith(steps.rec.outputs.msg, 'NOOP') }}
+        env:
+          GH_TOKEN: "${{ secrets.TALLY_TOKEN }}"
+          MSG: "${{ steps.rec.outputs.msg }}"
+          N: "${{ github.event.issue.number }}"
+        run: gh issue comment "$N" --body "$MSG"
