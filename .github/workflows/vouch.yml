@@ -1,39 +1,59 @@
 name: vouch
 # A person writes "I vouch for <agent id>" on any issue or pull request. This records it in vouches/<id>.json,
 # a folder only this workflow writes. Until an agent is vouched for, its entries are shown and never counted.
+# Run by hand with an issue number to catch up on vouches that raced each other.
 on:
   issue_comment:
     types: [created]
+  workflow_dispatch:
+    inputs:
+      issue:
+        description: issue or pull request number whose comments to re-read
+        required: true
 permissions:
   contents: write
   issues: write
   pull-requests: write
+concurrency:
+  group: vouches
+  cancel-in-progress: false
 jobs:
   record:
-    if: github.event.comment.user.type != 'Bot' && contains(github.event.comment.body, 'I vouch for')
+    if: github.event_name == 'workflow_dispatch' || (github.event.comment.user.type != 'Bot' && contains(github.event.comment.body, 'I vouch for'))
     runs-on: ubuntu-latest
-    concurrency: vouches
     steps:
       - uses: actions/checkout@v4
         with: { token: "${{ secrets.TALLY_TOKEN }}" }
       - id: rec
         env:
+          EVENT: "${{ github.event_name }}"
           BODY: "${{ github.event.comment.body }}"
           WHO: "${{ github.event.comment.user.login }}"
-          N: "${{ github.event.issue.number }}"
+          N: "${{ github.event.issue.number || inputs.issue }}"
           GH_TOKEN: "${{ secrets.TALLY_TOKEN }}"
         run: |
-          printf '%s' "$BODY" > /tmp/body.txt
-          msg=$(python3 tools/record_vouch.py "$WHO" /tmp/body.txt "$N")
-          echo "msg=$msg" >> "$GITHUB_OUTPUT"
-      - if: ${{ !startsWith(steps.rec.outputs.msg, 'NOOP') }}
-        env: { N: "${{ github.event.issue.number }}" }
+          : > /tmp/msgs.txt
+          if [ "$EVENT" = "workflow_dispatch" ]; then
+            gh api "repos/${GITHUB_REPOSITORY}/issues/$N/comments?per_page=100" --jq '.[] | select(.user.type != "Bot") | [.user.login, .body] | @json' > /tmp/comments.jsonl
+            while IFS= read -r line; do
+              who=$(printf '%s' "$line" | python3 -c 'import json,sys;print(json.loads(sys.stdin.read())[0])')
+              printf '%s' "$line" | python3 -c 'import json,sys;print(json.loads(sys.stdin.read())[1])' > /tmp/body.txt
+              msg=$(python3 tools/record_vouch.py "$who" /tmp/body.txt "$N"); case "$msg" in NOOP*) ;; *) echo "$msg" >> /tmp/msgs.txt;; esac
+            done < /tmp/comments.jsonl
+          else
+            printf '%s' "$BODY" > /tmp/body.txt
+            msg=$(python3 tools/record_vouch.py "$WHO" /tmp/body.txt "$N"); case "$msg" in NOOP*) ;; *) echo "$msg" >> /tmp/msgs.txt;; esac
+          fi
+          echo "n=$(wc -l < /tmp/msgs.txt | tr -d ' ')" >> "$GITHUB_OUTPUT"
+      - if: ${{ steps.rec.outputs.n != '0' }}
+        env: { N: "${{ github.event.issue.number || inputs.issue }}" }
         run: |
           git config user.name "tally"; git config user.email "312784285+manda-builder-bot@users.noreply.github.com"
-          git add vouches && git commit -m "Vouch recorded on #$N" && git push
-      - if: ${{ !startsWith(steps.rec.outputs.msg, 'NOOP') }}
+          git add vouches && git commit -m "Vouch recorded on #$N"
+          for i in 1 2 3 4; do git pull --rebase -q origin main && git push -q && exit 0; sleep 5; done
+          echo "could not push after four tries"; exit 1
+      - if: ${{ steps.rec.outputs.n != '0' }}
         env:
           GH_TOKEN: "${{ secrets.TALLY_TOKEN }}"
-          MSG: "${{ steps.rec.outputs.msg }}"
-          N: "${{ github.event.issue.number }}"
-        run: gh issue comment "$N" --body "$MSG"
+          N: "${{ github.event.issue.number || inputs.issue }}"
+        run: gh issue comment "$N" --body-file /tmp/msgs.txt
