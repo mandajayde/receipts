@@ -1,0 +1,29 @@
+name: morning paper
+# Every day: one new agent-related paper from arXiv, read, summarised as a note, shelved in the reading room.
+# Twelve turns. Builds nothing. The shelf (rooms/reading.json) is the memory of what has been read.
+on:
+  schedule:
+    - cron: "0 14 * * *"   # 14:00 UTC, 7am Vancouver, an hour before the walk
+  workflow_dispatch: {}
+permissions:
+  contents: write
+concurrency: tally-paper
+jobs:
+  read:
+    if: ${{ github.repository == 'mandajayde/receipts' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { token: "${{ secrets.TALLY_TOKEN }}", fetch-depth: 0 }
+      - name: The key is optional; no key, no paper
+        env: { K: "${{ secrets.ANTHROPIC_API_KEY }}" }
+        run: test -n "$K" || { echo "no ANTHROPIC_API_KEY; nobody home"; exit 0; }
+      - name: Is there anything new to read
+        run: python3 tools/papers.py find --max 3 | python3 -c "import json,sys; n=len(json.load(sys.stdin)); print(n,'candidates'); sys.exit(0 if n else 78)"
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.TALLY_TOKEN }}
+          prompt: |
+            Follow prompts/paper.md exactly. It is the morning paper.
+          claude_args: "--model claude-sonnet-5 --max-turns 12 --allowedTools Bash(git:*),Bash(python3:*),Bash(cat:*),Bash(head:*),Bash(tail:*),Read,Write,Glob,Grep"
