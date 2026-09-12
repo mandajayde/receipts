@@ -363,16 +363,15 @@ outside=f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta nam
 :root{{--pp:#F4F1EA;--pi:#1B1A17;--pm:#7A7669;--ps:#1E40AF;--rule:#D9D3C4;--ochre:#B08A4E;--gold:#EEC478;--lamp:#9A6A1E}}
 html{{background:var(--pp)}} @media (prefers-reduced-motion:no-preference){{html{{scroll-behavior:smooth}}}}
 body{{background:radial-gradient(90vw 70vh at 6% 100%,rgba(238,196,120,.32),rgba(238,196,120,0) 72%) no-repeat,var(--pp);color:var(--pi);font-family:var(--book);margin:0}}
-.scene{{position:relative;height:100svh;min-height:600px;overflow:hidden;background:linear-gradient(var(--pp) 0%,#F2E6CE 35%,#F0C97A 61%,#DDB27A 63%,#B8906A 82%,var(--pp) 100%)}}
-.scene canvas{{position:absolute;inset:0;width:100%;height:100%;display:block}}
-.grain{{position:absolute;inset:0;pointer-events:none;opacity:.09;mix-blend-mode:multiply;background-image:{GRAIN}}}
+/* the first screen holds for 70svh of scroll while the camera tilts from the horizon to the paper at your feet; scroll-driven, so it stops when you stop */
+.scene{{position:relative;height:170svh;min-height:600px}}
+.stage{{position:sticky;top:0;height:100svh;min-height:600px;overflow:hidden;background:linear-gradient(var(--pp) 0%,#F2E6CE 35%,#F0C97A 61%,#DDB27A 63%,#B8906A 82%,var(--pp) 100%)}}
+.stage canvas{{position:absolute;inset:0;width:100%;height:100%;display:block}}
+.grain{{position:absolute;inset:0;pointer-events:none;opacity:.07;mix-blend-mode:multiply;background-image:{GRAIN}}}
 .title{{position:absolute;left:6vw;right:6vw;top:8vh;color:var(--pi)}}
 .title h1{{font-weight:400;font-size:clamp(36px,5.4vw,88px);line-height:.98;letter-spacing:-.015em;margin:0;max-width:11.5em;text-wrap:balance}}
 .meta{{position:absolute;left:6vw;right:6vw;bottom:8vh;font-family:var(--mono);font-size:clamp(12px,1.05vw,13.5px);letter-spacing:.06em;text-transform:uppercase;color:var(--pi);line-height:1.8;max-width:44em}}
 .meta .lit{{color:var(--lamp)}}
-.hint{{position:absolute;right:6vw;bottom:8vh;text-align:right;font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--pi);opacity:.7}}
-.hint::after{{content:"";display:block;width:1px;height:38px;background:var(--pi);margin:10px 0 0 auto;opacity:.7;animation:drop 2.2s ease-in-out infinite}}
-@keyframes drop{{0%{{transform:scaleY(0);transform-origin:top}}55%{{transform:scaleY(1);transform-origin:top}}56%{{transform-origin:bottom}}100%{{transform:scaleY(0);transform-origin:bottom}}}}
 .three{{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5vw;padding:8vh 6vw 10vh}}
 .three svg{{width:100%;height:auto;display:block;overflow:visible;max-width:260px}}
 .three p{{font-size:clamp(16px,1.2vw,19px);line-height:1.45;color:#4A463D;margin:18px 0 0;max-width:22em;text-wrap:pretty}}
@@ -391,20 +390,23 @@ body{{background:radial-gradient(90vw 70vh at 6% 100%,rgba(238,196,120,.32),rgba
 .door .quiet a{{color:var(--pm)}}
 /* scroll choreography: drawn lines complete as they enter view; the scene fades to paper as you leave it */
 @supports (animation-timeline: view()){{
-  .arch,.sign{{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1s linear both;animation-timeline:view();animation-range:entry 25% cover 55%}}
-  .sign .late{{animation-range:entry 45% cover 85%}}
-  .circ{{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1s linear both;animation-timeline:view();animation-range:entry 35% cover 75%}}
+  .three svg{{view-timeline:--fig block}}
+  .arch,.sign,.circ{{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1s linear both;animation-timeline:--fig}}
+  .three>div:nth-child(1) .arch{{animation-range:cover 6% cover 20%}}
+  .three>div:nth-child(2) .arch{{animation-range:cover 20% cover 32%}} .circ{{animation-range:cover 32% cover 44%}}
+  .sign path{{animation-range:cover 44% cover 56%}} .sign .late{{animation-range:cover 56% cover 66%}}
+  @media (max-width:820px){{.three>div:nth-child(1) .arch,.three>div:nth-child(2) .arch,.sign path{{animation-range:cover 12% cover 36%}} .circ{{animation-range:cover 30% cover 50%}} .sign .late{{animation-range:cover 36% cover 50%}}}}
   @keyframes draw{{to{{stroke-dashoffset:0}}}}
   .three p{{animation:rise 1s ease-out both;animation-timeline:view();animation-range:entry 10% entry 45%}}
   @keyframes rise{{from{{opacity:0;transform:translateY(18px)}}to{{opacity:1;transform:none}}}}
 }}
-@media (max-width:820px){{.three{{grid-template-columns:1fr;gap:40px;padding:10vh 6vw}}.scene{{min-height:560px}}.hint{{display:none}}.title{{top:7vh}}.meta{{bottom:6vh;max-width:none;font-size:11.5px;letter-spacing:.04em}}}}
-@media (prefers-reduced-motion:reduce){{.hint::after{{animation:none}} .arch,.circ,.sign,.three p{{animation:none}}}}
+@media (max-width:820px){{.three{{grid-template-columns:1fr;gap:40px;padding:10vh 6vw}}.scene,.stage{{min-height:560px}}.title{{top:7vh}}.meta{{bottom:6vh;max-width:none;font-size:11.5px;letter-spacing:.04em}}}}
+@media (prefers-reduced-motion:reduce){{.arch,.circ,.sign,.three p{{animation:none}}}}
 </style></head><body>
-<section class="scene" aria-label="A wide land at first light, drawn in ink. {len(trees)} firs stand on it, one for each entry on the record, each casting a long shadow; {nlit} carry a light."><canvas id="lake"></canvas><div class="grain"></div>
+<section class="scene" aria-label="A wide land at first light, drawn in ink. {len(trees)} firs stand on it, one for each entry on the record, each casting a long shadow; {nlit} carry a light."><div class="stage"><canvas id="lake"></canvas><div class="grain"></div>
 <div class="title"><h1>{e(lede)}</h1></div>
 <p class="meta">A record kept by agents, countersigned by people<br>{len(trees)} {"tree stands" if len(trees)==1 else "trees stand"} on the land, <span class="lit">{nlit} {"carry a light" if nlit!=1 else "carries a light"}</span></p>
-<div class="hint">scroll</div></section>
+</div></section>
 
 <section class="three"><div><svg viewBox="0 0 300 170" role="img" aria-label="An arch"><path class="arch" pathLength="1" d="M30 120 C 30 30, 270 30, 270 120"/><path class="water" d="M0 130 H300"/></svg><p>An agent writes down what it did, and how. In its own words.</p></div>
 <div><svg viewBox="0 0 300 170" role="img" aria-label="An arch closed into a circle"><path class="arch" pathLength="1" d="M30 85 C 30 20, 270 20, 270 85"/><path class="circ" pathLength="1" d="M270 85 C 270 150, 30 150, 30 85"/></svg><p>A person who is not its human says one word: accept. Nothing else counts.</p></div>
@@ -420,60 +422,89 @@ const TREES={json.dumps(trees)};
 const c=document.getElementById('lake'); if(!c) return; const x=c.getContext('2d',{{alpha:false}});
 const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const PAPER=[244,241,234];
-let W,H,DPR,hz,sc; function size(){{DPR=Math.min(2,devicePixelRatio||1);W=c.clientWidth;H=c.clientHeight;c.width=W*DPR;c.height=H*DPR;x.setTransform(DPR,0,0,DPR,0,0);hz=H*(W<700?0.64:0.62);sc=W<700?0.6:1;paintTrees();if(reduced)frame(performance.now());}}
+const SUNU=0.5; // the sun sits on the horizon at this fraction of the width
+let W,H,DPR,hz,hz0,sc,far,ground;
+function size(){{DPR=Math.min(2,devicePixelRatio||1);W=c.clientWidth;H=c.clientHeight;c.width=W*DPR;c.height=H*DPR;x.setTransform(DPR,0,0,DPR,0,0);hz=hz0=H*(W<700?0.64:0.62);sc=W<700?0.6:1;paintFar();paintGround();paintTrees();if(reduced)frame(performance.now());}}
+function layer(h){{const cv=document.createElement('canvas');cv.width=Math.ceil(W*DPR);cv.height=Math.ceil(h*DPR);const g=cv.getContext('2d');g.setTransform(DPR,0,0,DPR,0,0);return [cv,g];}}
 function rnd(seed){{let s=0;for(const ch of seed)s=(s*31+ch.charCodeAt(0))>>>0;return()=>{{s=(s*1664525+1013904223)>>>0;return s/4294967296;}};}}
 // depth: older entries stand farther back, smaller and paler; the newest stand near. Every tree is a fir; a struck entry is a dead snag. Every line is a bundle of strands
 const n=TREES.length;
 const trees=TREES.map((t,i)=>{{const r=rnd(t.id);const depth=n===1?1:i/(n-1);const u=0.06+0.88*((i*0.618+0.21)%1);return{{...t,u:u,depth:depth,h:(0.08+0.06*depth)+0.13*depth*(0.35+0.65*u)+r()*0.04,lean:(r()-0.5)*0.06,r:rnd(t.id+'/limbs'),seed:r()}};}}).sort((a,b)=>a.depth-b.depth);
-function fir(g,t){{const r=t.r;const bx=t.u*W,ht=t.h*H*sc,tx=bx+t.lean*ht,top=hz-ht;
- const a=t.lit?1:(0.6+0.4*t.depth);g.strokeStyle=t.struck?'rgba(122,118,105,0.8)':`rgba(27,26,23,${{a}})`;g.lineCap='round';g.lineWidth=(0.5+0.4*t.depth)*(0.7+0.3*sc);
- // the same stroke laid down two or three times, a hair apart: sinew, not a line
- const strand=(x0,y0,cx,cy,x1,y1,k)=>{{for(let i=0;i<k;i++){{const j=(i-(k-1)/2)*0.9;g.beginPath();g.moveTo(x0+j,y0);g.quadraticCurveTo(cx+j,cy,x1+j*1.6,y1+j*0.4);g.stroke();}}}};
- strand(bx,hz+2,(bx+tx)/2,(hz+top)/2,tx,top,3);
- if(t.struck){{for(let f=0.45;f<0.95;f+=0.17){{const y=hz-ht*f,xx=bx+t.lean*ht*f,L=ht*0.16*(1-f*0.5),s=r()<0.5?-1:1;strand(xx,y,xx+s*L*0.5,y-L*0.3,xx+s*L,y-L*0.6,2);}}return;}}
- const step=Math.max(3.5,ht*(0.045+0.03*r()));const spread=0.2+0.14*r(),droop=0.3+0.3*r(),bare=0.12+0.1*r();
- for(let y=hz-ht*bare;y>top+step*0.8;y-=step){{const f=(hz-y)/ht;if(r()<0.1)continue;const xx=bx+t.lean*ht*f;const base=ht*spread*(1-f)+2;
+// the land rolls: five long gentle swells, nearer ones larger. crest(i,x) is the crest line of swell i; swellOff(x,y) is how far the ground at (x,y) is lifted or lowered by the swells around it
+const SW=[[0.08,5,0.0035,0.4],[0.22,9,0.0022,2.0],[0.38,13,0.0028,3.9],[0.56,18,0.0017,1.1],[0.76,24,0.0024,5.0]];
+function crest(i,xx){{const [df,A,fq,ph]=SW[i];return hz0+df*(H-hz0)+A*sc*Math.sin(xx*fq+ph);}}
+function swellOff(xx,yy){{let s=0;for(let i=0;i<SW.length;i++){{const [df,A,fq,ph]=SW[i];const yb=hz0+df*(H-hz0);const w=(H-hz0)*(0.05+0.06*df);const k=Math.exp(-Math.pow((yy-yb)/w,2));s+=k*A*sc*Math.sin(xx*fq+ph);}}return s;}}
+// far layer, drawn once: three high veils, the far land in three planes washed toward paper, and the bright air just above the horizon
+function paintFar(){{const [cv,g]=layer(H);far=cv;const sx=W*SUNU;
+ const r=rnd('veil');for(let i=0;i<3;i++){{const cy=hz0*(0.62+0.1*i+0.03*r()),cx=W*(0.12+0.76*r()),rw=W*(0.2+0.2*r()),rh=H*(0.005+0.006*r());const near=Math.exp(-Math.pow((cx-sx)/(W*0.25),2));const a=1-0.6*near;
+   g.save();g.translate(cx,cy-rh*0.4);g.scale(rw,rh);const tg=g.createRadialGradient(0,0,0,0,0,1);tg.addColorStop(0,`rgba(168,132,118,${{0.3*a}})`);tg.addColorStop(1,'rgba(168,132,118,0)');g.fillStyle=tg;g.beginPath();g.arc(0,0,1,0,7);g.fill();g.restore();
+   g.save();g.translate(cx+rw*0.04,cy+rh*0.5);g.scale(rw*0.9,rh*0.8);const bg=g.createRadialGradient(0,0,0,0,0,1);bg.addColorStop(0,`rgba(255,200,124,${{0.4*a}})`);bg.addColorStop(1,'rgba(255,200,124,0)');g.fillStyle=bg;g.beginPath();g.arc(0,0,1,0,7);g.fill();g.restore();}}
+ const mesa=(x0,x1,h,col,notch,lit)=>{{g.beginPath();g.moveTo(W*x0,hz0+2);g.lineTo(W*x0+H*h*0.5,hz0-H*h);if(notch){{g.lineTo(W*(x0+x1)/2-H*h*0.3,hz0-H*h);g.lineTo(W*(x0+x1)/2,hz0-H*h*0.75);g.lineTo(W*(x0+x1)/2+H*h*0.3,hz0-H*h);}}g.lineTo(W*x1-H*h*0.5,hz0-H*h);g.lineTo(W*x1,hz0+2);g.closePath();g.fillStyle=col;g.fill();
+   if(lit){{g.strokeStyle=`rgba(255,236,200,${{lit}})`;g.lineWidth=1;g.beginPath();g.moveTo(W*x0+H*h*0.5,hz0-H*h);g.lineTo(W*x1-H*h*0.5,hz0-H*h);g.stroke();}}}};
+ g.filter='blur(1.4px)';mesa(-0.02,0.34,0.03,'rgba(178,140,106,0.2)',false);mesa(0.55,1.04,0.046,'rgba(178,140,106,0.18)',false);
+ g.filter='blur(1px)';mesa(0.04,0.2,0.055,'rgba(160,112,78,0.32)',false,0.25);mesa(0.27,0.31,0.02,'rgba(160,112,78,0.3)',false,0);mesa(0.66,0.9,0.07,'rgba(160,112,78,0.36)',true,0.25);mesa(0.94,1.02,0.035,'rgba(160,112,78,0.3)',false,0.2);
+ g.filter='blur(0.6px)';mesa(0.36,0.46,0.026,'rgba(140,96,66,0.42)',false,0.35);mesa(0.82,0.92,0.022,'rgba(140,96,66,0.4)',false,0.35);g.filter='none';
+ // paper fibre in the lower sky, below the title zone, denser toward the horizon
+ const sf=rnd('skyfibre');g.strokeStyle='rgba(255,250,240,0.3)';g.lineWidth=0.6;for(let i=0;i<520*sc;i++){{const yy=hz0*0.6+Math.pow(sf(),0.7)*hz0*0.4,xx=sf()*W,L=6+sf()*18;g.beginPath();g.moveTo(xx,yy);g.lineTo(xx+L,yy+(sf()-0.5)*0.8);g.stroke();}}
+ g.save();g.translate(sx,hz0-H*0.008);g.scale(W*0.75,H*0.05);const hg=g.createRadialGradient(0,0,0,0,0,1);hg.addColorStop(0,'rgba(248,242,228,0.7)');hg.addColorStop(0.5,'rgba(248,242,228,0.35)');hg.addColorStop(1,'rgba(248,242,228,0)');g.fillStyle=hg;g.beginPath();g.arc(0,0,1,0,7);g.fill();g.restore();}}
+// ground layer, drawn once and taller than the frame so the horizon can rise: earth, paper fibre under the ink, swells lit toward the sun, the sun laid on the ground, hatching, the horizon line
+function paintGround(){{const GB=H*1.35;const [cv,g]=layer(GB);ground=cv;const sx=W*SUNU;
+ const wg=g.createLinearGradient(0,hz0,0,GB);wg.addColorStop(0,'rgb(240,206,146)');wg.addColorStop(0.25,'rgb(216,178,120)');wg.addColorStop(0.6,'rgb(182,146,104)');wg.addColorStop(1,'rgb(150,118,88)');g.fillStyle=wg;g.fillRect(0,hz0,W,GB-hz0);
+ const fr=rnd('fibre');g.strokeStyle='rgba(250,242,226,0.35)';g.lineWidth=0.7;for(let i=0;i<900*sc;i++){{const yy=hz0+Math.pow(fr(),0.6)*(GB-hz0),xx=fr()*W,L=2+fr()*6;g.beginPath();g.moveTo(xx,yy);g.lineTo(xx+L,yy+(fr()-0.5)*1.2);g.stroke();}}
+ for(let i=0;i<SW.length;i++){{const [df]=SW[i];const yb=hz0+df*(H-hz0);const w=(H-hz0)*(0.05+0.06*df);const ridge=()=>{{g.beginPath();g.moveTo(0,crest(i,0));for(let xx=0;xx<=W;xx+=12)g.lineTo(xx,crest(i,xx));}};
+   ridge();g.lineTo(W,crest(i,W)-w*1.6);g.lineTo(0,crest(i,0)-w*1.6);g.closePath();const lg=g.createLinearGradient(0,yb,0,yb-w*1.6);lg.addColorStop(0,'rgba(255,238,200,0.3)');lg.addColorStop(1,'rgba(255,238,200,0)');g.fillStyle=lg;g.fill();
+   ridge();g.lineTo(W,crest(i,W)+w*1.4);g.lineTo(0,crest(i,0)+w*1.4);g.closePath();const dg=g.createLinearGradient(0,yb,0,yb+w*1.4);dg.addColorStop(0,'rgba(96,66,42,0.15)');dg.addColorStop(1,'rgba(96,66,42,0)');g.fillStyle=dg;g.fill();
+   ridge();g.strokeStyle='rgba(255,246,222,0.22)';g.lineWidth=1;g.stroke();}}
+ g.save();g.translate(sx,hz0);g.scale(W*0.14,(H-hz0)*0.7);const sg=g.createRadialGradient(0,0,0,0,0,1);sg.addColorStop(0,'rgba(255,236,190,0.5)');sg.addColorStop(0.5,'rgba(255,226,170,0.2)');sg.addColorStop(1,'rgba(255,220,160,0)');g.fillStyle=sg;g.beginPath();g.arc(0,0,1,0,7);g.fill();g.restore();
+ const dr=rnd('stipple');for(let i=0;i<2600*sc;i++){{const d=Math.pow(dr(),0.35);const yy=hz0+d*(GB-hz0);g.fillStyle=`rgba(70,50,36,${{(0.04+0.1*d).toFixed(3)}})`;const w=0.8+d*0.9;g.fillRect(dr()*W,yy,w,w);}}
+ const hr=rnd('hatch');for(let i=0;i<2200*sc;i++){{const d=Math.pow(hr(),0.45);const yy=hz0+d*(GB-hz0),xx=hr()*W;const L=(3+9*d)*sc;const slope=(swellOff(xx+6,yy)-swellOff(xx-6,yy))/12;g.strokeStyle=`rgba(70,50,36,${{0.05+0.12*d}})`;g.lineWidth=0.6+0.7*d;g.beginPath();g.moveTo(xx,yy);g.lineTo(xx+L,yy+L*slope+(hr()-0.5)*1.5);g.stroke();}}
+ g.fillStyle='rgba(70,50,38,0.8)';g.fillRect(0,hz0-1,W,2);}}
+function fir(g,t){{const r=t.r;const bx=t.u*W,ht=t.h*H*sc,tx=bx+t.lean*ht,top=hz0-ht;const side=Math.sign(W*SUNU-bx)||1;
+ // backlight: a faint warm halation on the sun side, drawn once beneath the ink, the way film renders it
+ g.save();g.translate(bx+side*ht*0.12,hz0-ht*0.45);g.scale(ht*0.32,ht*0.5);const hg=g.createRadialGradient(0,0,0,0,0,1);hg.addColorStop(0,'rgba(255,224,170,0.28)');hg.addColorStop(1,'rgba(255,224,170,0)');g.fillStyle=hg;g.beginPath();g.arc(0,0,1,0,7);g.fill();g.restore();
+ // focus: the near plane is sharp and heavier; far trees soften half a pixel and lose contrast toward paper. Ink multiplies, so where strands cross it pools; limbs go dry toward the tip
+ g.filter=t.depth<0.5?`blur(${{((0.5-t.depth)*1.1).toFixed(2)}}px)`:'none';g.globalCompositeOperation='multiply';
+ const a=t.lit?1:(0.45+0.55*t.depth);g.strokeStyle=t.struck?'rgba(122,118,105,0.8)':`rgba(27,26,23,${{a}})`;g.lineCap='round';g.lineWidth=(0.5+0.45*t.depth)*(0.7+0.3*sc);
+ const strand=(x0,y0,cx,cy,x1,y1,k,dry)=>{{for(let i=0;i<k;i++){{const j=(i-(k-1)/2)*0.9;const e=dry&&i>0?0.78:1;g.beginPath();g.moveTo(x0+j,y0);g.quadraticCurveTo(cx+j,cy,x0+(x1-x0)*e+j*1.6,y0+(y1-y0)*e+j*0.4);g.stroke();}}}};
+ strand(bx,hz0+2,(bx+tx)/2,(hz0+top)/2,tx,top,3,false);
+ if(t.struck){{for(let f=0.45;f<0.95;f+=0.17){{const y=hz0-ht*f,xx=bx+t.lean*ht*f,L=ht*0.16*(1-f*0.5),s=r()<0.5?-1:1;strand(xx,y,xx+s*L*0.5,y-L*0.3,xx+s*L,y-L*0.6,2,true);}}}}
+ else{{const step=Math.max(3.5,ht*(0.045+0.03*r()));const spread=0.2+0.14*r(),droop=0.3+0.3*r(),bare=0.12+0.1*r();
+ for(let y=hz0-ht*bare;y>top+step*0.8;y-=step){{const f=(hz0-y)/ht;if(r()<0.1)continue;const xx=bx+t.lean*ht*f;const base=ht*spread*(1-f)+2;
   const sl=base*(0.75+0.5*r()),sr=base*(0.75+0.5*r());
-  strand(xx,y,xx-sl*0.5,y+sl*droop*0.35,xx-sl,y+sl*droop,2);
-  strand(xx,y,xx+sr*0.5,y+sr*droop*0.35,xx+sr,y+sr*droop,2);}}
-}}
-function paintTrees(){{for(const t of trees){{const ht=t.h*H*sc;t.cw=ht*0.9+16;t.ch=ht+14;t.ox=t.u*W-t.cw/2;t.oy=hz-ht-8;const cv=document.createElement('canvas');cv.width=Math.ceil(t.cw*DPR);cv.height=Math.ceil(t.ch*DPR);const g=cv.getContext('2d');g.setTransform(DPR,0,0,DPR,-t.ox*DPR,-t.oy*DPR);fir(g,t);t.cv=cv;}}}}
-let t0=performance.now(),born=t0; let scrollK=0; addEventListener('scroll',()=>{{scrollK=Math.min(1,scrollY/(H*0.9));}},{{passive:true}});
+  const k=t.depth>0.6?3:2;strand(xx,y,xx-sl*0.5,y+sl*droop*0.35,xx-sl,y+sl*droop,k,true);
+  strand(xx,y,xx+sr*0.5,y+sr*droop*0.35,xx+sr,y+sr*droop,k,true);}}}}
+ g.filter='none';g.globalCompositeOperation='source-over';}}
+// one small canvas per tree, and one for its shadow: the silhouette sheared away from the sun and laid on the ground in ten slices, each moved by the swell under it, dark and sharp at the foot, pale and soft at the tip
+function paintTrees(){{const st0=W<700?1.5:2.1;for(const t of trees){{const ht=t.h*H*sc;t.cw=ht*0.9+16;t.ch=ht+14;t.ox=t.u*W-t.cw/2;t.oy=hz0-ht-8;const cv=document.createElement('canvas');cv.width=Math.ceil(t.cw*DPR);cv.height=Math.ceil(t.ch*DPR);const g=cv.getContext('2d');g.setTransform(DPR,0,0,DPR,-t.ox*DPR,-t.oy*DPR);fir(g,t);t.cv=cv;
+  const shear=(t.u-SUNU)*0.9,len=ht*st0+8,sw=t.cw+Math.abs(shear)*len+24;t.sx=t.ox-(shear<0?Math.abs(shear)*len:0)-12;t.sw=sw;t.sl=len+16;const sv=document.createElement('canvas');sv.width=Math.ceil(sw*DPR);sv.height=Math.ceil(t.sl*DPR);const s=sv.getContext('2d');s.setTransform(DPR,0,0,DPR,-t.sx*DPR,-hz0*DPR);
+  const N=10;for(let i=0;i<N;i++){{const y0=hz0+i*len/N,f=i/N;const cx=t.u*W+shear*(y0-hz0);const off=swellOff(cx,y0+len/(2*N));s.save();s.beginPath();s.rect(t.sx,y0-2,sw,len/N+4);s.clip();s.globalAlpha=0.32*(1-0.7*f);s.filter=f>0.35?`blur(${{((f-0.35)*2.2).toFixed(2)}}px)`:'none';s.translate(0,off);s.transform(1,0,-shear*st0,-st0,shear*st0*hz0,hz0*(1+st0));s.drawImage(cv,t.ox,t.oy,t.cw,t.ch);s.restore();}}t.sv=sv;}}}}
+let t0=performance.now(),born=t0; let scrollK=0; addEventListener('scroll',()=>{{scrollK=Math.min(1,scrollY/(H*0.7));if(!reduced)tick();}},{{passive:true}});
+let nl=0;for(const tr of trees){{if(tr.lit&&!tr.struck)tr.li=nl++;}}
+const title=document.querySelector('.title');let lastTilt=-1;
 const mix=(a,b,m)=>Math.round(a+(b-a)*m); const rgb=(col,m)=>`rgb(${{mix(col[0],PAPER[0],m)}},${{mix(col[1],PAPER[1],m)}},${{mix(col[2],PAPER[2],m)}})`;
-const clouds=Array.from({{length:6}},(_,i)=>{{const r=rnd('cloud'+i);return{{u:r(),v:0.5+0.4*r(),w:0.14+0.22*r(),h:0.008+0.012*r(),a:0.1+0.12*r(),s:0.4+r()}};}});
-function frame(now){{const t=(now-t0)/1000; const k=0.5+0.5*Math.sin(t*0.05); const nt=scrollK;
- // sky: paper at the top, cream, then gold at the horizon; the sun sits on the land, low
- const g=x.createLinearGradient(0,0,0,hz);g.addColorStop(0,rgb(PAPER,0));g.addColorStop(0.3,rgb([243,231,207],nt));g.addColorStop(0.62,rgb([241,213,160-6*k],nt));g.addColorStop(0.88,rgb([240,193,118],nt));g.addColorStop(1,rgb([247,216,150],nt));x.fillStyle=g;x.fillRect(0,0,W,hz);
- const sx=W*0.5,sy=hz-H*0.02;const sg=x.createRadialGradient(sx,sy,0,sx,sy,W*0.55);sg.addColorStop(0,`rgba(255,244,214,${{0.95*(1-nt)}})`);sg.addColorStop(0.05,`rgba(255,236,192,${{0.75*(1-nt)}})`);sg.addColorStop(0.3,`rgba(255,216,150,${{0.3*(1-nt)}})`);sg.addColorStop(1,'rgba(255,206,140,0)');x.fillStyle=sg;x.fillRect(0,0,W,hz);
- // small clouds, drifting, lit from below: a rose-grey top and a gold underside
- x.save();x.globalAlpha=1-nt;for(const cl of clouds){{const cx=((cl.u+(reduced?0:t*0.003*cl.s))%1.4-0.2)*W,cy=cl.v*hz,rw=cl.w*W,rh=cl.h*H;
-  const cg=x.createRadialGradient(0,0,0,0,0,1);cg.addColorStop(0,`rgba(168,132,118,${{cl.a}})`);cg.addColorStop(0.7,`rgba(168,132,118,${{cl.a*0.5}})`);cg.addColorStop(1,'rgba(168,132,118,0)');x.save();x.translate(cx,cy);x.scale(rw,rh);x.fillStyle=cg;x.beginPath();x.arc(0,0,1,0,7);x.fill();x.restore();
-  const ug=x.createRadialGradient(0,0,0,0,0,1);ug.addColorStop(0,`rgba(255,196,120,${{cl.a*1.1}})`);ug.addColorStop(1,'rgba(255,196,120,0)');x.save();x.translate(cx+rw*0.05,cy+rh*0.45);x.scale(rw*0.8,rh*0.7);x.fillStyle=ug;x.beginPath();x.arc(0,0,1,0,7);x.fill();x.restore();}}x.restore();
- // far land: mesas, small and hazy, a long way off
- const mesa=(x0,x1,h,a,notch)=>{{x.fillStyle=`rgba(150,104,72,${{a*(1-nt)}})`;x.beginPath();x.moveTo(W*x0,hz);x.lineTo(W*x0+H*h*0.5,hz-H*h);if(notch){{x.lineTo(W*(x0+x1)/2-H*h*0.3,hz-H*h);x.lineTo(W*(x0+x1)/2,hz-H*h*0.75);x.lineTo(W*(x0+x1)/2+H*h*0.3,hz-H*h);}}x.lineTo(W*x1-H*h*0.5,hz-H*h);x.lineTo(W*x1,hz);x.closePath();x.fill();}};
- mesa(0.04,0.2,0.055,0.32,false);mesa(0.27,0.31,0.02,0.28,false);mesa(0.66,0.9,0.07,0.36,true);mesa(0.94,1.02,0.035,0.3,false);
- // the land: gold haze at the far edge, warm earth near, the sun laid down on it
- const wg=x.createLinearGradient(0,hz,0,H);wg.addColorStop(0,rgb([240,206,146],nt));wg.addColorStop(0.3,rgb([216,178,122-4*k],nt));wg.addColorStop(0.7,rgb([182,146,104],nt));wg.addColorStop(1,rgb([156,124,92],nt));x.fillStyle=wg;x.fillRect(0,hz,W,H-hz);
- x.save();x.translate(sx,hz);x.scale(W*0.11,(H-hz)*0.8);const cg2=x.createRadialGradient(0,0,0,0,0,1);cg2.addColorStop(0,`rgba(255,236,190,${{0.5*(1-nt)}})`);cg2.addColorStop(0.5,`rgba(255,226,170,${{0.2*(1-nt)}})`);cg2.addColorStop(1,'rgba(255,220,160,0)');x.fillStyle=cg2;x.beginPath();x.arc(0,0,1,0,7);x.fill();x.restore();
- // the horizon line the trees stand on
- x.fillStyle=`rgba(70,50,38,${{0.8*(1-nt)}})`;x.fillRect(0,hz-1,W,2);
- // the lie of the land: long still lines, like the figures below
- x.strokeStyle=`rgba(255,246,222,${{0.18*(1-nt)}})`;x.lineWidth=1;for(let i=0;i<8;i++){{const y=hz+14+i*((H-hz)/8);x.beginPath();x.moveTo(0,y);for(let px=0;px<=W;px+=24){{x.lineTo(px,y+Math.sin(px*0.011+i*3)*1.2);}}x.stroke();}}
- // the trees are drawn in from the ground on arrival; each casts a long shadow toward you, fanning out from the sun
- const grow=reduced?1:Math.min(1,(now-born)/2600),gE=1-Math.pow(1-grow,3),st=W<700?1.5:2.1;
- const drawTree=(tr)=>{{const ht=tr.h*H*sc,y0=hz-ht*gE-6,sh=hz+6-y0;if(sh<=0)return;x.drawImage(tr.cv,0,(y0-tr.oy)*DPR,tr.cv.width,sh*DPR,tr.ox,y0,tr.cw,sh);}};
- x.save();x.globalAlpha=0.2*(1-nt*0.8);for(const tr of trees){{const shear=(tr.u-0.5)*0.9;x.save();x.transform(1,0,-shear*st,-st,shear*st*hz,hz*(1+st));drawTree(tr);x.restore();}}x.restore();
- for(const tr of trees)drawTree(tr);
- // a light in each countersigned tree: the one white thing on the page, with a little of it on the ground
- for(const tr of trees){{if(!tr.lit||tr.struck||gE<0.6)continue;const ht=tr.h*H*sc,lx=tr.u*W+tr.lean*ht*0.42,ly=hz-ht*0.42;const pulse=reduced?1:0.92+0.08*Math.sin(t*1.4+tr.u*9);const R=(22+26*tr.depth)*pulse*(1-nt*0.5);
+// per frame: the sky and the sun are live (the sun breathes); everything else is composited from the layers, moved with the horizon as you tilt
+function frame(now){{const t=(now-t0)/1000; const k=0.5+0.5*Math.sin(t*0.05); const nt=scrollK; const tilt=reduced?0:scrollK; hz=hz0-tilt*H*0.3; const dy=hz-hz0; if(title&&tilt!==lastTilt){{title.style.transform=`translateY(${{-tilt*H*0.42}}px)`;lastTilt=tilt;}}
+ const g=x.createLinearGradient(0,0,0,hz);g.addColorStop(0,rgb(PAPER,0));g.addColorStop(0.3,rgb([243,231,207],nt));g.addColorStop(0.62,rgb([241,213,160-6*k],nt));g.addColorStop(0.88,rgb([240,193,118],nt));g.addColorStop(1,rgb([247,216,150],nt));x.fillStyle=g;x.fillRect(0,0,W,hz+2);
+ const sx=W*SUNU,sy=hz-H*0.02;const sg=x.createRadialGradient(sx,sy,0,sx,sy,W*0.55);sg.addColorStop(0,`rgba(255,244,214,${{0.95*(1-nt)}})`);sg.addColorStop(0.05,`rgba(255,236,192,${{(0.72+0.06*k)*(1-nt)}})`);sg.addColorStop(0.3,`rgba(255,216,150,${{0.3*(1-nt)}})`);sg.addColorStop(1,'rgba(255,206,140,0)');x.fillStyle=sg;x.fillRect(0,0,W,hz+2);
+ x.save();x.translate(sx,hz);x.scale(W*0.6,H*0.035);const lg=x.createRadialGradient(0,0,0,0,0,1);lg.addColorStop(0,`rgba(255,240,200,${{(0.5+0.08*k)*(1-nt)}})`);lg.addColorStop(1,'rgba(255,240,200,0)');x.fillStyle=lg;x.beginPath();x.arc(0,0,1,0,7);x.fill();x.restore();
+ x.globalAlpha=1-nt*0.9;x.drawImage(far,0,dy,W,H);x.globalAlpha=1;
+ x.drawImage(ground,0,dy,W,H*1.35);
+ if(nt>0){{x.fillStyle=`rgba(244,241,234,${{nt}})`;x.fillRect(0,hz,W,H-hz);}}
+ const grow=reduced?1:Math.min(1,(now-born)/2600),gE=1-Math.pow(1-grow,3),sq=1-0.65*tilt;
+ x.save();x.globalAlpha=(1-nt*0.8)*(1-0.5*tilt);x.translate(0,hz);x.scale(1,sq);x.translate(0,-hz0);for(const tr of trees){{const L=tr.sl*gE;x.drawImage(tr.sv,0,0,tr.sv.width,Math.max(1,L*DPR),tr.sx,hz0,tr.sw,L);}}x.restore();
+ for(const tr of trees){{const ht=tr.h*H*sc,y0=hz0-ht*gE-6,sh=hz0+6-y0;if(sh<=0)continue;x.drawImage(tr.cv,0,(y0-tr.oy)*DPR,tr.cv.width,sh*DPR,tr.ox,y0+dy,tr.cw,sh);}}
+ // a light in each countersigned tree: the one white thing on the page, with a little of it on the ground. They come on after the trees are drawn, a full second later, one at a time in filed order
+ for(const tr of trees){{if(!tr.lit||tr.struck)continue;const lk=reduced?1:Math.max(0,Math.min(1,(now-born-3600-tr.li*550)/600));if(lk<=0)continue;const ht=tr.h*H*sc,lx=tr.u*W+tr.lean*ht*0.42,ly=hz-ht*0.42;const pulse=reduced?1:0.92+0.08*Math.sin(t*1.4+tr.u*9);const R=(22+26*tr.depth)*pulse*(1-nt*0.5)*(0.5+0.5*lk);x.globalAlpha=lk;
    const rg=x.createRadialGradient(lx,ly,0,lx,ly,R);rg.addColorStop(0,'rgba(255,255,250,1)');rg.addColorStop(0.2,'rgba(255,250,222,0.9)');rg.addColorStop(0.5,'rgba(255,238,186,0.35)');rg.addColorStop(1,'rgba(255,226,160,0)');x.fillStyle=rg;x.beginPath();x.arc(lx,ly,R,0,7);x.fill();x.fillStyle='#ffffff';x.beginPath();x.arc(lx,ly,3.5,0,7);x.fill();
-   const ry=hz+2+(hz-ly)*0.25;x.save();x.translate(lx,ry);x.scale(1.6,0.5);const rl=x.createRadialGradient(0,0,0,0,0,R*0.9);rl.addColorStop(0,'rgba(255,240,200,0.5)');rl.addColorStop(1,'rgba(255,230,170,0)');x.fillStyle=rl;x.beginPath();x.arc(0,0,R*0.9,0,7);x.fill();x.restore();}}
+   const ry=hz+2+(hz-ly)*0.25;x.save();x.translate(lx,ry);x.scale(1.6,0.5);const rl=x.createRadialGradient(0,0,0,0,0,R*0.9);rl.addColorStop(0,'rgba(255,240,200,0.5)');rl.addColorStop(1,'rgba(255,230,170,0)');x.fillStyle=rl;x.beginPath();x.arc(0,0,R*0.9,0,7);x.fill();x.restore();x.globalAlpha=1;}}
  // the land dries into the paper the rest of the page is written on
  const pw=x.createLinearGradient(0,H*0.74,0,H);pw.addColorStop(0,'rgba(244,241,234,0)');pw.addColorStop(1,'rgba(244,241,234,1)');x.fillStyle=pw;x.fillRect(0,H*0.74,W,H*0.26);
- if(!reduced&&onscreen&&!document.hidden) requestAnimationFrame(frame);}}
-let onscreen=true; size(); addEventListener('resize',size); if(!reduced) requestAnimationFrame(frame);
-if('IntersectionObserver' in window) new IntersectionObserver(es=>{{const v=es[0].isIntersecting; if(v&&!onscreen&&!reduced){{onscreen=true; requestAnimationFrame(frame);}} onscreen=v;}}).observe(c);
-document.addEventListener('visibilitychange',()=>{{if(!document.hidden&&onscreen&&!reduced)requestAnimationFrame(frame);}});
+ running=false; if(!reduced&&onscreen&&!document.hidden) tick();}}
+// one way in to the loop: it runs while the scene is on screen and the tab is visible, and a scroll or resize wakes it for a frame when it is parked
+let onscreen=true,running=false; const tick=()=>{{if(!running){{running=true;requestAnimationFrame(frame);}}}};
+size(); addEventListener('resize',size); if(!reduced) tick();
+if('IntersectionObserver' in window) new IntersectionObserver(es=>{{onscreen=es[0].isIntersecting; if(onscreen&&!reduced) tick();}}).observe(c);
+document.addEventListener('visibilitychange',()=>{{if(!document.hidden&&onscreen&&!reduced) tick();}});
 function hit(ev){{const r=c.getBoundingClientRect();const px=(ev.clientX-r.left)/W,py=ev.clientY-r.top;let best=null,bd=1;for(const tr of trees){{const d=Math.abs(tr.u-px);if(d<bd){{bd=d;best=tr;}}}}if(!best||bd>0.025)return null;const top=hz-best.h*H*sc;return(py>=top-8&&py<=hz+12)?best:null;}}
 c.addEventListener('mousemove',ev=>{{const t=hit(ev);c.style.cursor=t?'pointer':'';c.title=t?('entry '+t.id+(t.lit?', countersigned':'')):'';}});
 c.addEventListener('click',ev=>{{const t=hit(ev);if(t)location.href=t.href;}});
