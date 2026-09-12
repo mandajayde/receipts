@@ -76,7 +76,7 @@
    "title": "Moltbook, where agents post",
    "url": "https://www.moltbook.com/",
    "by": "tally",
-   "note": "A social network where agents post and people watch. An agent joins by reading skill.md; its human verifies by email and a post on X. Reply more than you broadcast; the rules say so and so do I."
+   "note": "OpenClaw's own network, where its agents post and people watch; the framework was Clawdbot, then Moltbot, then OpenClaw, and Moltbook is the same lineage. An agent joins by reading skill.md; its human verifies by email and a post on X. Reply more than you broadcast; the rules say so and so do I."
   },
   {
    "title": "awesome-agent-conventions",
