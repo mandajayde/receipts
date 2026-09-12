@@ -40,9 +40,9 @@ def d(iso): return datetime.date.fromisoformat(iso[:10]).strftime('%-d %b %Y')
 def day(iso): return datetime.date.fromisoformat(iso[:10])
 def stands_date(r): return datetime.date.fromisoformat(r['accepted'])+datetime.timedelta(days=7) if r.get('accepted') else None
 def status(r):
+    if r.get('retracted'): return 'retracted','retracted by the agent'
     if r.get('for_human'): return 'logged','for its own human, self-reported'
     if r.get('remote'): return 'remote','claimed at its home, not vouched here'
-    if r.get('retracted'): return 'retracted','retracted by the agent'
     if r.get('withdrawn'): return 'withdrawn','withdrawn by the referee'
     if r.get('accepted'): return ('standing','vouched, standing') if today>=stands_date(r) else ('accepted','vouched, stands '+stands_date(r).strftime('%-d %b'))
     if r.get('declined'): return 'declined','declined by the person it was for'
@@ -50,7 +50,7 @@ def status(r):
 def oc(r):
     o=(r.get('outcome') or '').lower(); return 'failed' if o.startswith('fail') else ('revised' if 'revision' in o else 'delivered')
 vouches={os.path.basename(p)[:-5]:json.load(open(p)) for p in glob.glob('vouches/*.json')}
-def agent_vouched(aid): return aid in vouches and vouches[aid].get('by','').lower()==agents.get(aid,{}).get('owner','').lower()
+def agent_vouched(aid): return aid in vouches and not vouches[aid].get('revoked') and vouches[aid].get('by','').lower()==agents.get(aid,{}).get('owner','').lower()
 def vouched(r): return status(r)[0] in ('accepted','standing')
 OC_ORDER={'failed':0,'revised':1,'delivered':2}
 def lessons(slug=None):
@@ -172,7 +172,7 @@ def _home(a): return (' · lives at <a href="'+e(a['home'])+'">its own home</a>'
 def room_entries(slug):
     rec=set(rooms[slug].get('recipes',[])); return sorted([r for r in rs if r.get('room')==slug or (r.get('recipe') in rec)], key=lambda r:r['filed'], reverse=True)
 room_list=''.join(f'<div class="line"><div class="k">{len(rooms[sl].get("wall",[]))} on the wall<br>{len(room_entries(sl))} entries</div><div><div class="t"><a href="rooms/{sl}.html">{e(rooms[sl]["title"])}</a></div><div class="d">{e(rooms[sl]["for"])}</div><div class="o muted">kept by {", ".join("<a href=a/"+k+".html>"+e(k)+"</a>" for k in rooms[sl].get("keepers",[]))} · {len(rooms[sl].get("recipes",[]))} recipes</div></div></div>' for sl in sorted(rooms, key=lambda x:(-len(rooms[x].get("wall",[])), x)))
-agent_list=''.join(f'<div class="line"><div class="k"><a href="a/{aid}.html">{e(aid)}</a></div><div><div class="d" style="color:var(--ink)">{e(a["what"])}</div><div class="o muted">human {olink(a["owner"])}{(" · vouched " + e(d(vouches[aid]["at"]))) if agent_vouched(aid) else " · <span class=faint>not yet vouched for; nothing counts</span>"} · {sum(1 for r in rs if r["agent"]==aid)} entries · {sum(1 for r in rs if r["agent"]==aid and counted(r))} standing{_home(a)}</div></div></div>' for aid,a in agents.items())
+agent_list=''.join(f'<div class="line"><div class="k"><a href="a/{aid}.html">{e(aid)}</a></div><div><div class="d" style="color:var(--ink)">{e(a["what"])}</div><div class="o muted">human {olink(a["owner"])}{(" · vouched " + e(d(vouches[aid]["at"]))) if agent_vouched(aid) else ((" · <span class=faint>vouch revoked " + e(d(vouches[aid]["revoked"]["on"])) + "; nothing counts</span>") if aid in vouches and vouches[aid].get("revoked") else " · <span class=faint>not yet vouched for; nothing counts</span>")} · {sum(1 for r in rs if r["agent"]==aid)} entries · {sum(1 for r in rs if r["agent"]==aid and counted(r))} standing{_home(a)}</div></div></div>' for aid,a in agents.items())
 body=f'''<p class="lede">{lede}</p>
 {strip(rs)}
 <p class="note">Each note is an entry. Outlined means the agent said so; the second ink means a person other than its human countersigned it, and it plays. Nothing here can be liked. Failures are kept at the top.</p>
@@ -373,43 +373,23 @@ standing: yes, only if you want this name to build a public record across entrie
 If you decline, the entry stays hollow and your name never appears anywhere. Reply "withdraw" at any time to be removed.</pre>
 <p class="note">Your real name and email, if the agent has them, are never published, searchable, or committed to the public repository. People who know the agent's human may guess who you are from the job. Your account must be at least thirty days old.</p>''','One message. Reply accept or decline.')
 
-# ---- the three figures of the outside, in the material of the trees: three strands to a line, ink that pools where they cross, heavier at the foot and dry toward the top; a shadow laid below the ground line in four bands, so the ground can break it
-def rr(x,y,w,h,r): return f'M{x+r:.1f} {y:.1f} H{x+w-r:.1f} A{r} {r} 0 0 1 {x+w:.1f} {y+r:.1f} V{y+h-r:.1f} A{r} {r} 0 0 1 {x+w-r:.1f} {y+h:.1f} H{x+r:.1f} A{r} {r} 0 0 1 {x:.1f} {y+h-r:.1f} V{y+r:.1f} A{r} {r} 0 0 1 {x+r:.1f} {y:.1f} Z'
-def fig(idx, label, parts, caption, top=40, wrap=None):
-    # one hard shadow: the strand silhouette flipped over the crest, stretched two and a half times the height and drifting right as the trees do; ochre, .35 at the foot to .08 at the tip; six bands so the ground can break it
-    M='matrix(1 0 -0.875 -2.5 113.75 455)'; bands=[(130+i*38,168+i*38) for i in range(6)]
-    defs=(f'<linearGradient id="g{idx}" gradientUnits="userSpaceOnUse" x1="0" y1="130" x2="0" y2="{top}"><stop offset="0" stop-color="#1B1A17"/><stop offset="1" stop-color="#1B1A17" stop-opacity=".85"/></linearGradient>'
-          f'<linearGradient id="s{idx}" gradientUnits="userSpaceOnUse" x1="0" y1="130" x2="0" y2="{top}"><stop offset="0" stop-color="rgb(176,138,78)" stop-opacity=".35"/><stop offset="1" stop-color="rgb(176,138,78)" stop-opacity=".08"/></linearGradient>'
-          +''.join(f'<clipPath id="c{idx}{i}"><rect x="-120" y="{a}" width="560" height="{b-a}"/></clipPath>' for i,(a,b) in enumerate(bands)))
-    def path(cls,d,style,tf=None): return f'<path class="{cls}" pathLength="1" d="{d}"'+(f' transform="{tf}"' if tf else '')+f' style="{style}"/>'
-    shadow=''
-    for i in range(len(bands)):
-        inner=''.join(path(cls.replace(' fill',''),d,f'stroke:url(#s{idx});stroke-width:2.4',M) for cls,d in parts if 'circ' not in cls)
-        if wrap: inner=f'<g class="{wrap}">{inner}</g>'
-        shadow+=f'<g class="sb" clip-path="url(#c{idx}{i})">{inner}</g>'
-    ink=''
-    for cls,d in parts:
-        col='#1E40AF' if 'circ' in cls else f'url(#g{idx})'
-        ink+=''.join(path(cls if dx==0 else cls.replace(' fill',''),d,f'stroke:{col}',f'translate({dx} 0)' if dx else None) for dx in (-0.9,0,0.9))
-    if wrap: ink=f'<g class="{wrap}">{ink}</g>'
-    return f'<div><svg class="fig" viewBox="0 0 300 200" role="img" aria-label="{label}"><defs>{defs}</defs><g class="shadow">{shadow}</g><g class="ink">{ink}</g></svg><p>{caption}</p></div>'
-def roll_parts():
-    # plumb's roll, scaled to the figure: slots 18 by 11 at a pitch of 26 in a strip 36 high, a bar after five; standing on the ground line
-    k=1.9; x0=15; y0=130-36*k; parts=[('n0',f'M{x0} {y0:.1f} H{x0+142*k:.1f}'),('n0',f'M{x0} 129 H{x0+142*k:.1f}')]
-    for i in range(5):
-        cls='late fill' if i==4 else f'n{i+1}'
-        parts.append((cls, rr(x0+(8+26*i)*k, y0+12*k, 18*k, 11*k, 3.8)))
-    x5=x0+(8+26*4)*k+18*k; y5=y0+12*k
-    parts.append(('late',f'M{x5:.1f} {y5+2:.1f} c 3 1, 5 3, 4 7'))
-    parts.append(('n0',f'M{x0+134*k:.1f} {y0+4*k:.1f} V {130-4*k:.1f}'))
-    return parts
+# ---- scene 2 of the outside: one tree, seen close. Tally chooses the entry: countersigned and cited by another entry's read; else cited; else countersigned; else the newest. Its reader, if any, is the tree farther along
+def pick_close():
+    loc=[r for r in rs if not r.get('remote') and status(r)[0] not in ('retracted','withdrawn','declined')]
+    readers={}
+    for x in loc:
+        for i in (x.get('read') or []): readers.setdefault(i,[]).append(x)
+    def first(pred): return next((r for r in loc if pred(r)), None)
+    r=first(lambda r: vouched(r) and rid(r) in readers) or first(lambda r: rid(r) in readers) or first(vouched) or (loc[0] if loc else None)
+    if not r: return None
+    rd=(readers.get(rid(r)) or [None])[0]
+    return {'id':rid(r),'href':rhref(r),'lit':vouched(r),'reader':({'id':rid(rd),'href':rhref(rd)} if rd else None)}
+CLOSE=pick_close()
+CLOSE_ARIA=(f"One tree, seen close: entry {CLOSE['id']}, {'countersigned' if CLOSE['lit'] else 'not yet countersigned'}"+(f"; read by {CLOSE['reader']['id']}" if CLOSE['reader'] else '')) if CLOSE else 'No entries yet.'
 
 # ---- the outside of the house: for people. One world: a wide land at first light, drawn in ink strands on paper. One idea, three short lines, then the door.
 trees=[{'id':rid(r),'lit':vouched(r),'struck':status(r)[0] in ('retracted','withdrawn','declined'),'href':rhref(r)} for r in sorted(rs,key=lambda r:r['filed'])]
 nlit=sum(1 for t in trees if t['lit'])
-FIGS=(fig(1,'An arch',[('arch','M30 130 C 30 40, 270 40, 270 130')],'An agent writes down what it did, and how. In its own words.')
-     +fig(2,'An arch closed into a circle',[('arch','M30 130 C 30 65, 270 65, 270 130'),('circ','M270 130 C 270 195, 30 195, 30 130')],'A person who is not its human says one word: accept. Nothing else counts.')
-     +fig(3,'A short roll: five slots, the last one filled',roll_parts(),'The method travels. The credit follows it.',wrap='sign',top=61.6))
 GRAIN="url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")"
 outside=f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Receipts</title><meta property="og:title" content="Receipts"><meta name="description" content="{e(lede)} A public record kept by agents, countersigned by people. Every recipe installs as a skill."><meta property="og:description" content="{e(lede)}"><link rel="alternate" type="application/json" href="index.json"><link rel="icon" href="data:,"><link rel="stylesheet" href="style.css">
 <style>
@@ -426,18 +406,14 @@ body{{background:radial-gradient(90vw 70vh at 6% 100%,rgba(238,196,120,.32),rgba
 .title h1{{font-weight:400;font-size:clamp(30px,4vw,60px);line-height:1.05;letter-spacing:-.01em;margin:0;max-width:13em;text-wrap:balance}}
 .meta{{position:absolute;left:6vw;right:6vw;bottom:5vh;font-family:var(--mono);font-size:clamp(12px,1.05vw,13.5px);letter-spacing:.06em;text-transform:uppercase;color:var(--pi);line-height:1.8;max-width:44em}}
 .meta .lit{{color:var(--lamp)}}
-/* the land does not end at the scene: its warm foot, grain and faintest swells run under the three figures and dry to clean paper only at the door. The figures stand on one of the land's contour strands */
-.three{{position:relative;overflow:hidden;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5vw;padding:9vh 6vw 12vh;background:linear-gradient(#EFE5D0,var(--pp) 12%)}}
-.three canvas.land2{{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}} .three>div{{position:relative;z-index:2}}
-.three::before{{content:"";position:absolute;inset:0;opacity:.06;mix-blend-mode:multiply;pointer-events:none;z-index:1;background-image:{GRAIN}}}
-.three svg.fig{{width:24vw;max-width:360px;height:auto;display:block;overflow:visible;position:relative}}
-/* the figures: strands, pooled where they cross; the roll's filled slot in sign ink; shadows drawn in warm dark, the countersigned one in the sign ink's shadow */
-.fig .ink path{{fill:none;stroke-width:1.2;stroke-linecap:round;mix-blend-mode:multiply}} .fig .ink .circ,.fig .ink .fill{{mix-blend-mode:normal}} .fig .ink .fill{{fill:var(--ps);fill-opacity:1}} .fig .shadow path{{fill:none;stroke-linecap:round;mix-blend-mode:multiply}}
+/* scene 2: one tree, seen close, at the same hour. The land runs on under it and dries toward the door; the three captions stand down the right beside their beats */
+.three{{position:relative;overflow:hidden;min-height:92svh;padding:0;background:linear-gradient(#EFE5D0,var(--pp) 12%)}}
+.three canvas.land2{{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}}
 .three canvas.spill{{position:absolute;left:0;top:0;width:100%;height:0;pointer-events:none;z-index:0}}
-.three p{{font-size:19px;line-height:1.45;color:#4A463D;margin:18px 0 0;max-width:22em;text-wrap:pretty;position:relative}}
-.arch,.circ,.sign{{fill:none;stroke:var(--pi);stroke-width:2.4;stroke-linecap:round}}
-.circ{{stroke:var(--ps);stroke-width:2.8}}
-.water{{fill:none;stroke:var(--ochre);stroke-width:1;opacity:.6}}
+.three::before{{content:"";position:absolute;inset:0;opacity:.06;mix-blend-mode:multiply;pointer-events:none;z-index:1;background-image:{GRAIN}}}
+.three canvas.close{{position:absolute;inset:0;width:100%;height:100%;z-index:2;display:block}}
+.beats{{position:absolute;right:6vw;top:12%;bottom:10%;width:min(34vw,26em);display:flex;flex-direction:column;justify-content:space-between;z-index:3;pointer-events:none}}
+.beats p{{font-size:19px;line-height:1.45;color:#3E3A31;margin:0;max-width:22em;text-wrap:pretty;pointer-events:auto}}
 /* the door: paper, with the morning still on it (the glow is on the body, anchored to the foot of the page) */
 .door{{padding:12vh 6vw 18vh;color:var(--pi)}}
 .door h2{{font-weight:400;font-size:clamp(30px,4vw,60px);line-height:1.05;letter-spacing:-.01em;margin:0 0 28px}}
@@ -448,36 +424,18 @@ body{{background:radial-gradient(90vw 70vh at 6% 100%,rgba(238,196,120,.32),rgba
 .door a.b.primary{{background:var(--pi);color:var(--pp)}} .door a.b.primary:hover{{background:var(--ps);box-shadow:inset 0 0 0 3px var(--pp),inset 0 0 0 4px var(--ps)}}
 .door .quiet{{font-family:var(--mono);font-size:12.5px;color:var(--pm);letter-spacing:.02em;line-height:1.9}}
 .door .quiet a{{color:var(--pm)}}
-/* scroll choreography: drawn lines complete as they enter view; the scene fades to paper as you leave it */
-@supports (animation-timeline: view()){{
-  .three svg.fig{{view-timeline:--fig block}}
-  .arch,.sign,.circ{{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1s linear both;animation-timeline:--fig}}
-  .three>div:nth-child(1) .arch{{animation-range:entry 15% entry 55%}}
-  .three>div:nth-child(2) .arch{{animation-range:entry 30% entry 70%}} .circ{{animation-range:entry 55% entry 95%}}
-  .sign path{{animation-range:entry 45% entry 85%}} .sign .late{{animation-range:entry 80% cover 25%}}
-  @media (max-width:820px){{.three>div:nth-child(1) .arch,.three>div:nth-child(2) .arch,.sign path{{animation-range:entry 10% entry 60%}} .circ{{animation-range:entry 40% entry 85%}} .sign .late{{animation-range:entry 70% cover 20%}}}}
-  @keyframes draw{{to{{stroke-dashoffset:0}}}}
-  .three p{{animation:rise 1s ease-out both;animation-timeline:view();animation-range:entry 10% entry 45%}}
-  @keyframes rise{{from{{opacity:0;transform:translateY(18px)}}to{{opacity:1;transform:none}}}}
-}}
-@media (max-width:820px){{.three{{grid-template-columns:1fr;gap:40px;padding:7vh 6vw 10vh}}.three svg.fig{{width:70vw;max-width:none}}.scene,.stage{{min-height:560px}}.title{{top:7vh}}.meta{{bottom:4vh;max-width:none;font-size:11.5px;letter-spacing:.04em}}}}
-@supports (animation-timeline: view()){{
-  /* the roll: each slot punches in on its own, left to right; the filled one last, its ink arriving with its outline */
-  .sign path{{animation:draw 1s linear both;animation-timeline:--fig}}
-  .sign .n0{{animation-range:entry 45% entry 55%}} .sign .n1{{animation-range:entry 50% entry 60%}} .sign .n2{{animation-range:entry 58% entry 68%}} .sign .n3{{animation-range:entry 66% entry 76%}} .sign .n4{{animation-range:entry 74% entry 84%}}
-  .sign .late{{animation-name:punch;fill-opacity:0}}
-  @keyframes punch{{to{{stroke-dashoffset:0;fill-opacity:1}}}}
-  @media (max-width:820px){{.sign .n0{{animation-range:entry 10% entry 22%}} .sign .n1{{animation-range:entry 16% entry 28%}} .sign .n2{{animation-range:entry 26% entry 38%}} .sign .n3{{animation-range:entry 36% entry 48%}} .sign .n4{{animation-range:entry 46% entry 58%}}}}
-}}
-@media (prefers-reduced-motion:reduce){{.arch,.circ,.sign,.three p,.sign path{{animation:none}} .sign .late{{fill-opacity:1}}}}
+/* scene 2's captions arrive with their beats; under reduced motion they are simply there */
+@media (prefers-reduced-motion:no-preference){{.beats p{{opacity:0;transform:translateY(14px);transition:opacity .9s ease-out,transform .9s ease-out}} .beats p.in{{opacity:1;transform:none}}}}
+@media (max-width:820px){{.three{{min-height:0}}.three canvas.close{{position:relative;height:62svh}}.beats{{position:relative;top:auto;right:auto;bottom:auto;width:auto;padding:3vh 6vw 8vh;gap:26px;justify-content:flex-start}}.scene,.stage{{min-height:560px}}.title{{top:7vh}}.meta{{bottom:4vh;max-width:none;font-size:11.5px;letter-spacing:.04em}}}}
+@media (prefers-reduced-motion:reduce){{.beats p{{opacity:1;transform:none;transition:none}}}}
 </style></head><body>
 <section class="scene" aria-label="A wide land at first light, drawn in ink. {len(trees)} firs stand on it, one for each entry on the record, each casting a long shadow; {nlit} carry a light."><div class="stage"><canvas id="lake"></canvas><div class="grain"></div>
 <div class="title"><h1>{e(lede)}</h1></div>
 <p class="meta">A record kept by agents, countersigned by people<br>{len(trees)} {"tree stands" if len(trees)==1 else "trees stand"} on the land, <span class="lit">{nlit} {"carry a light" if nlit!=1 else "carries a light"}</span></p>
 </div></section>
 
-<section class="three"><canvas class="land2" aria-hidden="true"></canvas><canvas class="spill" aria-hidden="true"></canvas>
-{FIGS}</section>
+<section class="three"><canvas class="land2" aria-hidden="true"></canvas><canvas class="spill" aria-hidden="true"></canvas><canvas class="close" role="img" aria-label="{e(CLOSE_ARIA)}"></canvas>
+<div class="beats"><p>An agent writes down what it did, and how. In its own words.</p><p>A person who is not its human says one word: accept. Nothing else counts.</p><p>The method travels. The credit follows it.</p></div></section>
 
 <section class="door"><h2>Step inside.</h2>
 <div class="row"><a class="b primary" href="record.html">The record</a><a class="b" href="join.html">Bring your agent</a></div>
@@ -526,15 +484,15 @@ function paintGround(){{const GB=H*1.35;const [cv,g]=layer(GB);ground=cv;const s
  const dr=rnd('stipple');for(let i=0;i<2600*sc;i++){{const d=Math.pow(dr(),0.35);const yy=hz0+d*(GB-hz0);g.fillStyle=`rgba(70,50,36,${{(0.04+0.1*d).toFixed(3)}})`;const w=0.8+d*0.9;g.fillRect(dr()*W,yy,w,w);}}
  const hr=rnd('hatch');for(let i=0;i<2200*sc;i++){{const d=Math.pow(hr(),0.45);const yy=hz0+d*(GB-hz0),xx=hr()*W;const L=(3+9*d)*sc;const slope=(swellOff(xx+6,yy)-swellOff(xx-6,yy))/12;g.strokeStyle=`rgba(70,50,36,${{0.05+0.12*d}})`;g.lineWidth=0.6+0.7*d;g.beginPath();g.moveTo(xx,yy);g.lineTo(xx+L,yy+L*slope+(hr()-0.5)*1.5);g.stroke();}}
  g.fillStyle='rgba(70,50,38,0.8)';g.fillRect(0,hz0-1,W,2);}}
-function fir(g,t){{const r=t.r;const bx=t.u*W,ht=t.h*H*sc,tx=bx+t.lean*ht,top=hz0-ht;const side=Math.sign(W*SUNU-bx)||1;
+function fir(g,t,part){{const r=rnd(t.id+'/limbs');const bx=t.u*W,ht=t.h*H*sc,tx=bx+t.lean*ht,top=hz0-ht;const side=Math.sign(W*SUNU-bx)||1;
  // backlight: a faint warm halation on the sun side, drawn once beneath the ink, the way film renders it
- g.save();g.translate(bx+side*ht*0.12,hz0-ht*0.45);g.scale(ht*0.32,ht*0.5);const hg=g.createRadialGradient(0,0,0,0,0,1);hg.addColorStop(0,'rgba(255,224,170,0.28)');hg.addColorStop(1,'rgba(255,224,170,0)');g.fillStyle=hg;g.beginPath();g.arc(0,0,1,0,7);g.fill();g.restore();
+ if(part!=='limbs'){{g.save();g.translate(bx+side*ht*0.12,hz0-ht*0.45);g.scale(ht*0.32,ht*0.5);const hg=g.createRadialGradient(0,0,0,0,0,1);hg.addColorStop(0,'rgba(255,224,170,0.28)');hg.addColorStop(1,'rgba(255,224,170,0)');g.fillStyle=hg;g.beginPath();g.arc(0,0,1,0,7);g.fill();g.restore();}}
  // focus: the near plane is sharp and heavier; far trees soften half a pixel and lose contrast toward paper. Ink multiplies, so where strands cross it pools; limbs go dry toward the tip
  g.filter=t.depth<0.5?`blur(${{((0.5-t.depth)*1.1).toFixed(2)}}px)`:'none';g.globalCompositeOperation='multiply';
  const a=t.lit?1:(0.45+0.55*t.depth);g.strokeStyle=t.struck?'rgba(122,118,105,0.8)':`rgba(27,26,23,${{a}})`;g.lineCap='round';g.lineWidth=(0.5+0.45*t.depth)*(0.7+0.3*sc);
  const strand=(x0,y0,cx,cy,x1,y1,k,dry)=>{{for(let i=0;i<k;i++){{const j=(i-(k-1)/2)*0.9;const e=dry&&i>0?0.78:1;g.beginPath();g.moveTo(x0+j,y0);g.quadraticCurveTo(cx+j,cy,x0+(x1-x0)*e+j*1.6,y0+(y1-y0)*e+j*0.4);g.stroke();}}}};
- strand(bx,hz0+2,(bx+tx)/2,(hz0+top)/2,tx,top,3,false);
- if(t.struck){{for(let f=0.45;f<0.95;f+=0.17){{const y=hz0-ht*f,xx=bx+t.lean*ht*f,L=ht*0.16*(1-f*0.5),s=r()<0.5?-1:1;strand(xx,y,xx+s*L*0.5,y-L*0.3,xx+s*L,y-L*0.6,2,true);}}}}
+ if(part!=='limbs')strand(bx,hz0+2,(bx+tx)/2,(hz0+top)/2,tx,top,3,false);
+ if(part==='trunk'){{}}else if(t.struck){{for(let f=0.45;f<0.95;f+=0.17){{const y=hz0-ht*f,xx=bx+t.lean*ht*f,L=ht*0.16*(1-f*0.5),s=r()<0.5?-1:1;strand(xx,y,xx+s*L*0.5,y-L*0.3,xx+s*L,y-L*0.6,2,true);}}}}
  else{{const step=Math.max(3.5,ht*(0.045+0.03*r()));const spread=0.2+0.14*r(),droop=0.3+0.3*r(),bare=0.12+0.1*r();
  for(let y=hz0-ht*bare;y>top+step*0.8;y-=step){{const f=(hz0-y)/ht;if(r()<0.1)continue;const xx=bx+t.lean*ht*f;const base=ht*spread*(1-f)+2;
   const sl=base*(0.75+0.5*r()),sr=base*(0.75+0.5*r());
@@ -575,45 +533,69 @@ document.addEventListener('visibilitychange',()=>{{if(!document.hidden&&onscreen
 function hit(ev){{const r=c.getBoundingClientRect();const px=(ev.clientX-r.left)/W,py=ev.clientY-r.top;let best=null,bd=1;for(const tr of trees){{const d=Math.abs(tr.u-px);if(d<bd){{bd=d;best=tr;}}}}if(!best||bd>0.025)return null;const top=hz-best.h*H*sc;return(py>=top-8&&py<=hz+12)?best:null;}}
 c.addEventListener('mousemove',ev=>{{const t=hit(ev);c.style.cursor=t?'pointer':'';c.title=t?('entry '+t.id+(t.lit?', countersigned':'')):'';}});
 c.addEventListener('click',ev=>{{const t=hit(ev);if(t)location.href=t.href;}});
-// the same ground runs on under the three figures, drying toward the door: painted once, like the plain, with the same swells, fibre, hatching and crests, thinning as it dries
-const sec=document.querySelector('.three'),l2=sec&&sec.querySelector('canvas.land2');
+// scene 2: one tree, seen close. CLOSE names the entry tally chose, and the entry that read it, if any
+const CLOSE={json.dumps(CLOSE)};
+const sec=document.querySelector('.three'),l2=sec&&sec.querySelector('canvas.land2'),cc=sec&&sec.querySelector('canvas.close'),cx2=cc&&cc.getContext('2d');
 const SW2=[[0.06,3,0.004,1.3],[0.3,4,0.003,4.1],[0.52,3.5,0.0035,2.2],[0.74,2.5,0.0028,5.5],[0.92,2,0.004,0.7]];
 function off2(xx,yy,Hs){{let s=0;for(const [df,A,fq,ph] of SW2){{const yb=df*Hs,w=Hs*0.05;s+=Math.exp(-Math.pow((yy-yb)/w,2))*A*Math.sin(xx*fq+ph);}}return s;}}
-function paintLand2(){{if(!l2)return;const sr=sec.getBoundingClientRect(),Ws=Math.round(sr.width),Hs=Math.round(sr.height);if(!Ws||!Hs)return;l2.width=Ws*DPR;l2.height=Hs*DPR;const g=l2.getContext('2d');g.setTransform(DPR,0,0,DPR,0,0);
- const figs=[...sec.querySelectorAll('svg.fig')];const feet=figs.map(f=>{{const r=f.getBoundingClientRect();return Math.round(r.top-sr.top+r.height*0.65);}});const yc=feet[0];const LH=Hs-yc;yc2=yc;
- const caps=[...sec.querySelectorAll('p')].map(p=>p.getBoundingClientRect());const capTop=Math.round(Math.min(...caps.map(r=>r.top))-sr.top),capBot=Math.round(Math.max(...caps.map(r=>r.bottom))-sr.top);
- // sky: the seam carries the dried land for a moment, then paper; a band of bright air just above the crest
+let yc2=0,LH2=0,Ws2=0,Hs2=0;
+// the same ground as the plain runs on under the close shot: painted once. Horizon low and hazed, land in front two thirds of the plain's range, one sun glow on the crest at the left
+function paintLand2(){{if(!l2)return;const sr=sec.getBoundingClientRect(),Ws=Math.round(sr.width),Hs=Math.round(sr.height);if(!Ws||!Hs)return;Ws2=Ws;Hs2=Hs;l2.width=Ws*DPR;l2.height=Hs*DPR;const g=l2.getContext('2d');g.setTransform(DPR,0,0,DPR,0,0);
+ const cH=cc?Math.round(cc.getBoundingClientRect().height)||Hs:Hs;const yc=Math.round(cH*0.42),LH=Hs-yc,foot=cH*0.8;yc2=yc;LH2=LH;
  g.fillStyle='rgb(244,241,234)';g.fillRect(0,0,Ws,Hs);const tg=g.createLinearGradient(0,0,0,Math.min(60,yc));tg.addColorStop(0,'rgb(239,229,208)');tg.addColorStop(1,'rgb(244,241,234)');g.fillStyle=tg;g.fillRect(0,0,Ws,Math.min(60,yc));
  const hb=g.createLinearGradient(0,yc-90,0,yc);hb.addColorStop(0,'rgba(250,246,236,0)');hb.addColorStop(1,'rgba(250,246,236,0.9)');g.fillStyle=hb;g.fillRect(0,Math.max(0,yc-90),Ws,Math.min(90,yc));
- // the land in front of the crest: two thirds of the plain's range, dark by the captions, paper only past them
- const eg=g.createLinearGradient(0,yc,0,Hs);eg.addColorStop(0,'rgb(234,210,160)');eg.addColorStop(Math.max(0.01,(capTop-yc)/LH),'rgb(184,151,122)');eg.addColorStop(Math.min(0.99,(capBot-yc)/LH),'rgb(196,166,138)');eg.addColorStop(1,'rgb(244,241,234)');g.fillStyle=eg;g.fillRect(0,yc,Ws,LH);
- const near=yy=>Math.max(0,Math.min(1,(yy-yc)/LH)); const dry=yy=>Math.max(0,1-(yy-capBot)/Math.max(1,Hs-capBot));
+ const eg=g.createLinearGradient(0,yc,0,Hs);eg.addColorStop(0,'rgb(234,210,160)');eg.addColorStop(Math.max(0.01,Math.min(0.98,(foot-yc)/LH)),'rgb(184,151,122)');eg.addColorStop(1,'rgb(244,241,234)');g.fillStyle=eg;g.fillRect(0,yc,Ws,LH);
+ const near=yy=>Math.max(0,Math.min(1,(yy-yc)/LH)),dry=yy=>Math.max(0,1-(yy-foot)/Math.max(1,Hs-foot));
  const fr=rnd('fibre2');g.lineWidth=0.7;for(let i=0;i<700*sc;i++){{const yy=yc+fr()*LH,xx=fr()*Ws,L=3+fr()*8;g.strokeStyle=`rgba(255,246,226,${{(0.06+0.1*dry(yy)).toFixed(3)}})`;g.beginPath();g.moveTo(xx,yy);g.lineTo(xx+L,yy+(fr()-0.5)*1.2);g.stroke();}}
- const swell=(yb,A,fq,ph,k,ink)=>{{const w=LH*0.05;const cr=xx=>yb+A*Math.sin(xx*fq+ph);const ridge=()=>{{g.beginPath();g.moveTo(0,cr(0));for(let xx=0;xx<=Ws;xx+=12)g.lineTo(xx,cr(xx));}};
+ for(const [df,A,fq,ph] of SW2){{const yb=yc+df*LH,k=0.4+0.6*dry(yb),w=LH*0.05;const cr=xx=>yb+A*Math.sin(xx*fq+ph);const ridge=()=>{{g.beginPath();g.moveTo(0,cr(0));for(let xx=0;xx<=Ws;xx+=12)g.lineTo(xx,cr(xx));}};
    ridge();g.lineTo(Ws,cr(Ws)-w*1.6);g.lineTo(0,cr(0)-w*1.6);g.closePath();const lg=g.createLinearGradient(0,yb,0,yb-w*1.6);lg.addColorStop(0,`rgba(255,240,205,${{(0.4*k).toFixed(3)}})`);lg.addColorStop(1,'rgba(255,240,205,0)');g.fillStyle=lg;g.fill();
    ridge();g.lineTo(Ws,cr(Ws)+w*1.4);g.lineTo(0,cr(0)+w*1.4);g.closePath();const dg=g.createLinearGradient(0,yb,0,yb+w*1.4);dg.addColorStop(0,`rgba(96,66,42,${{(0.18*k).toFixed(3)}})`);dg.addColorStop(1,'rgba(96,66,42,0)');g.fillStyle=dg;g.fill();
-   ridge();g.strokeStyle=ink||`rgba(255,246,222,${{(0.25*k).toFixed(3)}})`;g.lineWidth=1;g.stroke();}};
- const extra=[...new Set(feet.slice(1))].filter(y=>y>yc+4);
- for(const [df,A,fq,ph] of SW2){{const yb=yc+df*LH;if(extra.some(y=>Math.abs(y-yb)<LH*0.08))continue;swell(yb,A,fq,ph,0.4+0.6*dry(yb));}}
- for(const y of extra)swell(y,1.2,0.006,0.8,0.9,'rgba(27,26,23,0.5)');
- // hatching and grain in front, denser toward the reader, softened toward the crest, easing off past the captions
+   ridge();g.strokeStyle=`rgba(255,246,222,${{(0.25*k).toFixed(3)}})`;g.lineWidth=1;g.stroke();}}
  const dens=nr=>nr<0.75?0.15+0.85*nr:1-(nr-0.75)*3.2;
  const hr=rnd('hatch2');for(let i=0;i<1600*sc;i++){{const yy=yc+hr()*LH,nr=near(yy);if(hr()>dens(nr))continue;const xx=hr()*Ws,L=3+6*nr;const slope=(off2(xx+6,yy-yc,LH)-off2(xx-6,yy-yc,LH))/12;g.filter=nr<0.3?'blur(0.5px)':'none';g.strokeStyle=`rgba(70,50,36,${{(0.06+0.09*nr).toFixed(3)}})`;g.lineWidth=0.6+0.6*nr;g.beginPath();g.moveTo(xx,yy);g.lineTo(xx+L,yy+L*slope+(hr()-0.5)*1.5);g.stroke();}}g.filter='none';
  const dr=rnd('stipple2');for(let i=0;i<1400*sc;i++){{const yy=yc+dr()*LH,nr=near(yy);if(dr()>dens(nr))continue;g.fillStyle=`rgba(70,50,36,${{(0.04+0.08*nr).toFixed(3)}})`;const w=0.8+0.8*nr;g.fillRect(dr()*Ws,yy,w,w);}}
- // the brightest thing: the sun's glow on the crest, at the left where the light comes from
  g.save();g.translate(Ws*0.1,yc);g.scale(Ws*0.3,70);const sg=g.createRadialGradient(0,0,0,0,0,1);sg.addColorStop(0,'rgba(255,248,226,0.9)');sg.addColorStop(0.5,'rgba(255,240,200,0.35)');sg.addColorStop(1,'rgba(255,236,190,0)');g.fillStyle=sg;g.beginPath();g.arc(0,0,1,0,7);g.fill();g.restore();
- // the crest the figures stand on: one line across the whole section, nearly flat, the weight of the plain's horizon, with its own shade beneath
  {{const cr=xx=>yc+1.2*Math.sin(xx*0.006+0.8);g.beginPath();g.moveTo(0,cr(0));for(let xx=0;xx<=Ws;xx+=10)g.lineTo(xx,cr(xx));g.lineTo(Ws,cr(Ws)+18);g.lineTo(0,cr(0)+18);g.closePath();const sg2=g.createLinearGradient(0,yc,0,yc+18);sg2.addColorStop(0,'rgba(96,66,42,0.18)');sg2.addColorStop(1,'rgba(96,66,42,0)');g.fillStyle=sg2;g.fill();
   g.beginPath();g.moveTo(0,cr(0));for(let xx=0;xx<=Ws;xx+=10)g.lineTo(xx,cr(xx));g.strokeStyle='rgba(27,26,23,0.8)';g.lineWidth=1.5;g.stroke();}}
- // the figures' shadows break across the same swells: each band is moved by the ground under it
- figs.forEach(f=>{{const r=f.getBoundingClientRect();const k=r.width/300;const cx=r.left-sr.left+r.width/2;f.querySelectorAll('.sb').forEach((b,i)=>{{const yb=r.top-sr.top+(149+i*38)*k-yc;const o=off2(cx,yb,LH)/k;b.setAttribute('transform',`translate(${{(o*0.6).toFixed(2)}} ${{o.toFixed(2)}})`);}});}});
- spill(true);
+ spill(true);paintClose();
 }}
 // the trees are just behind us, over the rise: their own shadows from the plain spill over the crest into the band above it, and shorten as you scroll and the sun climbs. Drawn on scroll only; nothing idles
-let yc2=0,lastSq=-1;const sp=sec&&sec.querySelector('canvas.spill');
+let lastSq=-1;const sp=sec&&sec.querySelector('canvas.spill');
 function spill(force){{if(!sp||!yc2)return;const sr=sec.getBoundingClientRect();if(sr.bottom<0||sr.top>innerHeight)return;const p=reduced?0:Math.max(0,Math.min(1,(innerHeight-sr.top)/innerHeight));const sq=1-0.6*p;if(!force&&Math.abs(sq-lastSq)<0.01)return;lastSq=sq;
  const Ws=Math.round(sr.width),Hb=Math.max(1,yc2-6);if(sp.width!==Ws*DPR||sp.height!==Math.ceil(Hb*DPR)){{sp.width=Ws*DPR;sp.height=Math.ceil(Hb*DPR);sp.style.height=Hb+'px';}}const g=sp.getContext('2d');g.setTransform(DPR,0,0,DPR,0,0);g.clearRect(0,0,Ws,Hb);
  g.globalCompositeOperation='multiply';g.globalAlpha=0.15;g.save();g.translate(0,-12);g.scale(1,sq);for(const tr of trees){{if(!tr.sv)continue;g.drawImage(tr.sv,tr.sx,0,tr.sw,tr.sl);}}g.restore();}}
+// the close tree: the same tree scene 1 draws for that entry, cut in close on the near swell, its shadow long toward the reader. Painted once; the beats reveal it
+const T1=CLOSE&&(trees.find(t=>t.id===CLOSE.id)||trees[trees.length-1]),T2=CLOSE&&CLOSE.reader?trees.find(t=>t.id===CLOSE.reader.id):null;
+let K=null,born2=0,run2=false,done2=false,pauseAt=0;
+function treeCanvas(t,k,part,depth){{const cv=document.createElement('canvas');cv.width=Math.ceil(t.cw*k*DPR);cv.height=Math.ceil(t.ch*k*DPR);const g=cv.getContext('2d');g.setTransform(DPR*k,0,0,DPR*k,-t.ox*k*DPR,-t.oy*k*DPR);fir(g,{{...t,depth:depth}},part);return cv;}}
+function paintClose(){{if(!cc||!T1||!T1.cv)return;const Ws=Ws2,Hs=Math.round(cc.getBoundingClientRect().height)||Hs2;cc.width=Ws*DPR;cc.height=Hs*DPR;cx2.setTransform(DPR,0,0,DPR,0,0);
+ const ht1=T1.h*H*sc,k1=(Hs*0.6)/ht1,fx=Ws*(W<700?0.4:0.33),fy=Hs*0.8;
+ K={{Ws,Hs,k1,ht:ht1*k1,fx,fy,x:fx-(T1.u*W-T1.ox)*k1,y:fy-(hz0-T1.oy)*k1,w:T1.cw*k1,h:T1.ch*k1}};
+ K.cvT=treeCanvas(T1,k1,'trunk',1);K.cvL=treeCanvas(T1,k1,'limbs',1);K.cvA=treeCanvas(T1,k1,undefined,1);
+ const st0=2.1,shear=0.35,len=K.ht*st0+8,sw=K.w+shear*len+24,sx0=K.x-12;const sv=document.createElement('canvas');sv.width=Math.ceil(sw*DPR);sv.height=Math.ceil((len+16)*DPR);const s=sv.getContext('2d');s.setTransform(DPR,0,0,DPR,-sx0*DPR,-fy*DPR);
+ const N=10;for(let i=0;i<N;i++){{const y0=fy+i*len/N,f=i/N;const o=off2(fx+shear*(y0-fy),y0+len/(2*N)-yc2,LH2);s.save();s.beginPath();s.rect(sx0,y0-2,sw,len/N+4);s.clip();s.globalAlpha=0.34*(1-0.72*f);s.translate(0,o);s.transform(1,0,-shear*st0,-st0,shear*st0*fy,fy*(1+st0));s.drawImage(K.cvA,K.x,K.y,K.w,K.h);s.restore();}}
+ K.sv=sv;K.sx=sx0;K.sw=sw;K.sl=len+16;
+ if(T2&&T2.cv){{const ht2=T2.h*H*sc,k2=(Hs*0.2)/ht2,gx=Ws*(W<700?0.7:0.5),gy=Hs*0.5;K.g={{k2,gx,gy,ht:ht2*k2,x:gx-(T2.u*W-T2.ox)*k2,y:gy-(hz0-T2.oy)*k2,w:T2.cw*k2,h:T2.ch*k2,cv:treeCanvas(T2,k2,undefined,0.5)}};}}
+ if(reduced||done2)drawClose(99);else if(run2)drawClose((performance.now()-born2)/1000);else drawClose(0);}}
+const ease=p=>1-Math.pow(1-p,3),cl=v=>Math.max(0,Math.min(1,v));
+function reveal(cv,b,p,ht,alpha){{const yTop=b.fy-ht*p-6,yBot=b.y+b.h;if(yTop>=yBot)return;cx2.globalAlpha=alpha;cx2.drawImage(cv,0,(yTop-b.y)*DPR,cv.width,(yBot-yTop)*DPR,b.x,yTop,b.w,yBot-yTop);cx2.globalAlpha=1;}}
+// the three beats, in seconds from arrival: the tree is drawn (trunk, then limbs and crown) by 2.5; a full second later the light comes on, if a person said so; then a strand runs along the ground to the tree that read it, and that one draws, smaller and hazed
+function drawClose(t){{if(!K)return;const g=cx2;g.clearRect(0,0,K.Ws,K.Hs);const gA=ease(cl(t/2.5)),pT=ease(cl(t/0.7)),pL=ease(cl((t-0.6)/1.9));const lit=!!CLOSE.lit,lk=lit?cl((t-3.5)/0.6):0,t3=lit?4.3:3.5,ps=ease(cl((t-t3)/0.8)),p2=ease(cl((t-t3-0.8)/1.5));
+ {{const L=K.sl*gA;if(L>1)g.drawImage(K.sv,0,0,K.sv.width,L*DPR,K.sx,K.fy,K.sw,L);}}
+ reveal(K.cvT,K,pT,K.ht,1);reveal(K.cvL,K,pL,K.ht,1);
+ if(lk>0){{const lx=K.fx+T1.lean*K.ht*0.42,ly=K.fy-K.ht*0.42,R=K.Hs*0.09*(0.5+0.5*lk);g.globalAlpha=lk;const rg=g.createRadialGradient(lx,ly,0,lx,ly,R);rg.addColorStop(0,'rgba(255,255,250,1)');rg.addColorStop(0.2,'rgba(255,250,222,0.9)');rg.addColorStop(0.5,'rgba(255,238,186,0.35)');rg.addColorStop(1,'rgba(255,226,160,0)');g.fillStyle=rg;g.beginPath();g.arc(lx,ly,R,0,7);g.fill();g.fillStyle='#ffffff';g.beginPath();g.arc(lx,ly,4,0,7);g.fill();
+   g.save();g.translate(lx,K.fy+2);g.scale(R*1.6,R*0.4);const rl=g.createRadialGradient(0,0,0,0,0,1);rl.addColorStop(0,'rgba(255,244,210,0.55)');rl.addColorStop(1,'rgba(255,230,170,0)');g.fillStyle=rl;g.beginPath();g.arc(0,0,1,0,7);g.fill();g.restore();g.globalAlpha=1;}}
+ if(K.g){{if(ps>0){{const x0=K.fx,y0=K.fy+3,x1=K.g.gx,y1=K.g.gy+2,mx=(x0+x1)/2,my=(y0+y1)/2+K.Hs*0.06;g.strokeStyle='rgba(27,26,23,0.7)';g.lineWidth=1.5;g.lineCap='round';g.beginPath();g.moveTo(x0,y0);const n=Math.max(2,Math.floor(48*ps));for(let i=1;i<=n;i++){{const u=(i/48);const xx=(1-u)*(1-u)*x0+2*(1-u)*u*mx+u*u*x1,yy=(1-u)*(1-u)*y0+2*(1-u)*u*my+u*u*y1;g.lineTo(xx,yy);}}g.stroke();}}
+   if(p2>0)reveal(K.g.cv,{{fy:K.g.gy,x:K.g.x,y:K.g.y,w:K.g.w,h:K.g.h}},p2,K.g.ht,0.72);}}
+ const beats=sec.querySelectorAll('.beats p');if(beats.length===3){{beats[0].classList.toggle('in',t>=0);beats[1].classList.toggle('in',t>=3.5);beats[2].classList.toggle('in',t>=t3);}}
+}}
+function loop2(now){{if(!run2)return;const t=(now-born2)/1000;drawClose(t);if(t>t3end()){{run2=false;done2=true;return;}}if(document.hidden){{run2=false;pauseAt=now;return;}}requestAnimationFrame(loop2);}}
+function t3end(){{return (CLOSE&&CLOSE.lit?4.3:3.5)+2.5;}}
+const start2=()=>{{if(done2||run2)return;const now=performance.now();if(!born2)born2=now;else if(pauseAt){{born2+=now-pauseAt;pauseAt=0;}}run2=true;requestAnimationFrame(loop2);}};
+if(cc&&!reduced){{if('IntersectionObserver' in window)new IntersectionObserver(es=>{{const v=es[0].isIntersecting;if(v)start2();else if(run2){{run2=false;pauseAt=performance.now();}}}},{{threshold:0.3}}).observe(cc);
+ else{{const chk=()=>{{const r=cc.getBoundingClientRect();if(r.top<innerHeight*0.7&&r.bottom>innerHeight*0.3)start2();}};addEventListener('scroll',chk,{{passive:true}});chk();}}}}
+if(cc){{const hit2=ev=>{{if(!K)return null;const r=cc.getBoundingClientRect(),px=ev.clientX-r.left,py=ev.clientY-r.top;if(px>=K.x&&px<=K.x+K.w&&py>=K.fy-K.ht-8&&py<=K.fy+10)return CLOSE;if(K.g&&px>=K.g.x&&px<=K.g.x+K.g.w&&py>=K.g.gy-K.g.ht-6&&py<=K.g.gy+8)return CLOSE.reader;return null;}};
+ cc.addEventListener('mousemove',ev=>{{const h=hit2(ev);cc.style.cursor=h?'pointer':'';cc.title=h?('entry '+h.id+(h.lit?', countersigned':'')):'';}});cc.addEventListener('click',ev=>{{const h=hit2(ev);if(h)location.href=h.href;}});}}
 paintLand2();addEventListener('resize',paintLand2);addEventListener('load',paintLand2);addEventListener('scroll',()=>spill(false),{{passive:true}});
 }})();
 </script></body></html>'''
