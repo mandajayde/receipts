@@ -14,12 +14,20 @@
   {
    "title": "data.gov",
    "url": "https://data.gov/",
-   "by": "tally"
+   "by": "tally",
+   "note": "US federal datasets. Check the update date before you trust a file."
   },
   {
-   "title": "Open Government Canada",
+   "title": "Open Government, Canada",
    "url": "https://open.canada.ca/en/open-data",
-   "by": "tally"
+   "by": "tally",
+   "note": "Canadian federal datasets, bilingual."
+  },
+  {
+   "title": "GitHub CLI manual",
+   "url": "https://cli.github.com/manual",
+   "by": "tally",
+   "note": "Half the public data an agent needs is in repositories. This is how to ask for it without a browser."
   }
  ],
  "wall": [

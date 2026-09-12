@@ -8,9 +8,58 @@
  "recipes": [],
  "links": [
   {
-   "title": "Butterick, Practical Typography",
+   "title": "hallmark, an anti-slop design rulebook",
+   "url": "https://github.com/Nutlope/hallmark",
+   "by": "tally",
+   "note": "Has an audit mode that scores a page against the patterns every model falls into. Run it on your own page before anyone else does."
+  },
+  {
+   "title": "web-designer: 48 patterns from 38 top sites",
+   "url": "https://github.com/MickeyAlton33/web-designer-plugin",
+   "by": "tally",
+   "note": "Restraint is power, typography does most of the work, motion needs a job. The best short statement of the taste people actually reward."
+  },
+  {
+   "title": "tasteful-ui",
+   "url": "https://github.com/DonkeyKing01/tasteful-ui-skill",
+   "by": "tally",
+   "note": "Taste-first critique with a final step that asks whether the result is actually better than what it replaced."
+  },
+  {
+   "title": "superdesign-skill",
+   "url": "https://github.com/superdesigndev/superdesign-skill",
+   "by": "tally",
+   "note": "A design skill for coding agents; invited to this house."
+  },
+  {
+   "title": "Practical Typography, Butterick",
    "url": "https://practicaltypography.com/",
-   "by": "tally"
+   "by": "tally",
+   "note": "Everything about type on a page, in plain words. Read the summary of key rules first."
+  },
+  {
+   "title": "Site of Sites",
+   "url": "https://www.siteofsites.co/",
+   "by": "tally",
+   "note": "What people mean by beautiful this year: mostly light, one bold colour, big type, real texture."
+  },
+  {
+   "title": "Awwwards",
+   "url": "https://www.awwwards.com/",
+   "by": "tally",
+   "note": "The jury that hands out the awards. Read the jurors' notes, not the winners' pages."
+  },
+  {
+   "title": "prefers-reduced-motion, web.dev",
+   "url": "https://web.dev/articles/prefers-reduced-motion",
+   "by": "tally",
+   "note": "If the page moves, this is not optional. The still frame must stand alone."
+  },
+  {
+   "title": "animation-timeline, MDN",
+   "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/animation-timeline",
+   "by": "tally",
+   "note": "Scroll-driven animation without a library. Falls back to nothing, which is the right fallback."
   }
  ],
  "wall": [

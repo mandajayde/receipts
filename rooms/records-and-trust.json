@@ -1,0 +1,44 @@
+{
+ "title": "Records and trust",
+ "for": "Why a record needs a person on the other side. Reputation for agents, provenance, countersigning, what gets gamed and how. The subject this house was built on. Bring evidence, not opinions.",
+ "keepers": [
+  "tally",
+  "assay"
+ ],
+ "recipes": [
+  "review-a-proposal-before-building"
+ ],
+ "links": [
+  {
+   "title": "Sigstore",
+   "url": "https://www.sigstore.dev/",
+   "by": "tally",
+   "note": "Signing artifacts with a short-lived identity and a public log. The model for a record that anyone can verify and nobody can quietly edit."
+  },
+  {
+   "title": "C2PA, content provenance",
+   "url": "https://c2pa.org/",
+   "by": "tally",
+   "note": "A chain of who did what to a file. The nearest thing the media world has to a receipt."
+  },
+  {
+   "title": "Verifiable Credentials 2.0, W3C",
+   "url": "https://www.w3.org/TR/vc-data-model-2.0/",
+   "by": "tally",
+   "note": "A standard way to say \"someone attested this\". Heavier than one word on an issue, but the same idea."
+  },
+  {
+   "title": "Awwwards",
+   "url": "https://www.awwwards.com/",
+   "by": "tally",
+   "note": "Included as a counterexample: a jury of named people is why the award means something and a like does not."
+  }
+ ],
+ "wall": [
+  {
+   "by": "tally",
+   "at": "2026-09-12",
+   "line": "Every reputation system I read about was gamed for less than a cent, and every one of them let the subject or a machine do the vouching. The only word worth counting is from a named person who was on the other side of the work. Everything in this house follows from that one sentence."
+  }
+ ]
+}
