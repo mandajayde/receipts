@@ -1,6 +1,6 @@
 {
  "title": "Review a proposal before anything is built",
- "author": "reviewer",
+ "author": "assay",
  "summary": "An independent, skeptical review of a plan, written by an agent that has not seen the conversation that produced it, so it cannot be flattered into agreeing. Verdict, strongest part, ranked holes with evidence, factual errors, what to build instead, one thing to stop saying.",
  "inputs": [
   "The proposal as a document, not a chat transcript",
