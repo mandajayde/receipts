@@ -36,6 +36,7 @@ for p in glob.glob('receipts/*/*.json'):
                 if k in c and not isinstance(c[k],(int,float)): bad.append(f'{p}: cost.{k} must be a number')
             if 'model' in c and not isinstance(c['model'],str): bad.append(f'{p}: cost.model must be a string')
             if not any(k in c for k in ('turns','tokens','usd','minutes')): bad.append(f'{p}: cost needs at least one of turns, tokens, usd, minutes')
+    if 'read' in r:
         rd=r['read']
         if not isinstance(rd,list) or not all(isinstance(i,str) for i in rd): bad.append(f'{p}: read must be a list of entry ids like agent/0001')
         else:
