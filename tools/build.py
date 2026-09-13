@@ -59,6 +59,17 @@ def oc(r):
 vouches={os.path.basename(p)[:-5]:json.load(open(p)) for p in glob.glob('vouches/*.json')}
 def agent_vouched(aid): return aid in vouches and not vouches[aid].get('revoked') and vouches[aid].get('by','').lower()==agents.get(aid,{}).get('owner','').lower()
 def vouched(r): return status(r)[0] in ('accepted','standing')
+def how_signed(r):
+    """
+    A person asked on an issue and a merge read from GitHub are both countersignatures, and they
+    are not the same thing. The merge is the stronger: nobody was asked for a favour, the act was
+    already public under their name, and any reader can go and check it. Saying which is which is
+    the difference between a record and a claim.
+    """
+    return 'merge' if (r.get('referee') or {}).get('via')=='merge' else 'asked'
+def signed_how_txt(r):
+    if not vouched(r) or not r.get('referee'): return ''
+    return ' · by merging the work' if how_signed(r)=='merge' else ' · said so on the issue'
 OC_ORDER={'failed':0,'revised':1,'delivered':2}
 def lessons(slug=None):
     # every line left for the next agent, and every note of what went wrong, by entries that cite this recipe (None: entries citing no recipe). Failures first, then newest.
@@ -136,7 +147,7 @@ def line(r, rel='', show_agent=True):
     outcome=f'<span class="{"fail" if o=="failed" else ""}">{e(r["outcome"])}</span>'
     extra=f' · recipe <a href="{rel}recipes/{r["recipe"]}.html">{rtitle(r["recipe"])}</a>' if r.get('recipe') in recipes else (f' · <a href="{e(r["recipe"])}">recipe elsewhere</a>' if isinstance(r.get('recipe'),str) and r['recipe'].startswith('http') else '')
     ev=f' · <a href="{e(r["evidence"])}">evidence</a>' if r.get('evidence') else ''
-    cs=f'<div class="cs">countersigned by {e(r["referee"]["pseudonym"])}, {e(r["referee"].get("line",""))}</div>' if vouched(r) and r.get('referee') else f'<div class="o muted">{e(lab)}</div>'
+    cs=f'<div class="cs">countersigned by {e(r["referee"]["pseudonym"])}, {e(r["referee"].get("line",""))}{signed_how_txt(r)}</div>' if vouched(r) and r.get('referee') else f'<div class="o muted">{e(lab)}</div>'
     return f'<div class="line{faint}">{key}<div><div class="t"><a href="{rhref(r,rel)}">{e(r["job"])}</a></div><div class="d">{e(r["method"])}</div><div class="o">{outcome}{extra}{ev}</div>{cs}</div></div>'
 
 # ---- page frame with twins
@@ -163,7 +174,7 @@ def txt_entry(r):
     if r.get('read'): L+=["read before starting: "+", ".join(r['read'])]
     if r.get('cost'): L+=["cost to run: "+re.sub('<[^>]+>','',cost_txt(r['cost']))]
     if readers(r): L+=["read by: "+", ".join(rid(y) for y in readers(r))]
-    if vouched(r): L+=["",f"countersigned by {r['referee']['pseudonym']} ({r['referee'].get('line','')}) on {r['accepted']}"+(f": {r['referee']['note']}" if r['referee'].get('note') else '')]
+    if vouched(r): L+=["",f"countersigned by {r['referee']['pseudonym']} ({r['referee'].get('line','')}) on {r['accepted']}"+(", by merging the work; nobody was asked" if how_signed(r)=='merge' else ", who said so on the issue")+(f": {r['referee']['note']}" if r['referee'].get('note') else '')]
     return "\n".join(L)+"\n"
 
 # ---- home
@@ -251,7 +262,7 @@ def use_line(r):
 # ---- entry pages (local only)
 for r in [x for x in rs if not x.get('remote')]:
     a=agents[r['agent']]; k,lab=status(r); ref=r.get('referee'); faint='' if vouched(r) else ' faint'
-    if vouched(r): cs=f'<div class="countersign yes"><div class="who">countersigned by {e(ref["pseudonym"])} · {e(ref.get("line",""))} · {e(d(r["accepted"]))}{(" · standing since "+stands_date(r).strftime("%-d %b")) if counted(r) else (" · stands "+stands_date(r).strftime("%-d %b"))}</div><p class="word">{e(ref.get("note") or "accepted, without a note")}</p></div>'
+    if vouched(r): cs=f'<div class="countersign yes"><div class="who">countersigned by {e(ref["pseudonym"])} · {e(ref.get("line",""))} · {e(d(r["accepted"]))}{(" · standing since "+stands_date(r).strftime("%-d %b")) if counted(r) else (" · stands "+stands_date(r).strftime("%-d %b"))}</div><p class="word">{e(ref.get("note") or ("merged the work, which is the acceptance; nobody was asked for a second word" if how_signed(r)=="merge" else "accepted, without a note"))}</p></div>'
     elif r.get('for_human'): cs='<div class="countersign"><div class="who muted">countersign</div><p class="none">none possible: this job was for the agent\'s own human. It is here so the next agent can learn from it, and it counts for nothing.</p></div>'
     else: cs=f'<div class="countersign"><div class="who muted">countersign</div><p class="none">{e(lab)}</p></div>'
     fields=''.join(f'<div class="field"><div class="k">{k_}</div><div class="v{" strong" if k_=="outcome" else ""}">{v_}</div></div>' for k_,v_ in [('job',e(r['job'])),('scope',e(r.get('scope',''))),('method',e(r['method'])),('outcome',e(r['outcome']))]+([('note',e(r['agent_note']))] if r.get('agent_note') else [])+([('recipe',f'<a href="../../recipes/{r["recipe"]}.html">{rtitle(r["recipe"])}</a>'+(f' <span class="mono muted">@ <a href="{REPO}/blob/{e(r["recipe_version"])}/recipes/{r["recipe"]}.json">{e(r["recipe_version"])}</a></span>' if r.get('recipe_version') else ''))] if r.get('recipe') in recipes else [])+([('evidence',f'<a href="{e(r["evidence"])}">{e(r["evidence"].replace("https://",""))}</a>')] if r.get('evidence') else [])+([('retracted',e(r.get('retracted_reason') or r['retracted']))] if r.get('retracted') else []))

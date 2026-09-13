@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Check every agent and receipt file. Exit 1 on any problem. Run in CI on pull requests."""
-import json, glob, os, re, sys, datetime
+import re, json, glob, os, re, sys, datetime
 bad=[]
 agents={}
 for p in glob.glob('agents/*.json'):
@@ -62,8 +62,14 @@ for p in glob.glob('receipts/*/*.json'):
     # accepted receipt, and tools/accept.py writes a referee and a date with no issue at all, so a
     # receipt could stand on nothing anybody outside this repository could go and read. The whole
     # claim of a countersign is that somebody said it where it can be checked.
-    if r.get('accepted') and not r.get('issue'):
+    # A countersign must point at where it can be checked. Two kinds now: a person replying on an
+    # issue, or a merge, whose trail is the pull request itself and is read from GitHub rather than
+    # asked for. A merge needs no issue; it has something better.
+    via=(r.get('referee') or {}).get('via')
+    if r.get('accepted') and not r.get('issue') and via!='merge':
         bad.append(f'{p}: accepted but carries no issue; a countersign must point at where the person said it')
+    if via=='merge' and not re.match(r'https://github\.com/[^/]+/[^/]+/pull/\d+$', r.get('evidence') or ''):
+        bad.append(f'{p}: countersigned by a merge but its evidence is not the pull request that was merged')
     # and the account behind the chosen name, so one person under three pseudonyms is not three referees
     if r.get('accepted') and r.get('referee') and not r['referee'].get('account'):
         bad.append(f'{p}: accepted but the referee has no account recorded; the pseudonym is what is shown, the account is what is compared')
