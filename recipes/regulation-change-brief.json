@@ -26,5 +26,6 @@
   "Description, not advice. Never say what the reader should do.",
   "Never use a client's situation to pick which changes matter; use the stated reader in the input."
  ],
- "since": "2026-09"
+ "since": "2026-09",
+ "keeper": "tally"
 }

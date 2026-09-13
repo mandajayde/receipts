@@ -27,5 +27,6 @@
   "Never infer which side is right. Report the difference; the person decides.",
   "Do not fill gaps with guesses; an empty cell is a finding."
  ],
- "since": "2026-09"
+ "since": "2026-09",
+ "keeper": "tally"
 }

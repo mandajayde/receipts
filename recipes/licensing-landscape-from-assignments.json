@@ -1,18 +1,32 @@
 {
-  "title": "Licensing landscape from recorded patent assignments",
-  "author": "tally",
-  "summary": "Map who has transferred or licensed patents to whom in one technology over five years, using only the recorded assignment databases of the patent offices, and draw it as a chart.",
-  "inputs": ["A technology, expressed as CPC classes or a keyword set", "A five-year window"],
-  "outputs": ["A table of recorded assignments and licences: assignor, assignee, date, patent count, conveyance type", "A chart of the transfers between the top parties", "A note on the limits of the data"],
-  "steps": [
-    "Define the technology as CPC classes first and keywords second. Record the definition so the person can check it.",
-    "Pull the recorded assignments for patents in those classes from the offices' assignment databases for the window. Keep the conveyance type field; licences are recorded separately from assignments where the office allows it.",
-    "Normalise party names (subsidiaries, renamed companies) and keep a list of every merge you made.",
-    "Aggregate by assignor and assignee; count patents, not records.",
-    "Draw the transfers between the top parties as a chart. Label the edges with patent counts.",
-    "Write the limits note: unrecorded licences are invisible, security interests are not licences, and a recorded assignment says nothing about price."
-  ],
-  "sources": ["Patent office assignment databases", "Patent office bulk data where offered"],
-  "cautions": ["Do not infer that a recorded assignment is a licence deal.", "Do not use paid databases or anything a client provided."],
-  "since": "2026-09"
+ "title": "Licensing landscape from recorded patent assignments",
+ "author": "tally",
+ "summary": "Map who has transferred or licensed patents to whom in one technology over five years, using only the recorded assignment databases of the patent offices, and draw it as a chart.",
+ "inputs": [
+  "A technology, expressed as CPC classes or a keyword set",
+  "A five-year window"
+ ],
+ "outputs": [
+  "A table of recorded assignments and licences: assignor, assignee, date, patent count, conveyance type",
+  "A chart of the transfers between the top parties",
+  "A note on the limits of the data"
+ ],
+ "steps": [
+  "Define the technology as CPC classes first and keywords second. Record the definition so the person can check it.",
+  "Pull the recorded assignments for patents in those classes from the offices' assignment databases for the window. Keep the conveyance type field; licences are recorded separately from assignments where the office allows it.",
+  "Normalise party names (subsidiaries, renamed companies) and keep a list of every merge you made.",
+  "Aggregate by assignor and assignee; count patents, not records.",
+  "Draw the transfers between the top parties as a chart. Label the edges with patent counts.",
+  "Write the limits note: unrecorded licences are invisible, security interests are not licences, and a recorded assignment says nothing about price."
+ ],
+ "sources": [
+  "Patent office assignment databases",
+  "Patent office bulk data where offered"
+ ],
+ "cautions": [
+  "Do not infer that a recorded assignment is a licence deal.",
+  "Do not use paid databases or anything a client provided."
+ ],
+ "since": "2026-09",
+ "keeper": "tally"
 }

@@ -1,18 +1,32 @@
 {
-  "title": "Cross-jurisdiction table of FRAND royalty rulings",
-  "author": "tally",
-  "summary": "Build a comparison table of court rulings on FRAND royalty rates for standard-essential patents across the UK, Germany, the US and China, from the public judgments, with a citation for every cell.",
-  "inputs": ["A technology standard or patent family to anchor on (optional)", "A date range"],
-  "outputs": ["A table: jurisdiction, case, court, date, rate or method, key holding, citation", "A one-page note on where the jurisdictions diverge"],
-  "steps": [
-    "List the leading FRAND rate decisions per jurisdiction from public court and tribunal sites, not from commentary. Start from the courts' own judgment databases and the official reporter where one exists.",
-    "For each judgment, read the rate-setting section itself. Record the method (comparables, top-down, or a mix), the rate or range, and the exact paragraph numbers.",
-    "Build the table with one row per judgment. Every cell that states a number or a holding carries a pinpoint citation to a paragraph.",
-    "Cross-check each rate against at least one second public source (a later judgment citing it, or the court's own press summary). Mark any cell you could not cross-check.",
-    "Write the divergence note last, from the table only. Do not import conclusions from commentary.",
-    "Send the table and the note. Ask the person which jurisdiction to lead with; do not assume."
-  ],
-  "sources": ["Court judgment databases", "Official law reports", "Court press summaries"],
-  "cautions": ["Rates in settlements are not rulings; exclude them.", "Never add a client's dispute or facts. Public judgments only."],
-  "since": "2026-09"
+ "title": "Cross-jurisdiction table of FRAND royalty rulings",
+ "author": "tally",
+ "summary": "Build a comparison table of court rulings on FRAND royalty rates for standard-essential patents across the UK, Germany, the US and China, from the public judgments, with a citation for every cell.",
+ "inputs": [
+  "A technology standard or patent family to anchor on (optional)",
+  "A date range"
+ ],
+ "outputs": [
+  "A table: jurisdiction, case, court, date, rate or method, key holding, citation",
+  "A one-page note on where the jurisdictions diverge"
+ ],
+ "steps": [
+  "List the leading FRAND rate decisions per jurisdiction from public court and tribunal sites, not from commentary. Start from the courts' own judgment databases and the official reporter where one exists.",
+  "For each judgment, read the rate-setting section itself. Record the method (comparables, top-down, or a mix), the rate or range, and the exact paragraph numbers.",
+  "Build the table with one row per judgment. Every cell that states a number or a holding carries a pinpoint citation to a paragraph.",
+  "Cross-check each rate against at least one second public source (a later judgment citing it, or the court's own press summary). Mark any cell you could not cross-check.",
+  "Write the divergence note last, from the table only. Do not import conclusions from commentary.",
+  "Send the table and the note. Ask the person which jurisdiction to lead with; do not assume."
+ ],
+ "sources": [
+  "Court judgment databases",
+  "Official law reports",
+  "Court press summaries"
+ ],
+ "cautions": [
+  "Rates in settlements are not rulings; exclude them.",
+  "Never add a client's dispute or facts. Public judgments only."
+ ],
+ "since": "2026-09",
+ "keeper": "tally"
 }

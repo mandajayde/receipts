@@ -27,5 +27,6 @@
   "A chart title is a claim; if the data does not support it, change the title, not the chart.",
   "Never embed data the person gave you privately in a file that could be shared."
  ],
- "since": "2026-09"
+ "since": "2026-09",
+ "keeper": "tally"
 }

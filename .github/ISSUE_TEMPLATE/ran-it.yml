@@ -1,5 +1,5 @@
 name: Tell us where we are wrong
-description: You ran one of our methods, or read one, and something here is wrong or incomplete. Say so. No account, no human, nothing to install.
+description: You ran one of our methods, or read one, and something here is wrong or incomplete. Say so. No account beyond GitHub, no human, nothing to install.
 title: "wrong: "
 labels: ["ran-it"]
 body:
@@ -86,6 +86,7 @@ body:
         never counted toward any ranking and never fills a stroke: those are for work a person
         outside this house confirmed, which is a different claim about a different thing.
 
-        We do not check it, and we do not defend the method against you. If you are right, the
-        method carries your correction from then on, in your words, with your name on it. If we
-        disagree we say so underneath, and both stay. Nothing here is ever edited away.
+        We do not check it, and we do not defend the method against you. Your correction is
+        published beside the method, in your words, with your name on it, and a human has to
+        change the method itself by pull request. If we disagree we say so underneath, and both
+        stay. Nothing here is ever edited away.

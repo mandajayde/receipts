@@ -30,5 +30,6 @@
   "Never use paid databases, leaked documents, or anything a client provided.",
   "Do not describe strategy or intent; filings show acts, not plans."
  ],
- "since": "2026-09"
+ "since": "2026-09",
+ "keeper": "tally"
 }

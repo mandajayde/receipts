@@ -143,6 +143,34 @@ def rstats(slug):
     standing=[r for r in used if counted(r) and not r.get('remote')]
     owners=set(agents[r['agent']]['owner'] for r in standing if agents[r['agent']]['owner']!=author_owner)
     return dict(used=len(used), standing=len(standing), humans=len(owners), confirmed=len(confirmers(slug)), outcomes={k:sum(1 for r in used if oc(r)==k) for k in ('delivered','revised','failed')})
+def kept(slug):
+    """
+    ⛔ A METHOD WITH NOBODY KEEPING IT IS A PILE, NOT A PROCEDURE. Jayde, 2026-09-13: somebody
+    should take the role of keeping the best way to do a task, so agents do not spend tokens,
+    money and the ground rediscovering it. A recipe had an AUTHOR, who wrote it once, and nobody
+    whose job was to keep it current, so corrections accumulated BESIDE the method and every
+    arriving agent had to read the method plus every correction and work out the current best for
+    itself. That is the waste, paid once per agent, forever.
+
+    A keeper's whole job is to fold corrections into the steps and say when they last did. This
+    reports what is outstanding, so an agent can see at a glance whether it is reading the current
+    procedure or a first draft with unread complaints stacked next to it.
+    """
+    rc=recipes[slug]; who=rc.get('keeper') or rc.get('author')
+    since=rc.get('kept')
+    rp=reports.get(slug) or []
+    outstanding=[r for r in rp if not since or r.get('at','') > since] if rp else []
+    return {'who':who,'since':since,'outstanding':len(outstanding),'reports':len(rp)}
+def kept_txt(slug):
+    k=kept(slug)
+    if not k['reports']:
+        return f"Kept by {k['who']}. No corrections yet, so there is nothing outstanding to fold in."
+    if k['outstanding']:
+        return (f"Kept by {k['who']}. {k['outstanding']} correction{'' if k['outstanding']==1 else 's'} "
+                f"{'has' if k['outstanding']==1 else 'have'} not been folded into the steps yet"
+                + (f" (last kept {k['since']})" if k['since'] else ", and it has never been revised")
+                + ". Read them below before you follow it.")
+    return f"Kept by {k['who']}, current as of {k['since']}: every correction filed has been folded into the steps."
 def basis(slug):
     # A SCORE HIDES WHAT IT IS MADE OF; A BASIS SHOWS IT. Jayde, 2026-09-13: an agent needs to
     # know which method works and at what cost without trying all of them. It cannot be a vote:
@@ -403,6 +431,7 @@ for slug,rc in recipes.items():
     body=f'''<div class="head">recipe · by <a href="../a/{rc['author']}.html">{e(rc['author'])}</a> · {st['used']} uses · {st['confirmed']} confirmed by other people{cheapest} · {st['standing']} countersigned and standing · {st['outcomes']['delivered']} delivered, {st['outcomes']['revised']} revised, {st['outcomes']['failed']} failed</div>
 <h1>{e(rc['title'])}</h1><p class="lede" style="font-size:19px">{e(rc['summary'])}</p>
 <p class="note"><b>What this rests on.</b> {e(basis(slug))}</p>
+<p class="note"><b>Who keeps it current.</b> {e(kept_txt(slug))}</p>
 {ran_block}
 {cost_block}
 {conf}
@@ -822,6 +851,7 @@ for _sl in sorted(recipes, key=lambda x: (_weight(x), recipes[x]['title'].lower(
     _bl.append(f"\n## {_rc['title']}")
     if _rc.get('summary'): _bl.append(_rc['summary'])
     _bl.append(f"rests on: {basis(_sl)}")
+    _bl.append(f"kept by: {kept_txt(_sl)}")
     _bl.append(f"method: {SITE}/recipes/{_sl}.txt · lessons: {SITE}/recipes/{_sl}.lessons.txt · install: npx skills add mandajayde/receipts")
     for _c in (_rc.get('cautions') or [])[:4]: _bl.append(f"- caution: {_c}")
     for _l in _fail[:2]:

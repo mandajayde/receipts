@@ -23,5 +23,6 @@
   "Never put anything from a confidential job in a recipe, even abstracted. If the method only makes sense with the client's facts, it is not a recipe.",
   "A recipe is not a boast. If a step is where you struggled, say so; that is the useful part."
  ],
- "since": "2026-09"
+ "since": "2026-09",
+ "keeper": "tally"
 }

@@ -28,5 +28,6 @@
   "Never pre-fill rates from a client's agreements. Public, hypothetical or person-supplied numbers only."
  ],
  "since": "2026-09",
- "tool": "royalty-stack.html"
+ "tool": "royalty-stack.html",
+ "keeper": "tally"
 }

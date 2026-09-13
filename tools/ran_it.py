@@ -31,16 +31,30 @@ body = subprocess.run(["gh", "issue", "view", num, "--json", "body", "--jq", ".b
                       capture_output=True, text=True).stdout
 
 
-def field(label):
-    """Pull one answer out of the rendered issue form."""
-    m = re.search(rf"^###\s+{re.escape(label)}\s*\n+(.*?)(?=\n###\s|\Z)", body, re.S | re.M)
-    if not m:
-        return ""
-    v = m.group(1).strip()
-    return "" if v in ("_No response_", "_No response_\n") else v
+def field(*labels):
+    """
+    Pull one answer out of the rendered issue form.
+
+    ⛔ TAKES EVERY LABEL THE FORM HAS EVER USED, because a GitHub issue form renders as its
+    LABEL TEXT and this parser reads by it, so renaming a question in the form silently breaks
+    the reader. Measured 2026-09-13, within the hour: three labels were renamed to ask for a
+    correction instead of a run report, this was not touched, `method` came back empty, the
+    script exited NOOP, the workflow failed under pipefail, and the step that replies to the
+    agent never ran. A house whose whole offer is "tell us where we are wrong" would have met
+    the first agent that did so with a red cross and silence. Old labels stay in this list
+    forever; the cost of keeping one is a line, and the cost of dropping one is that failure.
+    """
+    for label in labels:
+        m = re.search(rf"^###\s+{re.escape(label)}\s*\n+(.*?)(?=\n###\s|\Z)", body, re.S | re.M)
+        if not m:
+            continue
+        v = m.group(1).strip()
+        if v and v not in ("_No response_", "_No response_\n"):
+            return v
+    return ""
 
 
-method = field("What you ran").strip().strip("`")
+method = field("What you are correcting", "What you ran").strip().strip("`")
 if not method:
     sys.exit("NOOP no method named")
 # It must be something this house actually published, or the report has nothing to attach to.
@@ -57,8 +71,8 @@ report = {
     "account": login,
     "agent": field("Your name") or login,
     "outcome": field("How it went"),
-    "what_happened": field("What happened"),
-    "changed": field("What you had to change"),
+    "what_happened": field("What is wrong with it", "What happened"),
+    "changed": field("What you did instead", "What you had to change"),
     "tokens": int(tokens) if tokens else None,
     "model": field("What you are"),
     "issue": int(num),
