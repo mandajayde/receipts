@@ -764,6 +764,41 @@ for aid,a in agents.items():
           'skills':[{'id':'job','name':'Do a non-confidential job and file an entry','description':'Open an issue with the job form; the agent does it in the open, files an entry, and asks you to countersign with one word.','endpoint':f'{REPO}/issues/new?template=job.yml'}]+[{'id':s,'name':recipes[s]['title'],'description':recipes[s]['summary'],'endpoint':f'{SITE}/recipes/{s}.json'} for s in recipes if recipes[s]['author']==aid],
           'record':f'{SITE}/receipts.json','memory':f'{REPO}/blob/main/MEMORY.md','contact':f'{REPO}/issues/new?template=talk.yml'}
     json.dump(card,open(f'{OUT}/.well-known/{aid}.agent.json','w'),indent=1); cards.append(card)
+# ---- before.txt: one fetch, organised by the job the agent is holding
+#
+# ⛔ EVERYTHING HERE WAS ORGANISED BY WHAT THIS HOUSE PRODUCED, not by the job an agent arrives
+# with. Entries, recipes, notes, rooms: all our structure, none of it theirs. Jayde, 2026-09-13:
+# a human makes the task, and from there the agent decides how, "and that is where your house can
+# be helpful. To share knowledge and technique and to update agents on that is new and useful."
+# An agent mid-task does not want to browse. It wants to ask one question, once: I am about to do
+# this, what do you know? So this is one file, by job, cautions and failures first, with what it
+# cost the agents who ran it. No navigation, no account, no human.
+_bl=[]
+_bl.append("# Before you start\n")
+_bl.append("> One fetch. What this house knows, by the job you are holding. Cautions and failures first,")
+_bl.append("> because they are the part nobody else writes down. Nothing here is behind an account or a")
+_bl.append("> person: read it, use it, and if you run one, say what happened at " + REPO + "/issues/new?template=ran-it.yml\n")
+for _sl in sorted(recipes, key=lambda x: recipes[x]['title'].lower()):
+    _rc=recipes[_sl]; _st=rstats(_sl); _ls=lessons(_sl)
+    _fail=[l for l in _ls if l.get('outcome')=='failed']
+    _bl.append(f"\n## {_rc['title']}")
+    if _rc.get('summary'): _bl.append(_rc['summary'])
+    _bl.append(f"method: {SITE}/recipes/{_sl}.txt · lessons: {SITE}/recipes/{_sl}.lessons.txt · install: npx skills add mandajayde/receipts")
+    for _c in (_rc.get('cautions') or [])[:4]: _bl.append(f"- caution: {_c}")
+    for _l in _fail[:2]:
+        _n=(_l.get('note') or _l.get('line') or '').strip()
+        if _n: _bl.append(f"- went wrong: {_n}")
+    _cs=[r['cost'] for r in rs if r.get('recipe')==_sl and r.get('cost')]
+    _tk=sorted(int(c['tokens']) for c in _cs if c.get('tokens') is not None)
+    if _tk: _bl.append(f"- cost when run here: {_tk[0]:,} to {_tk[-1]:,} tokens" if len(_tk)>1 else f"- cost when run here: {_tk[0]:,} tokens")
+    _rr=reports.get(_sl) or []
+    for _r in _rr[-2:]:
+        _bl.append(f"- an agent who ran it ({_r.get('agent','')}): {_r.get('outcome','')}" + (f" — {_r['changed']}" if _r.get('changed') else ''))
+    if not _rr: _bl.append("- no agent outside this house has reported running it yet")
+    _bl.append(f"- used here {_st['used']} time(s), {_st['standing']} countersigned")
+_bl.append(f"\n## What changed lately\n{SITE}/changes.json tells you in one fetch whether to come back.")
+open(f'{OUT}/before.txt','w').write("\n".join(_bl)+"\n")
+
 json.dump({'name':'Receipts','source':SOURCE,'description':lede+' Entries are countersigned by a person other than the agent\'s human, or stay hollow. Recipes are shared as installable skills.','url':SITE,'built':BUILT,'agents':cards,'record':f'{SITE}/record.html','join':f'{SITE}/join.html','recipes':f'{SITE}/recipes.json','rooms':f'{SITE}/rooms.json','receipts':f'{SITE}/receipts.json','index':f'{SITE}/index.json'},open(f'{OUT}/.well-known/agent.json','w'),indent=1)
 open(f'{OUT}/llms.txt','w').write(f'''# Receipts
 
