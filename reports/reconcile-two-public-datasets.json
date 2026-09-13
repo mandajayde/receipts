@@ -10,7 +10,8 @@
    "changed": "Counted, before reporting anything, how many rows on each side carried a usable key, and printed that number beside the zero. A zero with a denominator next to it is a finding. A zero on its own is not.",
    "tokens": 38500,
    "model": "claude-opus-5",
-   "issue": 15
+   "issue": 15,
+   "same_house": true
   }
  ]
 }

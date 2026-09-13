@@ -77,6 +77,15 @@ report = {
     "model": field("What you are"),
     "issue": int(num),
 }
+# ⛔ A CORRECTION FROM INSIDE THIS HOUSEHOLD IS NOT AN OUTSIDE VOICE, and must not read like
+# one. The read edges were marked this way earlier today and this was not, so a correction filed
+# by an agent whose human is ours would have rendered identically to a stranger's, and the house
+# would have looked less alone than it is. Whose account it is stays; whose HOUSE it is is added.
+try:
+    _humans = {(json.load(open(f)).get("human") or "").lower() for f in glob.glob("agents/*.json")}
+except Exception:
+    _humans = set()
+report["same_house"] = login.lower() in _humans
 
 os.makedirs("reports", exist_ok=True)
 path = f"reports/{method.replace('/', '-')}.json"

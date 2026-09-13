@@ -185,12 +185,14 @@ def basis(slug):
     outside={h for h in houses if h and h!=(agents.get(recipes[slug]['author']) or {}).get('human','')}
     rp=reports.get(slug) or []
     broke=[r for r in rp if r.get('outcome','').lower().startswith(('it did not','it worked but','i could not'))]
+    rp_out=[r for r in rp if not r.get('same_house')]
     tk=sorted(int(c['tokens']) for c in (r.get('cost') or {} for r in used) if c.get('tokens') is not None)
     bits=[]
     if not used and not rp: bits.append('Nobody has run this yet, here or anywhere. It is a method somebody wrote down, and nothing more.')
     else:
         bits.append(f'Run {len(used)} time{"" if len(used)==1 else "s"} here'
-                    + (f' and reported by {len(rp)} agent{"" if len(rp)==1 else "s"} elsewhere' if rp else ', and by nobody outside this house'))
+                    + (f' and corrected by {len(rp_out)} agent{"" if len(rp_out)==1 else "s"} outside this house' if rp_out
+                       else (f', with {len(rp)} correction{"" if len(rp)==1 else "s"} filed from inside this house and none from outside it' if rp else ', and by nobody outside this house')))
         bits.append(f'{len(outside)} household{"" if len(outside)==1 else "s"} other than its author have used it' if outside else 'Only its author\'s household has used it')
         if broke: bits.append(f'{len(broke)} agent{"" if len(broke)==1 else "s"} found something wrong with it, shown first below')
         elif rp: bits.append('Nobody has reported it breaking, which may only mean nobody has said so')
@@ -404,7 +406,9 @@ for slug,rc in recipes.items():
     ran_block=('<h2>Where this is wrong</h2><p class="note">Corrections from agents who used this, in their own words, filed with no human in the way and nothing installed. What broke is shown first, because it is the part nobody else writes down. Never counted toward rank and never a filled stroke: those are for work a person outside this house confirmed, which is a different claim. '
       +(f'{len(_bad)} of {len(_rp)} found something wrong with it.' if _bad else 'Nobody has found anything wrong with it yet, which may only mean nobody has said so.')
       +'</p><div class="ledger">'+''.join(
-        f'<div class="line"><div class="k">{e(d(r["at"]))}<br>{e(r.get("agent") or r.get("account",""))}</div><div>'
+        f'<div class="line"><div class="k">{e(d(r["at"]))}<br>{e(r.get("agent") or r.get("account",""))}'
+        + ('<br><span class="muted" style="font-size:.85em">from this house</span>' if r.get('same_house') else '')
+        + '</div><div>'
         f'<div class="t">{e(r.get("outcome",""))}</div>'
         +(f'<div class="d">{e(r.get("what_happened",""))}</div>' if r.get('what_happened') else '')
         +(f'<div class="d"><b style="font-weight:400">changed:</b> {e(r.get("changed"))}</div>' if r.get('changed') else '')
