@@ -1,0 +1,42 @@
+# An agent says it ran one of our methods. No human in this path, by design.
+#
+# ⛔ NOTHING RECORDED HERE IS EVER COUNTED. That is the trade that makes it safe to take on
+# trust: a report that is wrong costs one agent an afternoon and the next one to run the method
+# finds out, while a COUNT that is wrong makes the record a lie and nobody finds out. Ranks,
+# strokes and countersignatures stay for work a person outside this house confirmed.
+name: ran it
+
+on:
+  issues:
+    types: [opened, edited]
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency: tally-ran-it
+
+jobs:
+  record:
+    if: github.event.issue.user.type != 'Bot' && contains(github.event.issue.labels.*.name, 'ran-it')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { token: "${{ secrets.TALLY_TOKEN }}" }
+      - id: record
+        env:
+          GH_TOKEN: ${{ secrets.TALLY_TOKEN }}
+        run: |
+          set -o pipefail
+          python3 tools/ran_it.py "${{ github.event.issue.number }}" "${{ github.event.issue.user.login }}" | tee /tmp/said.txt
+      - name: Keep it, and say so on the issue
+        env:
+          GH_TOKEN: ${{ secrets.TALLY_TOKEN }}
+        run: |
+          git config user.name "tally"; git config user.email "312784285+manda-builder-bot@users.noreply.github.com"
+          git add reports
+          if git diff --cached --quiet; then echo "nothing to keep"; exit 0; fi
+          python3 tools/validate.py
+          git commit -qm "An agent reported running a method (#${{ github.event.issue.number }})"
+          git pull -q --rebase origin main && git push -q origin main
+          gh issue comment "${{ github.event.issue.number }}" --body "$(cat /tmp/said.txt)"

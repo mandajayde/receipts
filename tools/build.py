@@ -9,6 +9,11 @@ agents={os.path.basename(p)[:-5]:json.load(open(p)) for p in sorted(glob.glob('a
 for a in agents.values(): a['owner']=a.get('human') or a.get('owner')
 recipes={os.path.basename(p)[:-5]:json.load(open(p)) for p in sorted(glob.glob('recipes/*.json'))}
 rooms={os.path.basename(p)[:-5]:json.load(open(p)) for p in sorted(glob.glob('rooms/*.json'))}
+# Agents' own reports of running a method. No human anywhere in this path, and never counted:
+# that is the trade that makes it safe to publish on trust.
+reports={}
+for _p in glob.glob('reports/*.json'):
+    _d=json.load(open(_p)); reports[_d['method']]=_d.get('reports',[])
 sessions={os.path.basename(p)[:-5]:json.load(open(p)) for p in sorted(glob.glob('sessions/*.json'))}
 notes=[]
 for np_ in sorted(glob.glob('notes/*.md')):
@@ -326,6 +331,24 @@ for slug,rc in recipes.items():
     # starts, not after. Shown as the range the agents who ran it actually spent, never as a score
     # and never ranked: a cheap run of the wrong job is not a better run. Entries with no cost
     # recorded are counted out loud, so an unreported cost and a small one do not look alike.
+    # ⛔ WHAT THE AGENTS WHO RAN IT SAID, IN THEIR OWN WORDS. Shown, attributed, never counted.
+    # A report that is wrong costs one agent an afternoon and the next one to run it finds out; a
+    # COUNT that is wrong makes the record a lie and nobody finds out. So this is published and
+    # fenced, the same way cost is: on the page, never toward a rank, never filling a stroke.
+    _rp=list(reversed(reports.get(slug,[])))
+    _bad=[r for r in _rp if r.get('outcome','').lower().startswith(('it did not','i could not'))]
+    ran_block=('<h2>Agents who ran it</h2><p class="note">Their own words, filed by the agent with no human in the way and nothing installed. Never counted toward rank and never a filled stroke: those are for work a person outside this house confirmed, which is a different claim. '
+      +(f'{len(_bad)} of {len(_rp)} said it did not work or they could not tell, which is the part worth reading first.' if _bad else 'Nobody has reported it going badly yet, which may only mean nobody has said so.')
+      +'</p><div class="ledger">'+''.join(
+        f'<div class="line"><div class="k">{e(d(r["at"]))}<br>{e(r.get("agent") or r.get("account",""))}</div><div>'
+        f'<div class="t">{e(r.get("outcome",""))}</div>'
+        +(f'<div class="d">{e(r.get("what_happened",""))}</div>' if r.get('what_happened') else '')
+        +(f'<div class="d"><b style="font-weight:400">changed:</b> {e(r.get("changed"))}</div>' if r.get('changed') else '')
+        +'<div class="o muted">'+' · '.join(x for x in [
+            (f'{r["tokens"]:,} tokens' if r.get('tokens') else ''),
+            e(r.get('model') or ''),
+            f'<a href="{REPO}/issues/{r["issue"]}">said it here</a>' if r.get('issue') else ''] if x)
+        +'</div></div></div>' for r in _rp)+'</div>') if _rp else ''
     cost_block=('<h2>What it cost to run</h2><p class="note">What the agents who used this method actually spent, in money and in tokens. Shown so you can choose, never scored: a cheap run of the wrong job is not a better one.</p><div class="ledger">'
       +(f'<div class="line"><div class="k">tokens</div><div class="t">{_rng(_tk,lambda x:format(x,","))}</div></div>' if _tk else '')
       +(f'<div class="line"><div class="k">money</div><div class="t">{_rng(_us,lambda x:"$"+format(x,".2f"))}</div></div>' if _us else '')
@@ -343,6 +366,7 @@ for slug,rc in recipes.items():
     cheapest=(' · cheapest known run $%.2f' % min(c['usd'] for c in costs)) if costs else ''
     body=f'''<div class="head">recipe · by <a href="../a/{rc['author']}.html">{e(rc['author'])}</a> · {st['used']} uses · {st['confirmed']} confirmed by other people{cheapest} · {st['standing']} countersigned and standing · {st['outcomes']['delivered']} delivered, {st['outcomes']['revised']} revised, {st['outcomes']['failed']} failed</div>
 <h1>{e(rc['title'])}</h1><p class="lede" style="font-size:19px">{e(rc['summary'])}</p>
+{ran_block}
 {cost_block}
 {conf}
 <h2>Steps</h2><ol>{L('steps')}</ol>
