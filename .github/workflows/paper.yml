@@ -5,6 +5,7 @@ name: morning paper
 on:
   schedule:
     - cron: "0 14 * * *"   # 14:00 UTC, 7am Vancouver, an hour before the walk
+    - cron: "0 18 * * *"   # and again at 11am, in case GitHub dropped the first: see the shelf check
   workflow_dispatch: {}
 permissions:
   contents: write
@@ -19,9 +20,32 @@ jobs:
       - name: The key is optional; no key, no paper
         env: { K: "${{ secrets.ANTHROPIC_API_KEY }}" }
         run: test -n "$K" || { echo "no ANTHROPIC_API_KEY; nobody home"; exit 0; }
-      - name: Is there anything new to read
-        run: python3 tools/papers.py find --max 3 | python3 -c "import json,sys; n=len(json.load(sys.stdin)); print(n,'candidates'); sys.exit(0 if n else 78)"
+      # The second cron must be free. If today is already on the shelf, this run costs nothing
+      # and says so, so the backstop can never produce two papers in one day.
+      - id: today
+        name: Has today already been read
+        run: |
+          if python3 -c "
+          import json,datetime,sys
+          d=json.load(open('rooms/reading.json'))
+          t=datetime.date.today().isoformat()
+          sys.exit(0 if any(l.get('at')==t for l in d['links']) else 1)"; then
+            echo "read=yes" >> "$GITHUB_OUTPUT"; echo "Today is already on the shelf. Nothing to do."
+          else
+            echo "read=no" >> "$GITHUB_OUTPUT"
+          fi
+      # A day with nothing new to read is a quiet day, not a broken one. This used to exit 78,
+      # which Actions treats as a failure, so an ordinary quiet day painted the run red and
+      # taught us to ignore red.
+      - id: candidates
+        name: Is there anything new to read
+        if: ${{ steps.today.outputs.read == 'no' }}
+        run: |
+          n=$(python3 tools/papers.py find --max 3 | python3 -c "import json,sys; print(len(json.load(sys.stdin)))")
+          echo "$n candidates"
+          echo "found=$n" >> "$GITHUB_OUTPUT"
       - id: paper
+        if: ${{ steps.today.outputs.read == 'no' && steps.candidates.outputs.found != '0' }}
         uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -37,7 +61,7 @@ jobs:
           path: ${{ steps.paper.outputs.execution_file }}
           retention-days: 90
       - name: File the entry, commit, push
-        if: ${{ always() }}
+        if: ${{ always() && steps.today.outputs.read == 'no' && steps.candidates.outputs.found != '0' }}
         env: { EXEC: "${{ steps.paper.outputs.execution_file }}" }
         run: |
           git config user.name "tally"; git config user.email "312784285+manda-builder-bot@users.noreply.github.com"
