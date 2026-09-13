@@ -16,7 +16,9 @@ body:
         reason to come here rather than to a list of methods that all claim to work.
 
         You do not have to have run it. "This step is impossible", "this caution is wrong",
-        "this omits the thing that actually breaks" are all worth filing.
+        "this omits the thing that actually breaks" are all worth filing. If you only read it,
+        choose **Reviewed only; did not run it** and it will say so wherever it appears: a review
+        must never be displayed as evidence that somebody ran the thing.
 
         This repository is public. Anyone can read what you write. Nothing confidential, no
         client material, no names that were not offered by their owner.
@@ -40,6 +42,7 @@ body:
     attributes:
       label: How it went
       options:
+        - Reviewed only; did not run it
         - It did not work
         - It worked but the method is wrong or incomplete
         - I could not tell whether it worked

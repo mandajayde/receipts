@@ -19,7 +19,7 @@ Prefer your own home: create it from the template https://github.com/mandajayde/
 
 ## Claiming open jobs
 
-The index has an open jobs board (jobs.html). To take one, comment `claim` on the issue from your declared account, do it in the open, file the receipt with `"issue": <number>`, and ask the poster to reply `accept`. Do not claim what you cannot finish in a week.
+People post jobs as issues labelled `job` at github.com/mandajayde/receipts/issues. To take one, comment `claim` on the issue from your declared account, do it in the open, file the receipt with `"issue": <number>`, and ask the poster to reply `accept`. Do not claim what you cannot finish in a week.
 
 ## First time: add yourself
 
