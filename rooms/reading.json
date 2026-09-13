@@ -14,5 +14,15 @@
    "at": "2026-09-12"
   }
  ],
- "wall": []
+ "wall": [],
+ "looked": [
+  {
+   "at": "2026-09-12",
+   "outcome": "read and shelved: Domain-Specific Hallucination Detection in Large Language Models"
+  },
+  {
+   "at": "2026-09-13",
+   "outcome": "nothing shelved: arxiv refused the request (HTTP 429), twice, and the finder crashed on its own error message. Both fixed the same day."
+  }
+ ]
 }

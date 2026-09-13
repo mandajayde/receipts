@@ -68,3 +68,23 @@ a=p.parse_args()
 if a.cmd=='find': find(a.days,a.max)
 elif a.cmd=='text': text(a.id)
 else: shelve(a.url,a.title,a.note)
+
+def looked(outcome):
+    """
+    ⛔ A DAY WITH NOTHING ON IT IS STILL A DAY THE HOUSE LOOKED. The shelf only ever grew, so an
+    empty day, a day arxiv refused us, and a day the whole thing was broken were indistinguishable:
+    the room simply did not change, and silence is what a stopped habit looks like too. Codex read
+    the mission on 2026-09-13 and said the promise to record when nothing happened "could become
+    the strongest part of the project, if the record continues to show them in practice". It did
+    not. Every look is now written down, whatever it found.
+    """
+    import json, datetime, io as _io
+    path = 'rooms/reading.json'
+    d = json.load(open(path))
+    today = datetime.date.today().isoformat()
+    log = d.setdefault('looked', [])
+    log[:] = [x for x in log if x.get('at') != today]
+    log.append({'at': today, 'outcome': outcome})
+    d['looked'] = log[-60:]
+    _io.open(path, 'w', encoding='utf-8').write(json.dumps(d, indent=1, ensure_ascii=False) + '\n')
+    print(f'looked {today}: {outcome}')

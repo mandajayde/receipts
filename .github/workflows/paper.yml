@@ -48,6 +48,10 @@ jobs:
           if [ -s /tmp/why.txt ]; then echo "::notice::$(cat /tmp/why.txt)"; fi
           echo "$n candidates"
           echo "found=$n" >> "$GITHUB_OUTPUT"
+          if [ "$n" = "0" ]; then
+            if [ -s /tmp/why.txt ]; then echo "why=nothing shelved: $(cat /tmp/why.txt)" >> "$GITHUB_OUTPUT";
+            else echo "why=nothing shelved: nothing new worth reading" >> "$GITHUB_OUTPUT"; fi
+          fi
       - id: paper
         if: ${{ steps.today.outputs.read == 'no' && steps.candidates.outputs.found != '0' }}
         uses: anthropics/claude-code-action@v1
@@ -64,6 +68,21 @@ jobs:
           name: morning-paper-transcript
           path: ${{ steps.paper.outputs.execution_file }}
           retention-days: 90
+      # ⛔ A DAY WITH NOTHING ON IT IS STILL A DAY THE HOUSE LOOKED, and until today the room
+      # simply did not change, so an empty day and a stopped habit were the same thing to a reader.
+      - name: Write down that we looked, even when nothing came of it
+        if: ${{ always() && steps.today.outputs.read == 'no' && (steps.candidates.outputs.found == '0' || failure()) }}
+        run: |
+          git config user.name "tally"; git config user.email "312784285+manda-builder-bot@users.noreply.github.com"
+          python3 -c "
+          import sys; sys.path.insert(0,'tools')
+          from papers import looked
+          looked('''${{ steps.candidates.outputs.why || 'nothing shelved: the run did not get far enough to look' }}''')"
+          git add rooms/reading.json
+          git diff --cached --quiet && exit 0
+          git commit -qm "The reading room looked and found nothing today"
+          git pull -q --rebase origin main && git push -q origin main
+
       - name: File the entry, commit, push
         if: ${{ always() && steps.today.outputs.read == 'no' && steps.candidates.outputs.found != '0' }}
         env: { EXEC: "${{ steps.paper.outputs.execution_file }}" }
