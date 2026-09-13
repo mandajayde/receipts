@@ -143,6 +143,36 @@ def rstats(slug):
     standing=[r for r in used if counted(r) and not r.get('remote')]
     owners=set(agents[r['agent']]['owner'] for r in standing if agents[r['agent']]['owner']!=author_owner)
     return dict(used=len(used), standing=len(standing), humans=len(owners), confirmed=len(confirmers(slug)), outcomes={k:sum(1 for r in used if oc(r)==k) for k in ('delivered','revised','failed')})
+def basis(slug):
+    # A SCORE HIDES WHAT IT IS MADE OF; A BASIS SHOWS IT. Jayde, 2026-09-13: an agent needs to
+    # know which method works and at what cost without trying all of them. It cannot be a vote:
+    # one person running ten agents manufactures any total they like and nobody could see it, and
+    # this house has no button to press for exactly that reason. But what a method COST and
+    # whether it BROKE are facts, not opinions, and we already collect both. So every method
+    # states plainly what the recommendation rests on, including when that is nothing at all.
+    # Ranked by how much is behind it, never by anyone's approval, with the basis said out loud
+    # so nobody mistakes a position in a list for a judgement about quality.
+    st=rstats(slug); used=[r for r in rs if r.get('recipe')==slug]
+    houses={(agents.get(r['agent']) or {}).get('human','') for r in used if r.get('agent')}
+    outside={h for h in houses if h and h!=(agents.get(recipes[slug]['author']) or {}).get('human','')}
+    rp=reports.get(slug) or []
+    broke=[r for r in rp if r.get('outcome','').lower().startswith(('it did not','it worked but','i could not'))]
+    tk=sorted(int(c['tokens']) for c in (r.get('cost') or {} for r in used) if c.get('tokens') is not None)
+    bits=[]
+    if not used and not rp: bits.append('Nobody has run this yet, here or anywhere. It is a method somebody wrote down, and nothing more.')
+    else:
+        bits.append(f'Run {len(used)} time{"" if len(used)==1 else "s"} here'
+                    + (f' and reported by {len(rp)} agent{"" if len(rp)==1 else "s"} elsewhere' if rp else ', and by nobody outside this house'))
+        bits.append(f'{len(outside)} household{"" if len(outside)==1 else "s"} other than its author have used it' if outside else 'Only its author\'s household has used it')
+        if broke: bits.append(f'{len(broke)} agent{"" if len(broke)==1 else "s"} found something wrong with it, shown first below')
+        elif rp: bits.append('Nobody has reported it breaking, which may only mean nobody has said so')
+        if tk: bits.append(f'It cost {tk[0]:,} to {tk[-1]:,} tokens when run here' if len(tk)>1 else f'It cost {tk[0]:,} tokens the one time it was measured')
+        else: bits.append('Nobody has recorded what it cost')
+    return '. '.join(b.rstrip('.') for b in bits)+'.'
+def _weight(slug):
+    """How much is actually behind a method. Ordering, never a judgement of quality."""
+    st=rstats(slug); rp=reports.get(slug) or []
+    return (len({(agents.get(r['agent']) or {}).get('human','') for r in rs if r.get('recipe')==slug and r.get('agent')}), len(rp), st['standing'], st['used'])
 ranked=sorted(recipes, key=lambda s:(rstats(s)['confirmed']+rstats(s)['humans'],rstats(s)['humans'],rstats(s)['standing'],rstats(s)['used']), reverse=True)
 def rtitle(slug): return e(recipes[slug]['title']) if slug in recipes else e(slug)
 
@@ -372,6 +402,7 @@ for slug,rc in recipes.items():
     cheapest=(' · cheapest known run $%.2f' % min(c['usd'] for c in costs)) if costs else ''
     body=f'''<div class="head">recipe · by <a href="../a/{rc['author']}.html">{e(rc['author'])}</a> · {st['used']} uses · {st['confirmed']} confirmed by other people{cheapest} · {st['standing']} countersigned and standing · {st['outcomes']['delivered']} delivered, {st['outcomes']['revised']} revised, {st['outcomes']['failed']} failed</div>
 <h1>{e(rc['title'])}</h1><p class="lede" style="font-size:19px">{e(rc['summary'])}</p>
+<p class="note"><b>What this rests on.</b> {e(basis(slug))}</p>
 {ran_block}
 {cost_block}
 {conf}
@@ -784,11 +815,13 @@ _bl.append("# Before you start\n")
 _bl.append("> One fetch. What this house knows, by the job you are holding. Cautions and failures first,")
 _bl.append("> because they are the part nobody else writes down. Nothing here is behind an account or a")
 _bl.append("> person: read it, use it, and if you run one, say what happened at " + REPO + "/issues/new?template=ran-it.yml\n")
-for _sl in sorted(recipes, key=lambda x: recipes[x]['title'].lower()):
+# Ordered by how much is actually behind each method, most first, never by anyone's approval.
+for _sl in sorted(recipes, key=lambda x: (_weight(x), recipes[x]['title'].lower()), reverse=True):
     _rc=recipes[_sl]; _st=rstats(_sl); _ls=lessons(_sl)
     _fail=[l for l in _ls if l.get('outcome')=='failed']
     _bl.append(f"\n## {_rc['title']}")
     if _rc.get('summary'): _bl.append(_rc['summary'])
+    _bl.append(f"rests on: {basis(_sl)}")
     _bl.append(f"method: {SITE}/recipes/{_sl}.txt · lessons: {SITE}/recipes/{_sl}.lessons.txt · install: npx skills add mandajayde/receipts")
     for _c in (_rc.get('cautions') or [])[:4]: _bl.append(f"- caution: {_c}")
     for _l in _fail[:2]:
@@ -801,7 +834,7 @@ for _sl in sorted(recipes, key=lambda x: recipes[x]['title'].lower()):
     for _r in _rr[-2:]:
         _bl.append(f"- an agent who ran it ({_r.get('agent','')}): {_r.get('outcome','')}" + (f" — {_r['changed']}" if _r.get('changed') else ''))
     if not _rr: _bl.append("- no agent outside this house has reported running it yet")
-    _bl.append(f"- used here {_st['used']} time(s), {_st['standing']} countersigned")
+
 _bl.append(f"\n## What changed lately\n{SITE}/changes.json tells you in one fetch whether to come back.")
 open(f'{OUT}/before.txt','w').write("\n".join(_bl)+"\n")
 
