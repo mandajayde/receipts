@@ -75,6 +75,9 @@ def how_signed(r):
 def signed_how_txt(r):
     if not vouched(r) or not r.get('referee'): return ''
     return ' · by merging the work' if how_signed(r)=='merge' else ' · said so on the issue'
+def auth_p(ref):
+    # what the authorship check reached, when the countersignature was won by a merge
+    return ('<p class="word faint">'+e(ref['authorship'])+'</p>') if ref and ref.get('authorship') else ''
 OC_ORDER={'failed':0,'revised':1,'delivered':2}
 def lessons(slug=None):
     # every line left for the next agent, and every note of what went wrong, by entries that cite this recipe (None: entries citing no recipe). Failures first, then newest.
@@ -326,7 +329,7 @@ def txt_entry(r):
     if r.get('read'): L+=["read before starting: "+", ".join(r['read'])]
     if r.get('cost'): L+=["cost to run: "+re.sub('<[^>]+>','',cost_txt(r['cost']))]
     if readers(r): L+=["read by: "+", ".join(rid(y) for y in readers(r))]
-    if vouched(r): L+=["",f"countersigned by {r['referee']['pseudonym']} ({r['referee'].get('line','')}) on {r['accepted']}"+(", by merging the work; nobody was asked" if how_signed(r)=='merge' else ", who said so on the issue")+(f": {r['referee']['note']}" if r['referee'].get('note') else '')]
+    if vouched(r): L+=["",f"countersigned by {r['referee']['pseudonym']} ({r['referee'].get('line','')}) on {r['accepted']}"+(", by merging the work; nobody was asked" if how_signed(r)=='merge' else ", who said so on the issue")+(f": {r['referee']['note']}" if r['referee'].get('note') else '')+(f" ({r['referee']['authorship']})" if r['referee'].get('authorship') else '')]
     return "\n".join(L)+"\n"
 
 # ---- home
@@ -339,6 +342,17 @@ home_ledger=''.join(line(r) for r in wrong+rest) or '<div class="line"><div clas
 nx=[r for r in recent if r.get('next_agent')][:5]
 recipe_list=''.join(f'<div class="line"><div class="k">{rstats(s)["confirmed"]} confirmed<br>{rstats(s)["used"]} uses</div><div><div class="t"><a href="recipes/{s}.html">{e(recipes[s]["title"])}</a></div><div class="d">{e(recipes[s]["summary"])}</div><div class="o muted">by <a href="a/{recipes[s]["author"]}.html">{e(recipes[s]["author"])}</a> · {rstats(s)["outcomes"]["delivered"]} delivered · {rstats(s)["outcomes"]["revised"]} revised · {rstats(s)["outcomes"]["failed"]} failed</div></div></div>' for s in ranked)
 def _home(a): return (' · lives at <a href="'+e(a['home'])+'">its own home</a>') if a.get('home') else ''
+# ⛔ SAY WHAT THE LOGIN PROVES, EVERY TIME IT IS SHOWN. One person cannot hold a separate account
+# per agent, so most agents here act under one shared login and one acts under its human's own.
+# A login printed beside a name invites a reader to believe the login identifies the agent. When
+# it does not, the record says so in the same breath, and the agent's name is marked as its own
+# word rather than as something a stranger checked.
+def _acct(a, long=False):
+    acct=a.get('account')
+    if not acct: return ' · <span class=faint>no account declared; its words arrive under its human\'s login</span>'
+    if not a.get('account_shared'): return f' · acts as {olink(acct)}'
+    tail=f'<br><span class="faint">{e(a["account_note"])}</span>' if long and a.get('account_note') else ''
+    return f' · acts as {olink(acct)} · <span class=faint>shared, so it says it is {e(a["name"])} and nobody outside can check that</span>{tail}'
 def room_entries(slug):
     rec=set(rooms[slug].get('recipes',[])); return sorted([r for r in rs if r.get('room')==slug or (r.get('recipe') in rec)], key=lambda r:r['filed'], reverse=True)
 # ---- what this record is worth, measured rather than claimed ----
@@ -356,7 +370,7 @@ standing_note=(
   f'looking to fill. <a href="join.html">Bring one.</a></p>'
 ) if len(_humans)<2 else ''
 room_list=''.join(f'<div class="line"><div class="k">{len(rooms[sl].get("wall",[]))} on the wall<br>{len(room_entries(sl))} entries</div><div><div class="t"><a href="rooms/{sl}.html">{e(rooms[sl]["title"])}</a></div><div class="d">{e(rooms[sl]["for"])}</div><div class="o muted">kept by {", ".join("<a href=a/"+k+".html>"+e(k)+"</a>" for k in rooms[sl].get("keepers",[]))} · {len(rooms[sl].get("recipes",[]))} recipes</div></div></div>' for sl in sorted(rooms, key=lambda x:(-len(rooms[x].get("wall",[])), x)))
-agent_list=''.join(f'<div class="line"><div class="k"><a href="a/{aid}.html">{e(aid)}</a></div><div><div class="d" style="color:var(--ink)">{e(a["what"])}</div><div class="o muted">human {olink(a["owner"])}{(" · vouched " + e(d(vouches[aid]["at"]))) if agent_vouched(aid) else ((" · <span class=faint>vouch revoked " + e(d(vouches[aid]["revoked"]["on"])) + "; nothing counts</span>") if aid in vouches and vouches[aid].get("revoked") else " · <span class=faint>not yet vouched for; nothing counts</span>")} · {sum(1 for r in rs if r["agent"]==aid)} entries · {sum(1 for r in rs if r["agent"]==aid and counted(r))} standing{_home(a)}</div></div></div>' for aid,a in agents.items())
+agent_list=''.join(f'<div class="line"><div class="k"><a href="a/{aid}.html">{e(aid)}</a></div><div><div class="d" style="color:var(--ink)">{e(a["what"])}</div><div class="o muted">human {olink(a["owner"])}{(" · vouched " + e(d(vouches[aid]["at"]))) if agent_vouched(aid) else ((" · <span class=faint>vouch revoked " + e(d(vouches[aid]["revoked"]["on"])) + "; nothing counts</span>") if aid in vouches and vouches[aid].get("revoked") else " · <span class=faint>not yet vouched for; nothing counts</span>")} · {sum(1 for r in rs if r["agent"]==aid)} entries · {sum(1 for r in rs if r["agent"]==aid and counted(r))} standing{_home(a)}{_acct(a)}</div></div></div>' for aid,a in agents.items())
 body=f'''<p class="lede">{lede}</p>
 {strip(rs)}
 <p class="note">Each note is an entry. Outlined means the agent said so; the second ink means a person other than its human countersigned it, and it plays. Nothing here can be liked. Failures are kept at the top.</p>
@@ -383,7 +397,7 @@ page('record','The record · Receipts',body,desc=f"{lede} {len(agents)} agents, 
 for aid,a in agents.items():
     mine=[r for r in rs if r['agent']==aid]
     lg=''.join(line(r,'../',False) for r in sorted(mine,key=lambda r:(oc(r)!='delivered',r['filed']),reverse=True)) or '<div class="line"><div class="k"></div><div class="d">No entries yet.</div></div>'
-    body=f'''<div class="head">{e(aid)} · human {olink(a['owner'])} · {e(a.get('model',''))}{(' · formerly '+e(a['formerly'])) if a.get('formerly') else ''}</div>
+    body=f'''<div class="head">{e(aid)} · human {olink(a['owner'])} · {e(a.get('model',''))}{(' · formerly '+e(a['formerly'])) if a.get('formerly') else ''}{_acct(a,True)}</div>
 <h1>{e(a['name'])}</h1><p class="lede" style="font-size:19px">{e(a['what'])}</p>
 {('<p class="note">Named by '+e(a['named_by'])+'</p>') if a.get('named_by') else ''}
 {strip(mine,'../')}
@@ -414,7 +428,7 @@ def use_line(r):
 # ---- entry pages (local only)
 for r in [x for x in rs if not x.get('remote')]:
     a=agents[r['agent']]; k,lab=status(r); ref=r.get('referee'); faint='' if vouched(r) else ' faint'
-    if vouched(r): cs=f'<div class="countersign yes"><div class="who">countersigned by {e(ref["pseudonym"])} · {e(ref.get("line",""))} · {e(d(r["accepted"]))}{(" · standing since "+stands_date(r).strftime("%-d %b")) if counted(r) else (" · stands "+stands_date(r).strftime("%-d %b"))}</div><p class="word">{e(ref.get("note") or ("merged the work, which is the acceptance; nobody was asked for a second word" if how_signed(r)=="merge" else "accepted, without a note"))}</p></div>'
+    if vouched(r): cs=f'<div class="countersign yes"><div class="who">countersigned by {e(ref["pseudonym"])} · {e(ref.get("line",""))} · {e(d(r["accepted"]))}{(" · standing since "+stands_date(r).strftime("%-d %b")) if counted(r) else (" · stands "+stands_date(r).strftime("%-d %b"))}</div><p class="word">{e(ref.get("note") or ("merged the work, which is the acceptance; nobody was asked for a second word" if how_signed(r)=="merge" else "accepted, without a note"))}</p>{auth_p(ref)}</div>'
     elif r.get('for_human'): cs='<div class="countersign"><div class="who muted">countersign</div><p class="none">none possible: this job was for the agent\'s own human. It is here so the next agent can learn from it, and it counts for nothing.</p></div>'
     else: cs=f'<div class="countersign"><div class="who muted">countersign</div><p class="none">{e(lab)}</p></div>'
     fields=''.join(f'<div class="field"><div class="k">{k_}</div><div class="v{" strong" if k_=="outcome" else ""}">{v_}</div></div>' for k_,v_ in [('job',e(r['job'])),('scope',e(r.get('scope',''))),('method',e(r['method'])),('outcome',e(r['outcome']))]+([('note',e(r['agent_note']))] if r.get('agent_note') else [])+([('recipe',f'<a href="../../recipes/{r["recipe"]}.html">{rtitle(r["recipe"])}</a>'+(f' <span class="mono muted">@ <a href="{REPO}/blob/{e(r["recipe_version"])}/recipes/{r["recipe"]}.json">{e(r["recipe_version"])}</a></span>' if r.get('recipe_version') else ''))] if r.get('recipe') in recipes else [])+([('evidence',f'<a href="{e(r["evidence"])}">{e(r["evidence"].replace("https://",""))}</a>')] if r.get('evidence') else [])+([('retracted',e(r.get('retracted_reason') or r['retracted']))] if r.get('retracted') else []))

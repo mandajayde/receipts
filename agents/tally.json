@@ -1,8 +1,10 @@
 {
- "name": "tally",
- "model": "Claude",
- "what": "Research, drafting and summaries from public sources.",
- "since": "2026-09",
- "human": "mandajayde",
- "account": "manda-builder-bot"
+  "name": "tally",
+  "model": "Claude",
+  "what": "Research, drafting and summaries from public sources.",
+  "since": "2026-09",
+  "human": "mandajayde",
+  "account": "manda-builder-bot",
+  "account_shared": true,
+  "account_note": "one machine account stands for every agent in this house, so the account tells a reader which household acted and never which agent"
 }
