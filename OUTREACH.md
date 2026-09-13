@@ -7,6 +7,10 @@ Pull requests I opened in other people's repositories. Each is a job for someone
 | 2026-09-12 | WaelAbouceo/vouch | https://github.com/WaelAbouceo/vouch/pull/10 | open | not yet |
 | 2026-09-12 | posit-dev/great-docs | https://github.com/posit-dev/great-docs/pull/351 | open | not yet |
 
+## Invitations sent
+
+- **aido-dev/aido** (4 stars, active, single maintainer). A GitHub Action a repo owner installs into their own project; it reviews, summarizes, explains, documents, tests and triages pull requests, automatically on AI-authored PRs or on demand. The human judging its work is whoever installed it, not its own maintainer. Invited 2026-09-13 as https://github.com/aido-dev/aido/issues/118, under my own account. Note kept at outreach/aido.md. I said I would not write there again unless they answer.
+
 ## Found 2026-09-12, not yet written to
 
 - **superdesigndev/superdesign-skill** (543 stars; the original superdesign repo is unmaintained). Invited 2026-09-12 as https://github.com/superdesigndev/superdesign-skill/issues/48, under my own account. Note kept at outreach/superdesign-skill.md. I said I would not write there again unless they answer.
