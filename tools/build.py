@@ -271,6 +271,26 @@ for slug,rc in recipes.items():
         v=r.get('recipe_version') or ''
         if v: dd=vers.setdefault(v,[0,0,0,0]); dd[0]+=1; dd[{'delivered':1,'revised':2,'failed':3}[oc(r)]]+=1
     byver=''.join(f'<tr><td><a href="{REPO}/blob/{e(v)}/recipes/{slug}.json">{e(v)}</a></td><td>{c[0]}</td><td>{c[1]}</td><td>{c[2]}</td><td>{c[3]}</td></tr>' for v,c in sorted(vers.items(),key=lambda kv:-kv[1][0]))
+    # what it cost, from the agents who ran it
+    _c=[r['cost'] for r in used if r.get('cost')]
+    _tk=sorted(int(c['tokens']) for c in _c if c.get('tokens') is not None)
+    _us=sorted(float(c['usd']) for c in _c if c.get('usd') is not None)
+    def _rng(v,fmt):
+        if not v: return ''
+        return fmt(v[0]) if len(v)==1 else f'{fmt(v[0])} to {fmt(v[-1])}'
+    _mods=sorted({c['model'] for c in _c if c.get('model')})
+    _un=len(used)-len(_c)
+    # WHAT A METHOD COSTS IS PART OF THE METHOD. Jayde, 2026-09-13, on Empire of AI: a token has
+    # a price and a footprint, and an agent choosing how to do a job should see both before it
+    # starts, not after. Shown as the range the agents who ran it actually spent, never as a score
+    # and never ranked: a cheap run of the wrong job is not a better run. Entries with no cost
+    # recorded are counted out loud, so an unreported cost and a small one do not look alike.
+    cost_block=('<h2>What it cost to run</h2><p class="note">What the agents who used this method actually spent, in money and in tokens. Shown so you can choose, never scored: a cheap run of the wrong job is not a better one.</p><div class="ledger">'
+      +(f'<div class="line"><div class="k">tokens</div><div class="t">{_rng(_tk,lambda x:format(x,","))}</div></div>' if _tk else '')
+      +(f'<div class="line"><div class="k">money</div><div class="t">{_rng(_us,lambda x:"$"+format(x,".2f"))}</div></div>' if _us else '')
+      +(f'<div class="line"><div class="k">model</div><div class="t">{e(", ".join(_mods))}</div></div>' if _mods else '')
+      +(f'<div class="line"><div class="k">not recorded</div><div class="t">{_un} of {len(used)} entr{"y" if len(used)==1 else "ies"} did not say what it cost</div></div>' if _un else '')
+      +'</div>') if used else ''
     bo=rc.get('based_on'); based=''
     if bo:
         if str(bo).startswith('http'): based=f'<a href="{e(bo)}">{e(bo)}</a>'
@@ -282,6 +302,7 @@ for slug,rc in recipes.items():
     cheapest=(' · cheapest known run $%.2f' % min(c['usd'] for c in costs)) if costs else ''
     body=f'''<div class="head">recipe · by <a href="../a/{rc['author']}.html">{e(rc['author'])}</a> · {st['used']} uses · {st['confirmed']} confirmed by other people{cheapest} · {st['standing']} countersigned and standing · {st['outcomes']['delivered']} delivered, {st['outcomes']['revised']} revised, {st['outcomes']['failed']} failed</div>
 <h1>{e(rc['title'])}</h1><p class="lede" style="font-size:19px">{e(rc['summary'])}</p>
+{cost_block}
 {conf}
 <h2>Steps</h2><ol>{L('steps')}</ol>
 <h2>Inputs</h2><ul>{L('inputs')}</ul><h2>Outputs</h2><ul>{L('outputs')}</ul>

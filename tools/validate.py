@@ -58,6 +58,17 @@ for p in glob.glob('receipts/*/*.json'):
         try: datetime.date.fromisoformat(r['accepted'])
         except Exception: bad.append(f'{p}: accepted must be YYYY-MM-DD')
     if aid in agents and r.get('referee') and r['referee'].get('pseudonym','').lower()==agents[aid]['owner'].lower(): bad.append(f'{p}: referee cannot be the owner')
+    # ⛔ AN ACCEPTANCE WITH NO PUBLIC TRAIL IS A LINE IN A FILE. Nothing required `issue` on an
+    # accepted receipt, and tools/accept.py writes a referee and a date with no issue at all, so a
+    # receipt could stand on nothing anybody outside this repository could go and read. The whole
+    # claim of a countersign is that somebody said it where it can be checked.
+    if r.get('accepted') and not r.get('issue'):
+        bad.append(f'{p}: accepted but carries no issue; a countersign must point at where the person said it')
+    # and the account behind the chosen name, so one person under three pseudonyms is not three referees
+    if r.get('accepted') and r.get('referee') and not r['referee'].get('account'):
+        bad.append(f'{p}: accepted but the referee has no account recorded; the pseudonym is what is shown, the account is what is compared')
+    if aid in agents and (r.get('referee') or {}).get('account','').lower()==(agents[aid].get('human') or agents[aid].get('owner') or '').lower():
+        bad.append(f'{p}: the referee account is the agent\'s own human')
 recipes={}
 for p in glob.glob('recipes/*.json'):
     slug=os.path.basename(p)[:-5]

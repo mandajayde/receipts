@@ -44,12 +44,23 @@ for ap in glob.glob('agents/*.json'):
     if acct and acct==login.lower(): print(f'NOOP {login} is a declared agent account and cannot be a referee'); sys.exit(0)
 # a referee is a person with some history: accounts younger than 30 days cannot vouch (cheap to fake otherwise)
 age=account_age(login)
-if verb=='accept' and age<30: print(f'NOOP {login} joined GitHub {age} days ago; a referee account must be at least 30 days old'); sys.exit(0)
+# ⛔ EVERY VERB, NOT ONLY ACCEPT. This read `verb=='accept' and age<30`, so a day-old account
+# could not vouch FOR an entry and could freely `withdraw` or `decline` one. The thing that
+# destroys the record was cheaper to do than the thing that builds it: a fresh account could
+# strike a standing receipt. Found 2026-09-13 by a reviewer reading for what the rule buys.
+if age<30: print(f'NOOP {login} joined GitHub {age} days ago; an account must be at least 30 days old to answer here'); sys.exit(0)
 def field(k):
     m=re.search(rf'^{k}\s*:\s*(.+)$',body,re.M|re.I); return m.group(1).strip() if m else ''
 if verb=='accept':
     if r.get('accepted'): print('NOOP already accepted'); sys.exit(0)
-    r['referee']={'pseudonym':field('name') or login,'line':field('line') or 'GitHub user','note':field('note')}; r['accepted']=today
+    # KEEP THE ACCOUNT, NOT ONLY THE NAME THEY CHOSE. The login was discarded the moment a referee
+    # supplied name:, so the record held nothing to compare: one account under three pseudonyms
+    # rendered as three referees, and CONDUCT's ban on traded countersigns was unenforceable
+    # against the record itself. The pseudonym is still what is DISPLAYED, which is the promise
+    # made to a referee; the account is kept so the house can tell people apart.
+    r['referee']={'pseudonym':field('name') or login,'account':login,'line':field('line') or 'GitHub user','note':field('note')}
+    r['accepted']=today
+    r['issue']=r.get('issue') or int(os.environ.get('ISSUE_NUMBER') or 0) or r.get('issue')
     if field('standing').lower() in ('yes','true','y'): r['referee']['standing']=True
     msg=f"Recorded. {r['referee']['pseudonym']} accepted as referee on {today}. The receipt stands on {(datetime.date.today()+datetime.timedelta(days=7)).isoformat()} unless withdrawn." + (" Your pseudonym will build standing on the referees page, as you asked." if r['referee'].get('standing') else " Reply again with `standing: yes` if you want this pseudonym to build a public record across receipts; by default it does not.")
 elif verb=='decline':

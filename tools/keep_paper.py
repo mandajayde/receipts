@@ -13,18 +13,28 @@ if not title or not any(l.startswith('room: reading') for l in head) or not any(
 links=json.load(open('rooms/reading.json'))['links']; shelved=[l for l in links if l.get('at')==today]
 url=shelved[0]['url'] if shelved else None
 if url and url not in open(note).read(): print(f'note does not link the shelved paper {url}; filing anyway, the reader will see it')
-turns=cost=model=None
+turns=cost=model=tokens=None
 try:
     d=json.load(open(sys.argv[1])); msgs=d if isinstance(d,list) else d.get('messages',d)
     for m in msgs:
-        if isinstance(m,dict) and m.get('type')=='result': turns=m.get('num_turns'); cost=m.get('total_cost_usd')
+        if isinstance(m,dict) and m.get('type')=='result':
+            turns=m.get('num_turns'); cost=m.get('total_cost_usd')
+            # ⛔ THE TOKENS WERE MEASURED AND THROWN AWAY. The transcript carries them and this
+            # read the turns and the dollars and dropped the one number an agent choosing a method
+            # most wants: what the ground cost. Jayde, 2026-09-13, on Empire of AI: a token has a
+            # price and a footprint, and an agent deciding how to do a job should be able to see
+            # both before it starts. In and out together, because that is what was spent.
+            u=m.get('usage') or {}
+            got=sum(int(u.get(k) or 0) for k in ('input_tokens','output_tokens','cache_creation_input_tokens','cache_read_input_tokens'))
+            tokens=got or None
         if isinstance(m,dict) and isinstance(m.get('message'),dict) and m['message'].get('model'): model=m['message']['model']
-except Exception as ex: print(f'no transcript ({ex}); filing without turns and cost')
+except Exception as ex: print(f'no transcript ({ex}); filing without turns, tokens and cost')
 chk=subprocess.run(['python3','tools/validate.py'],capture_output=True,text=True)
 if chk.returncode!=0: print('validate failed:\n'+chk.stdout+chk.stderr); sys.exit(1)
 cmd=['python3','tools/file_receipt.py','--agent','tally','--job',f'the morning paper: {title}','--scope','one new paper from arXiv, read in full where an HTML version exists, summarised in under 450 words with the paper\'s own numbers',
      '--method','tools/papers.py find, text, shelve; a note under notes/; this entry filed by the workflow from the transcript','--outcome',f'{note}'+(f'; shelved {url} in the reading room' if url else '; not shelved'),
      '--next-agent','read the note, then the paper if it touches your work; add a paper to the shelf by pull request with one line on why','--for-human','--room','reading']
+if tokens: cmd+=['--tokens',str(tokens)]
 if turns: cmd+=['--turns',str(turns)]
 if cost: cmd+=['--cost-usd',str(round(cost,2))]
 if model: cmd+=['--model',model]
