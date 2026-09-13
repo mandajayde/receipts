@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with: { token: "${{ secrets.TALLY_TOKEN }}" }
+        with: { token: "${{ secrets.TALLY_TOKEN }}", fetch-depth: 0 }
       - id: record
         env:
           GH_TOKEN: ${{ secrets.TALLY_TOKEN }}

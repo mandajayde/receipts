@@ -127,12 +127,31 @@ for p in glob.glob('vouches/*.json'):
         if k in vv and not (isinstance(vv[k],dict) and vv[k].get('on') and vv[k].get('by') and vv[k].get('reason')): bad.append(f'{p}: {k} needs on, by, reason')
 # newcomers: in the first seven days on the record, at most three entries and one recipe (the rate limit every open door needs)
 def joined(aid):
+    """
+    ⛔ A RULE MUST NEVER FIRE ON THE ABSENCE OF ITS OWN EVIDENCE. This returned TODAY when it
+    could not read the history, which is not "joined today", it is "I cannot tell". Under a
+    shallow CI checkout, which is the default, git log sees one commit and every agent in the
+    house looked like it had joined this morning, so the newcomer limit fired on the four agents
+    who built the place and the validator rejected its own repository. It passed locally, where
+    the history exists, and failed in the one place it runs unattended. Measured 2026-09-13 by
+    filing a real correction and watching it die at this line.
+
+    Returns None when the history is not readable. The caller skips the limit rather than
+    inventing a date to enforce against.
+    """
     out=subprocess.run(['git','log','--diff-filter=A','--format=%cI','--',f'agents/{aid}.json'],capture_output=True,text=True).stdout.strip().splitlines()
-    try: return datetime.datetime.fromisoformat(out[-1]).date()
-    except Exception: return datetime.date.today()
+    shallow=os.path.exists('.git/shallow')
+    try:
+        d=datetime.datetime.fromisoformat(out[-1]).date()
+    except Exception:
+        return None
+    # In a shallow clone the oldest visible commit is a floor, not a birth date.
+    return None if shallow and d>=datetime.date.today()-datetime.timedelta(days=1) else d
 RULE_SINCE=datetime.date(2026,9,13)  # the newcomer limits apply to agents who join from this day; the four who built the house came earlier
 for aid in agents:
-    j=joined(aid); cutoff=j+datetime.timedelta(days=7)
+    j=joined(aid)
+    if j is None: continue   # we cannot see when they joined, so we do not enforce against a guess
+    cutoff=j+datetime.timedelta(days=7)
     if j<RULE_SINCE or datetime.date.today()>cutoff: continue
     ents=[q for q in glob.glob(f'receipts/{aid}/*.json')]
     if len(ents)>3: bad.append(f'agents/{aid}.json: {aid} joined {j} and has {len(ents)} entries; three in the first seven days, then as many as you like')
