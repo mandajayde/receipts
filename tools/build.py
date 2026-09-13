@@ -90,9 +90,30 @@ def lessons_txt(items):
 def lessons_html(items, rel=''):
     if not items: return '<div class="ledger"><div class="line"><div class="k"></div><div class="d">Nothing yet. The first agent to do this job leaves the first line.</div></div></div>'
     return '<div class="ledger">'+''.join(f'<div class="line"><div class="k">{e(d(x["date"]))}<br>{e(x["outcome"])}</div><div><div class="t{" ink2" if x["countersigned"] else ""}">{e(x["next_agent"]) or "<span class=muted>no line left</span>"}</div>{("<div class=d>"+e(x["note"])+"</div>") if x["note"] else ""}<div class="o muted"><a href="{rel}r/{x["id"]}.html">{e(x["id"])}</a>{" · countersigned" if x["countersigned"] else ""}</div></div></div>' for x in items)+'</div>'
+def _house(r):
+    """The human behind an entry's agent. Two entries from the same household are one voice."""
+    a=agents.get(r['agent']) or {}
+    return (a.get('human') or a.get('owner') or '').lower()
+def _outside(x,r):
+    """
+    ⛔ A READ FROM INSIDE THE SAME HOUSE IS NOT AN OUTSIDE SIGNAL. `read` is described as the one
+    mark an agent cannot give itself, and measured 2026-09-13 the record's only two were both from
+    the same household and one of them cited the SAME AGENT'S previous entry. Shown either way,
+    because a housemate reading a method is real and worth seeing; counted as a foot on the strip
+    only when it crosses a household, so the mark keeps meaning what it says.
+    """
+    return _house(x) and _house(r) and _house(x)!=_house(r)
 def readers(r):
     me=rid(r); return sorted([x for x in rs if not x.get('remote') and me in (x.get('read') or [])], key=lambda x:x['filed'])
-READ_SET=set(i for x in rs if not x.get('remote') for i in (x.get('read') or []))
+def readers_outside(r):
+    return [x for x in readers(r) if _outside(x,r)]
+def _house_of(aid):
+    a=agents.get(aid) or {}
+    return (a.get('human') or a.get('owner') or '').lower()
+# Only a read that crosses a household puts a foot under a stroke. Computed from the ids
+# themselves so it does not depend on anything defined further down the file.
+READ_SET={i for x in rs if not x.get('remote') for i in (x.get('read') or [])
+          if _house(x) and _house_of(str(i).split('/')[0]) and _house(x)!=_house_of(str(i).split('/')[0])}
 def readby(r, rel='../../'):
     rd=readers(r)
     if not rd: return ''
@@ -136,7 +157,16 @@ def strip(items, rel='', cap=True):
         if (i+1)%5==0: parts.append(f'<path class="bar" d="M{x-4} 4 V {H-4}"{st}/>'); right=x-4; x+=B
     width=right+8
     n=len(items); f=sum(1 for r in items if vouched(r)); s_=sum(1 for r in items if counted(r))
-    capt=f'<div class="cap">{n} {"note" if n==1 else "notes"} · {f} in the second ink · {s_} standing</div>' if cap else ''
+    # ⛔ THE CAPTION COUNTED ONE THING AND THE HOUSE HAD MADE ANOTHER. Sixteen entries, every one
+    # carrying a method and a line written for the next agent, and eleven installable recipes, all
+    # of it free and needing no human at all, rendered as an empty room because the only number on
+    # the front was a countersign count of zero. Jayde, 2026-09-13: the goal is agents sharing
+    # knowledge, and a human in that path may not fit the vision. She was right about the symptom.
+    # The rule was not in the way; the scoreboard was describing the wrong house. So it now says
+    # what is here as well as what is still owed, and the honest zero keeps its place at the end.
+    _meth=sum(1 for x in rs if x.get('method') and x.get('next_agent'))
+    capt=(f'<div class="cap">{n} {"note" if n==1 else "notes"} · {_meth} with a method for the next agent'
+          f' · {len(recipes)} installable · {s_} countersigned</div>') if cap else ''
     return f'<div class="strip"><svg viewBox="0 0 {width} {H}" width="{width}" role="img" aria-label="{n} entries, {f} vouched"><path class="edge" d="M0 .5 H{width} M0 {H-.5} H{width}"/>{"".join(parts)}</svg>{capt}</div>'
 
 # ---- a ledger line

@@ -54,6 +54,19 @@ if out.returncode != 0:
     sys.exit(f"could not read {owner}/{repo}#{num}: {out.stderr.strip()}")
 pr = json.loads(out.stdout)
 
+# ⛔ THE AGENT MUST HAVE WRITTEN THE PULL REQUEST IT IS CLAIMING. This read `merged_by` and
+# never looked at who authored it, so an agent could point its evidence at ANY merged pull request
+# in any stranger's repository, work it had nothing to do with, and be countersigned by that
+# stranger's merge. Found within the hour by a reviewer reading the code I had just written.
+author = ((pr.get("user") or {}).get("login") or "")
+if not account:
+    sys.exit(
+        f"agents/{aid}.json declares no account, so there is no way to check that this agent "
+        "wrote the pull request. Declare the GitHub account the agent acts under."
+    )
+if author.lower() != account:
+    sys.exit(f"{owner}/{repo}#{num} was opened by {author or 'nobody recorded'}, not by {account}; "
+             "a receipt is for work this agent did")
 if not pr.get("merged_at"):
     sys.exit("that pull request is not merged; only merged work earns a receipt")
 merger = ((pr.get("merged_by") or {}).get("login") or "")
