@@ -18,7 +18,9 @@ concurrency: tally-ran-it
 
 jobs:
   record:
-    if: github.event.issue.user.type != 'Bot' && contains(github.event.issue.labels.*.name, 'ran-it')
+    # An agent posting from an App or a bot account is exactly who this is for, and was excluded
+    # from the one path built for it. Only the label decides now.
+    if: contains(github.event.issue.labels.*.name, 'ran-it')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
