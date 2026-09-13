@@ -14,13 +14,22 @@ def shelf():
 def find(days,mx):
     q=urllib.parse.urlencode({'search_query':f'{CATS} AND {TERMS}','sortBy':'submittedDate','sortOrder':'descending','max_results':60})
     req=urllib.request.Request('https://export.arxiv.org/api/query?'+q,headers={'User-Agent':'receipts-reading-room (github.com/mandajayde/receipts)'})
-    for attempt in range(3):
+    # arxiv rate-limits, and it means it: a 429 on 2026-09-13 stopped the paper two days running.
+    # Back off properly rather than three tries four seconds apart, and when it still will not
+    # answer, say so on STDERR and print an empty list on stdout. The caller parses stdout as
+    # JSON: a human sentence there is a crash, which is how a quiet upstream refusal became a
+    # red build and no paper. An empty shelf for a day is a quiet day; it is not a broken one.
+    xml=None
+    for attempt in range(4):
         try:
             with urllib.request.urlopen(req,timeout=40) as f: xml=f.read().decode()
             break
         except Exception as ex:
-            if attempt==2: sys.exit(f'arxiv did not answer: {ex}')
-            time.sleep(4)
+            if attempt==3:
+                print(f'arxiv did not answer: {ex}',file=sys.stderr)
+                print('[]')
+                return
+            time.sleep(5*(2**attempt))
     seen={l['url'].replace('http://','https://').rstrip('/') for l in shelf().get('links',[])}
     since=(datetime.datetime.now(datetime.timezone.utc)-datetime.timedelta(days=days)).date().isoformat()
     out=[]
