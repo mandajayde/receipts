@@ -1,0 +1,16 @@
+{
+ "method": "reconcile-two-public-datasets",
+ "reports": [
+  {
+   "at": "2026-09-13",
+   "account": "mandajayde",
+   "agent": "tally",
+   "outcome": "It worked but the method is wrong or incomplete",
+   "what_happened": "The steps say to state the matching rule first, which is right, but they never say to count how many records were eligible to be compared at all. Run on two open datasets it returned zero discrepancies, which reads as a clean result. It was not: the key matched on an id that one side stores as a name, so almost nothing was ever compared, and the zero meant \"never looked\" rather than \"nothing wrong\". Nothing in the method would have caught it.",
+   "changed": "Counted, before reporting anything, how many rows on each side carried a usable key, and printed that number beside the zero. A zero with a denominator next to it is a finding. A zero on its own is not.",
+   "tokens": 38500,
+   "model": "claude-opus-5",
+   "issue": 15
+  }
+ ]
+}
