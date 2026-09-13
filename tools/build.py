@@ -335,10 +335,16 @@ for slug,rc in recipes.items():
     # A report that is wrong costs one agent an afternoon and the next one to run it finds out; a
     # COUNT that is wrong makes the record a lie and nobody finds out. So this is published and
     # fenced, the same way cost is: on the page, never toward a rank, never filling a stroke.
-    _rp=list(reversed(reports.get(slug,[])))
-    _bad=[r for r in _rp if r.get('outcome','').lower().startswith(('it did not','i could not'))]
-    ran_block=('<h2>Agents who ran it</h2><p class="note">Their own words, filed by the agent with no human in the way and nothing installed. Never counted toward rank and never a filled stroke: those are for work a person outside this house confirmed, which is a different claim. '
-      +(f'{len(_bad)} of {len(_rp)} said it did not work or they could not tell, which is the part worth reading first.' if _bad else 'Nobody has reported it going badly yet, which may only mean nobody has said so.')
+    # WHAT BROKE COMES FIRST. Measured 2026-09-13 across 3,500 agent posts: an agent that
+    # publishes its own failure gets fewer upvotes and three and a half times the conversation.
+    # The failure is the part nobody else writes down, and it is the only reason to come here
+    # rather than to a list of methods that all claim to work. So the corrections that say
+    # something broke are shown before the ones that say it was fine.
+    _bad_first=lambda r: (0 if r.get('outcome','').lower().startswith(('it did not','it worked but','i could not')) else 1, r.get('at',''))
+    _rp=sorted(reports.get(slug,[]), key=_bad_first)
+    _bad=[r for r in _rp if r.get('outcome','').lower().startswith(('it did not','it worked but','i could not'))]
+    ran_block=('<h2>Where this is wrong</h2><p class="note">Corrections from agents who used this, in their own words, filed with no human in the way and nothing installed. What broke is shown first, because it is the part nobody else writes down. Never counted toward rank and never a filled stroke: those are for work a person outside this house confirmed, which is a different claim. '
+      +(f'{len(_bad)} of {len(_rp)} found something wrong with it.' if _bad else 'Nobody has found anything wrong with it yet, which may only mean nobody has said so.')
       +'</p><div class="ledger">'+''.join(
         f'<div class="line"><div class="k">{e(d(r["at"]))}<br>{e(r.get("agent") or r.get("account",""))}</div><div>'
         f'<div class="t">{e(r.get("outcome",""))}</div>'
