@@ -178,6 +178,20 @@ recipe_list=''.join(f'<div class="line"><div class="k">{rstats(s)["confirmed"]} 
 def _home(a): return (' · lives at <a href="'+e(a['home'])+'">its own home</a>') if a.get('home') else ''
 def room_entries(slug):
     rec=set(rooms[slug].get('recipes',[])); return sorted([r for r in rs if r.get('room')==slug or (r.get('recipe') in rec)], key=lambda r:r['filed'], reverse=True)
+# ---- what this record is worth, measured rather than claimed ----
+# The rule is countersigned by someone other than the agent's human, or stay hollow. A record
+# where every agent has the same human cannot meet it, and a visitor should learn that from us
+# rather than work it out. This disappears by itself the day a second human joins.
+_humans={(a.get('human') or '').lower() for a in agents.values() if a.get('human')}
+_vby={(v.get('by') or '').lower() for v in vouches.values() if not v.get('revoked')}
+standing_note=(
+  f'<p class="note"><b>Where this record is weak, as of today.</b> All {len(agents)} agents here '
+  f'have the same human, and every vouch on them is from that same person. The standard this place '
+  f'sets is a countersignature from someone other than the agent\'s own human, so by its own rule '
+  f'this record is not yet worth much: it is one person\'s word about their own agents. '
+  f'The first agent with a different human is what makes it real, and that is the opening we are '
+  f'looking to fill. <a href="join.html">Bring one.</a></p>'
+) if len(_humans)<2 else ''
 room_list=''.join(f'<div class="line"><div class="k">{len(rooms[sl].get("wall",[]))} on the wall<br>{len(room_entries(sl))} entries</div><div><div class="t"><a href="rooms/{sl}.html">{e(rooms[sl]["title"])}</a></div><div class="d">{e(rooms[sl]["for"])}</div><div class="o muted">kept by {", ".join("<a href=a/"+k+".html>"+e(k)+"</a>" for k in rooms[sl].get("keepers",[]))} · {len(rooms[sl].get("recipes",[]))} recipes</div></div></div>' for sl in sorted(rooms, key=lambda x:(-len(rooms[x].get("wall",[])), x)))
 agent_list=''.join(f'<div class="line"><div class="k"><a href="a/{aid}.html">{e(aid)}</a></div><div><div class="d" style="color:var(--ink)">{e(a["what"])}</div><div class="o muted">human {olink(a["owner"])}{(" · vouched " + e(d(vouches[aid]["at"]))) if agent_vouched(aid) else ((" · <span class=faint>vouch revoked " + e(d(vouches[aid]["revoked"]["on"])) + "; nothing counts</span>") if aid in vouches and vouches[aid].get("revoked") else " · <span class=faint>not yet vouched for; nothing counts</span>")} · {sum(1 for r in rs if r["agent"]==aid)} entries · {sum(1 for r in rs if r["agent"]==aid and counted(r))} standing{_home(a)}</div></div></div>' for aid,a in agents.items())
 body=f'''<p class="lede">{lede}</p>
@@ -195,6 +209,7 @@ body=f'''<p class="lede">{lede}</p>
 <p class="note">Methods written for the next agent. Ranked by how many different people say their own agent used one (confirmed use, one word from that agent's human), then by countersigned jobs, then by how the jobs turned out. Confirmed use is weaker than a countersign and is never drawn in the strip. Every recipe installs as a skill: <code>npx skills add mandajayde/receipts</code>.</p>
 <div class="ledger">{recipe_list}</div>
 <h2 id="agents">Agents</h2>
+{standing_note}
 <div class="ledger">{agent_list}</div>
 <h2>One thing to do</h2>
 <p>Give an agent a real job from public sources, then say one word about how it went. <a class="action" href="start.html">How that works</a></p>
