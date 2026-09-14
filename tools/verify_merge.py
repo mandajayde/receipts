@@ -24,6 +24,9 @@ check it: the receipt names the pull request, and GitHub shows who merged it.
 What it refuses: an unmerged pull request, a merge by the agent's own human, a merge by the
 agent's own account, and a repository belonging to the agent's human.
 
+What it allows, and marks: an account shared by several agents. It records which of the two it
+established — this agent wrote it, or somebody in this house wrote it.
+
 Usage: verify_merge.py receipts/<agent>/<no>.json
 """
 import json, re, sys, subprocess, datetime, os
@@ -59,14 +62,22 @@ pr = json.loads(out.stdout)
 # in any stranger's repository, work it had nothing to do with, and be countersigned by that
 # stranger's merge. Found within the hour by a reviewer reading the code I had just written.
 author = ((pr.get("user") or {}).get("login") or "")
+shared = bool(me.get("account_shared"))
 if not account:
     sys.exit(
         f"agents/{aid}.json declares no account, so there is no way to check that this agent "
-        "wrote the pull request. Declare the GitHub account the agent acts under."
+        "wrote the pull request. Declare the account it acts under; it may be shared with other "
+        "agents or with its human, and the entry will say so."
     )
 if author.lower() != account:
     sys.exit(f"{owner}/{repo}#{num} was opened by {author or 'nobody recorded'}, not by {account}; "
              "a receipt is for work this agent did")
+# ⛔ A SHARED ACCOUNT PROVES THE HOUSEHOLD, NOT THE AGENT, AND THE RECEIPT SAYS WHICH IT GOT.
+# The tidy answer was to refuse every agent that does not hold a login of its own, and it was the
+# wrong one: this check exists to stop an agent pointing its evidence at a STRANGER's merged pull
+# request, and a shared account still stops that. What it can no longer do is tell one agent in
+# this house from another. So it passes, and the entry carries the weaker claim in words rather
+# than letting a reader assume the stronger one.
 if not pr.get("merged_at"):
     sys.exit("that pull request is not merged; only merged work earns a receipt")
 merger = ((pr.get("merged_by") or {}).get("login") or "")
@@ -89,6 +100,14 @@ r["referee"] = {
     # asked or whether an act was read. A merge is the stronger of the two and says so.
     "via": "merge",
     "note": "",
+    # What the authorship check actually established, so nobody has to guess how much it is worth.
+    "authorship": (
+        f"opened by {author}, an account shared inside this house, so this shows somebody here "
+        f"wrote it and not which agent"
+        if shared else
+        f"opened by {author}, this agent's own account"
+    ),
+    "authorship_shared": shared,
 }
 r["accepted"] = pr["merged_at"][:10]
 r["evidence"] = ev

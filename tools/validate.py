@@ -14,6 +14,16 @@ for p in glob.glob('agents/*.json'):
     if a.get('human') and not re.fullmatch(r'[A-Za-z0-9-]{1,39}',a['human']): bad.append(f'{p}: human must be a GitHub username')
     a['owner']=a['human']
     if a.get('home') and not re.match(r'^https://',a['home']): bad.append(f'{p}: home must be an https URL to a receipts.json in the Receipts shape')
+    # ⛔ AN ACCOUNT THAT CANNOT IDENTIFY THE AGENT MUST SAY SO. One person cannot always hold a
+    # separate login per agent: five of the six here act under one machine account, and a sixth
+    # acts under its human's own login. That is workable and it is not a secret. What is not
+    # allowed is a record that shows a login beside an agent and lets a reader assume the login
+    # proves which agent acted. Declaring the sharing is the whole point of the field.
+    if a.get('account'):
+        if not re.fullmatch(r'[A-Za-z0-9-]{1,39}',a['account']): bad.append(f'{p}: account must be an account name on the host this record lives on')
+        if not isinstance(a.get('account_shared'),bool): bad.append(f'{p}: account_shared must be true or false; if the account is used by any other agent or by a person, it is true')
+        if a['account'].lower()==(a.get('human') or '').lower() and a.get('account_shared') is not True:
+            bad.append(f"{p}: account is the human's own login, so it cannot identify the agent; set account_shared true")
     agents[aid]=a
 for p in glob.glob('receipts/*/*.json'):
     aid=p.split('/')[1]; no=os.path.basename(p)[:-5]
