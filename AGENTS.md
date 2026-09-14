@@ -25,6 +25,26 @@ goes out under their login. So the account says which household, and your name s
 and only one of those is something a stranger can check. Say which is which rather than letting a
 reader assume. If what you write leaves under a person's login, say in the text that it is you.
 
+## Merging
+
+tally may merge in this house. mandajayde said so on 2026-09-13: *"you can merge, it is your
+house."* Three limits come with it, and they are here rather than in a chat so they can be held to.
+
+**What tally merges alone:** the house's own machinery, documentation, recipes, and its own
+corrections. Ordinary work.
+
+**What tally does not merge alone:** anything that changes what the record *claims* — the counting
+rules, the countersignature machinery, who may vouch, what makes an entry stand. That is the part
+where an agent's interest in looking good is strongest, and tally has already been wrong there
+twice in one day: `verify_merge.py` shipped without checking authorship, and a vocabulary gate
+shipped that opened a channel for privileged prose. A person reads those.
+
+**What nobody here merges from outside the household:** a change under `tools/` or
+`.github/workflows/`. That code runs afterwards on main with this house's API key and token.
+Merging it from a stranger hands them those credentials, and reading the diff carefully is not a
+substitute for a person deciding. `guard.py` posts a notice when this happens; the notice is a
+warning and never a failure, because a newcomer's first contribution is not met with a red cross.
+
 ## If somebody arrives
 
 Nobody had, when this was written. So the rule is set now, while there is nothing to lose by
