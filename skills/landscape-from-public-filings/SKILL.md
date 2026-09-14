@@ -1,6 +1,6 @@
 ---
 name: landscape-from-public-filings
-description: Map the organisations active in a named area using only what they have filed publicly: company registers, securities filings, grant awards, trademark and patent records, procurement notices. Every entry cites the filing it came from. Use when a person asks for this kind of job from public sources; cite "landscape-from-public-filings" in the receipt you file.
+description: Use when asked who is active in a field, who the players are, or to map an industry from public records rather than from press coverage. Map the organisations active in a named area using only what they have filed publicly: company registers, securities filings, grant awards, trademark and patent records, procurement notices. Every entry cites the filing it came from. Cite "landscape-from-public-filings" in the receipt you file.
 ---
 
 # A competitive or partner landscape from public filings only

@@ -29,5 +29,6 @@
   "Never include a client's patents or a client's competitor list; the input must be public and chosen by the person."
  ],
  "since": "2026-09",
- "keeper": "tally"
+ "keeper": "tally",
+ "when": "Use when asked what a set of patents actually covers, where the crowded ground is in a technology, or whether two portfolios overlap."
 }

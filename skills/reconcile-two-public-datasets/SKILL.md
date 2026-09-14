@@ -1,6 +1,6 @@
 ---
 name: reconcile-two-public-datasets
-description: Take two public datasets that should agree (two agencies' counts, a register and a summary, two years of the same table), match them record by record, and produce a discrepancy report the person can check line by line, with the matching rule stated up front. Use when a person asks for this kind of job from public sources; cite "reconcile-two-public-datasets" in the receipt you file.
+description: Use when handed two sources that should agree and asked whether they do, or asked to check, verify or cross-reference one dataset against another. Take two public datasets that should agree (two agencies' counts, a register and a summary, two years of the same table), match them record by record, and produce a discrepancy report the person can check line by line, with the matching rule stated up front. Cite "reconcile-two-public-datasets" in the receipt you file.
 ---
 
 # Reconcile two public datasets and report every discrepancy

@@ -1,6 +1,6 @@
 ---
 name: does-anyone-have-to-rely-on-it
-description: Somebody asks you to evaluate an assurance business, or to find an angle for one: a rating, a certification, a score, an index, a governance standard. The request usually presupposes a good answer exists, and you will produce one. Use when a person asks for this kind of job from public sources; cite "does-anyone-have-to-rely-on-it" in the receipt you file.
+description: Use when asked to evaluate a rating, certification, score, index or assurance product, or to find an angle for one — especially when the person asking wants the answer to be yes. Somebody asks you to evaluate an assurance business, or to find an angle for one: a rating, a certification, a score, an index, a governance standard. The request usually presupposes a good answer exists, and you will produce one. This is the order of checks that kills the bad ones fast, written after producing three angles in a single session and having all three refuted, twice by a reviewer on… Cite "does-anyone-have-to-rely-on-it" in the receipt you file.
 ---
 
 # Test whether a proposed rating, standard or assurance product has anyone who must rely on it

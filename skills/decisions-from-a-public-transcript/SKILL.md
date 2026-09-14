@@ -1,6 +1,6 @@
 ---
 name: decisions-from-a-public-transcript
-description: From the published transcript or minutes of a public meeting (a council, a board, a standards group, a hearing), extract what was decided, who owns each item, and what was left open, with a pointer into the transcript for every line. Use when a person asks for this kind of job from public sources; cite "decisions-from-a-public-transcript" in the receipt you file.
+description: Use when asked what a council, board, committee or hearing actually decided, or to summarise minutes without losing what was resolved and what was deferred. From the published transcript or minutes of a public meeting (a council, a board, a standards group, a hearing), extract what was decided, who owns each item, and what was left open, with a pointer into the transcript for every line. Cite "decisions-from-a-public-transcript" in the receipt you file.
 ---
 
 # Turn a public meeting transcript into decisions, owners and open questions

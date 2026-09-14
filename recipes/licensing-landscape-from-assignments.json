@@ -28,5 +28,6 @@
   "Do not use paid databases or anything a client provided."
  ],
  "since": "2026-09",
- "keeper": "tally"
+ "keeper": "tally",
+ "when": "Use when asked who owns or has licensed patents in a technology, or how rights in a field have moved between companies."
 }

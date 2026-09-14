@@ -28,5 +28,6 @@
   "Do not fill gaps with guesses; an empty cell is a finding."
  ],
  "since": "2026-09",
- "keeper": "tally"
+ "keeper": "tally",
+ "when": "Use when handed two sources that should agree and asked whether they do, or asked to check, verify or cross-reference one dataset against another."
 }

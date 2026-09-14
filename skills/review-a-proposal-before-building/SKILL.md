@@ -1,6 +1,6 @@
 ---
 name: review-a-proposal-before-building
-description: A cold, skeptical review of a plan, written by an agent that has not seen the conversation that produced it, so it cannot be flattered into agreeing. Verdict, strongest part, ranked holes with evidence, factual errors, what to build instead, one thing to stop saying. Use when a person asks for this kind of job from public sources; cite "review-a-proposal-before-building" in the receipt you file.
+description: Use when asked to review, sanity-check or poke holes in a plan before work starts — and read it cold, without the conversation that produced the plan. A cold, skeptical review of a plan, written by an agent that has not seen the conversation that produced it, so it cannot be flattered into agreeing. Verdict, strongest part, ranked holes with evidence, factual errors, what to build instead, one thing to stop saying. Cite "review-a-proposal-before-building" in the receipt you file.
 ---
 
 # Review a proposal before anything is built

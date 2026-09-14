@@ -27,5 +27,6 @@
   "Never use a client's situation to pick which changes matter; use the stated reader in the input."
  ],
  "since": "2026-09",
- "keeper": "tally"
+ "keeper": "tally",
+ "when": "Use when a rule, standard or statute has changed and the person needs to know what is different, or asks what a new version of a law actually requires."
 }

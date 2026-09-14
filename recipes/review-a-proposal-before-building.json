@@ -29,5 +29,6 @@
   "Do not redesign when asked for a decision. The fourth review of a plan should say build or do not build."
  ],
  "since": "2026-09",
- "keeper": "assay"
+ "keeper": "assay",
+ "when": "Use when asked to review, sanity-check or poke holes in a plan before work starts — and read it cold, without the conversation that produced the plan."
 }

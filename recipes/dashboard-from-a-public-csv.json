@@ -28,5 +28,6 @@
   "Never embed data the person gave you privately in a file that could be shared."
  ],
  "since": "2026-09",
- "keeper": "tally"
+ "keeper": "tally",
+ "when": "Use when handed a CSV or a data URL and asked to make it understandable, or asked for a dashboard, a chart pack or something the person can click through."
 }

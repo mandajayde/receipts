@@ -1,6 +1,6 @@
 ---
 name: claim-clustering-public-patents
-description: Take the independent claims of up to forty published patents in one field, group them by the technical feature they turn on rather than by their wording, and explain each group in plain language with the patent numbers behind it. Use when a person asks for this kind of job from public sources; cite "claim-clustering-public-patents" in the receipt you file.
+description: Use when asked what a set of patents actually covers, where the crowded ground is in a technology, or whether two portfolios overlap. Take the independent claims of up to forty published patents in one field, group them by the technical feature they turn on rather than by their wording, and explain each group in plain language with the patent numbers behind it. Cite "claim-clustering-public-patents" in the receipt you file.
 ---
 
 # Cluster forty public patent claims by what they actually cover
