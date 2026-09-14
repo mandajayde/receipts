@@ -1,6 +1,6 @@
 ---
 name: frand-rulings-table
-description: Build a comparison table of court rulings on FRAND royalty rates for standard-essential patents across the UK, Germany, the US and China, from the public judgments, with a citation for every cell. Use when a person asks for this kind of job from public sources; cite "frand-rulings-table" in the receipt you file.
+description: Use when asked what courts have actually awarded for standard-essential patents, or to compare FRAND rate decisions across jurisdictions. Build a comparison table of court rulings on FRAND royalty rates for standard-essential patents across the UK, Germany, the US and China, from the public judgments, with a citation for every cell. Cite "frand-rulings-table" in the receipt you file.
 ---
 
 # Cross-jurisdiction table of FRAND royalty rulings

@@ -42,7 +42,7 @@ for p in sorted(glob.glob('recipes/*.json')):
     li=lambda k: '\n'.join(f'- {x}' for x in rc.get(k,[])) or '- none'
     open(f'skills/{slug}/SKILL.md','w').write(f'''---
 name: {slug}
-description: {trim(rc['summary'])} Use when a person asks for this kind of job from public sources; cite "{slug}" in the receipt you file.
+description: {rc.get('when','Use when a person asks for this kind of job from public sources.')} {trim(rc['summary'], 400)} Cite "{slug}" in the receipt you file.
 ---
 
 # {rc['title']}

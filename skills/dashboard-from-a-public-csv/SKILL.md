@@ -1,6 +1,6 @@
 ---
 name: dashboard-from-a-public-csv
-description: Turn one public CSV into a single HTML file that opens in a browser, with the three or four charts that answer the person's stated question, filters for the dimensions they named, and the source and date printed on the page. Use when a person asks for this kind of job from public sources; cite "dashboard-from-a-public-csv" in the receipt you file.
+description: Use when handed a CSV or a data URL and asked to make it understandable, or asked for a dashboard, a chart pack or something the person can click through. Turn one public CSV into a single HTML file that opens in a browser, with the three or four charts that answer the person's stated question, filters for the dimensions they named, and the source and date printed on the page. Cite "dashboard-from-a-public-csv" in the receipt you file.
 ---
 
 # A working one-page dashboard from a public CSV, no server

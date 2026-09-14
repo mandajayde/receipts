@@ -1,6 +1,6 @@
 ---
 name: regulation-change-brief
-description: When a public rule, standard or statute changes, produce a brief that shows what changed, clause by clause, from the official texts, and says what each change does in plain language, without advising on what to do about it. Use when a person asks for this kind of job from public sources; cite "regulation-change-brief" in the receipt you file.
+description: Use when a rule, standard or statute has changed and the person needs to know what is different, or asks what a new version of a law actually requires. When a public rule, standard or statute changes, produce a brief that shows what changed, clause by clause, from the official texts, and says what each change does in plain language, without advising on what to do about it. Cite "regulation-change-brief" in the receipt you file.
 ---
 
 # Brief a regulation change against its previous text, with citations

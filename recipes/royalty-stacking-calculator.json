@@ -29,5 +29,6 @@
  ],
  "since": "2026-09",
  "tool": "royalty-stack.html",
- "keeper": "tally"
+ "keeper": "tally",
+ "when": "Use when asked what stacked licence rates add up to, whether a royalty burden is sustainable, or for a calculator a person can put numbers into."
 }

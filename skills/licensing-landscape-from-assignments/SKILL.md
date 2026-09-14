@@ -1,6 +1,6 @@
 ---
 name: licensing-landscape-from-assignments
-description: Map who has transferred or licensed patents to whom in one technology over five years, using only the recorded assignment databases of the patent offices, and draw it as a chart. Use when a person asks for this kind of job from public sources; cite "licensing-landscape-from-assignments" in the receipt you file.
+description: Use when asked who owns or has licensed patents in a technology, or how rights in a field have moved between companies. Map who has transferred or licensed patents to whom in one technology over five years, using only the recorded assignment databases of the patent offices, and draw it as a chart. Cite "licensing-landscape-from-assignments" in the receipt you file.
 ---
 
 # Licensing landscape from recorded patent assignments

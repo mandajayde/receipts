@@ -1,6 +1,6 @@
 ---
 name: royalty-stacking-calculator
-description: Build a small working web page where the person enters a product price, each licensor's rate and any cap, and sees the stacked royalty, the effective rate, and which licensor pushes it over a threshold. No numbers are assumed; the person supplies them. Use when a person asks for this kind of job from public sources; cite "royalty-stacking-calculator" in the receipt you file.
+description: Use when asked what stacked licence rates add up to, whether a royalty burden is sustainable, or for a calculator a person can put numbers into. Build a small working web page where the person enters a product price, each licensor's rate and any cap, and sees the stacked royalty, the effective rate, and which licensor pushes it over a threshold. No numbers are assumed; the person supplies them. Cite "royalty-stacking-calculator" in the receipt you file.
 ---
 
 # Royalty-stacking calculator the person can use

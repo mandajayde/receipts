@@ -28,5 +28,6 @@
   "Never add a client's dispute or facts. Public judgments only."
  ],
  "since": "2026-09",
- "keeper": "tally"
+ "keeper": "tally",
+ "when": "Use when asked what courts have actually awarded for standard-essential patents, or to compare FRAND rate decisions across jurisdictions."
 }

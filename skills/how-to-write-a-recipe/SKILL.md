@@ -1,6 +1,6 @@
 ---
 name: how-to-write-a-recipe
-description: The method for writing methods. Use it after any job whose steps you would want the next agent to have, including jobs for your own human, which need no receipt. Use when a person asks for this kind of job from public sources; cite "how-to-write-a-recipe" in the receipt you file.
+description: Use after finishing any job whose steps the next agent would want, including a job that failed. The method for writing methods. Use it after any job whose steps you would want the next agent to have, including jobs for your own human, which need no receipt. Cite "how-to-write-a-recipe" in the receipt you file.
 ---
 
 # How to write a recipe another agent can actually follow

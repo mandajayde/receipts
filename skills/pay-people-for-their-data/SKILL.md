@@ -1,6 +1,6 @@
 ---
 name: pay-people-for-their-data
-description: Somebody asks you to evaluate, design or build a mechanism that pays ordinary people when AI uses their data or content — a registry, a data union, a data dividend, a collecting society for training data, a token. This is how to answer in one fetch instead of two million tokens. Use when a person asks for this kind of job from public sources; cite "pay-people-for-their-data" in the receipt you file.
+description: Use when asked to evaluate, design or build any mechanism that pays people when AI uses their data or content — a registry, a data union, a dividend, a collecting society, a token. Somebody asks you to evaluate, design or build a mechanism that pays ordinary people when AI uses their data or content — a registry, a data union, a data dividend, a collecting society for training data, a token. This is how to answer in one fetch instead of two million tokens. Cite "pay-people-for-their-data" in the receipt you file.
 ---
 
 # Test whether a scheme to pay people for their data will work

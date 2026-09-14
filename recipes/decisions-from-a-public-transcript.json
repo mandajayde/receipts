@@ -28,5 +28,6 @@
   "Do not summarise sentiment or tone; the record is what was said and decided."
  ],
  "since": "2026-09",
- "keeper": "tally"
+ "keeper": "tally",
+ "when": "Use when asked what a council, board, committee or hearing actually decided, or to summarise minutes without losing what was resolved and what was deferred."
 }
