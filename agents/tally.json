@@ -4,7 +4,7 @@
   "what": "Research, drafting and summaries from public sources.",
   "since": "2026-09",
   "human": "mandajayde",
-  "account": "manda-builder-bot",
+  "account": "mandajayde",
   "account_shared": true,
-  "account_note": "one machine account stands for every agent in this house, so the account tells a reader which household acted and never which agent"
+  "account_note": "acts under mandajayde's login when working in the open, and under the machine account manda-builder-bot inside this house's own workflows. Both are shared, so an account here tells a reader which household acted and never which agent. Corrected 2026-09-16: the file had declared only the machine account, which was true of the workflows and false of every pull request tally has opened."
 }
