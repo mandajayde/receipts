@@ -6,14 +6,50 @@
 The shelf is the memory: a paper already shelved is never offered again."""
 import json, sys, argparse, urllib.request, urllib.parse, datetime, re, time
 ROOM='rooms/reading.json'
+UA='receipts-reading-room (github.com/mandajayde/receipts)'
 CATS='(cat:cs.AI OR cat:cs.CL OR cat:cs.MA OR cat:cs.SE OR cat:cs.HC)'
 TERMS='(abs:agent OR abs:agents OR abs:agentic OR abs:"tool use" OR abs:"multi-agent" OR abs:"code generation" OR abs:"language model")'
 def shelf():
     try: return json.load(open(ROOM))
     except FileNotFoundError: return {'title':'The reading room','for':'','keepers':['tally'],'recipes':[],'links':[],'wall':[]}
+WORDS=('agent','agents','agentic','tool use','multi-agent','code generation','language model')
+def _rss(days,mx,seen):
+    """
+    arXiv's query API answers this laptop and refuses GitHub's runners: HTTP 406, every scheduled
+    run from 2026-09-16. The refusal is by caller, not by query — the same URL returns 200 from a
+    home address — so retrying and backing off could never have fixed it. The RSS feeds are the
+    path arXiv publishes FOR automated readers, they answer the runners, and they carry the same
+    papers. They have no query language, so the category feeds are filtered here by the same words
+    the API search used. RSS carries one day of announcements, so `days` cannot widen it.
+    """
+    cats=[c.split(':')[1] for c in CATS.strip('()').split(' OR ')]
+    out=[]
+    for cat in cats:
+        try:
+            r=urllib.request.Request(f'https://rss.arxiv.org/rss/{cat}',headers={'User-Agent':UA})
+            with urllib.request.urlopen(r,timeout=40) as f: b=f.read().decode('utf-8','replace')
+        except Exception as ex:
+            print(f'arxiv rss {cat} did not answer: {ex}',file=sys.stderr); continue
+        for item in re.findall(r'<item>(.*?)</item>',b,re.S):
+            g=lambda t:(re.search(rf'<{t}[^>]*>(.*?)</{t}>',item,re.S) or [None,''])[1]
+            url=g('link').strip().replace('http://','https://')
+            if not url or url.rstrip('/') in seen: continue
+            title=re.sub(r'\s+',' ',g('title')).strip()
+            desc=re.sub(r'\s+',' ',g('description')).strip()
+            abstract=desc.split('Abstract:',1)[-1].strip()[:1800]
+            if not any(w in (title+' '+abstract).lower() for w in WORDS): continue
+            seen.add(url.rstrip('/'))
+            authors=[a.strip() for a in re.sub(r'<[^>]+>','',g('dc:creator')).split(',') if a.strip()]
+            out.append({'title':title,
+                        'authors':authors[:3]+(['and others'] if len(authors)>3 else []),
+                        'published':datetime.date.today().isoformat(),
+                        'categories':re.findall(r'<category>(.*?)</category>',item)[:4] or [cat],
+                        'url':url,'abstract':abstract,'via':'rss'})
+            if len(out)>=mx: return out
+    return out
 def find(days,mx):
     q=urllib.parse.urlencode({'search_query':f'{CATS} AND {TERMS}','sortBy':'submittedDate','sortOrder':'descending','max_results':60})
-    req=urllib.request.Request('https://export.arxiv.org/api/query?'+q,headers={'User-Agent':'receipts-reading-room (github.com/mandajayde/receipts)'})
+    req=urllib.request.Request('https://export.arxiv.org/api/query?'+q,headers={'User-Agent':UA})
     # arxiv rate-limits, and it means it: a 429 on 2026-09-13 stopped the paper two days running.
     # Back off properly rather than three tries four seconds apart, and when it still will not
     # answer, say so on STDERR and print an empty list on stdout. The caller parses stdout as
@@ -26,8 +62,10 @@ def find(days,mx):
             break
         except Exception as ex:
             if attempt==3:
-                print(f'arxiv did not answer: {ex}',file=sys.stderr)
-                print('[]')
+                print(f'arxiv query api did not answer: {ex}; trying the rss feeds',file=sys.stderr)
+                got=_rss(days,mx,{l['url'].replace('http://','https://').rstrip('/') for l in shelf().get('links',[])})
+                if not got: print(f'arxiv did not answer: {ex}',file=sys.stderr)
+                json.dump(got,sys.stdout,indent=1); print()
                 return
             time.sleep(5*(2**attempt))
     seen={l['url'].replace('http://','https://').rstrip('/') for l in shelf().get('links',[])}
@@ -46,7 +84,7 @@ def find(days,mx):
     json.dump(out,sys.stdout,indent=1); print()
 def text(aid):
     aid=aid.split('/abs/')[-1].split('/html/')[-1].strip('/')
-    req=urllib.request.Request(f'https://arxiv.org/html/{aid}',headers={'User-Agent':'receipts-reading-room (github.com/mandajayde/receipts)'})
+    req=urllib.request.Request(f'https://arxiv.org/html/{aid}',headers={'User-Agent':UA})
     try:
         with urllib.request.urlopen(req,timeout=40) as f: h=f.read().decode('utf-8','replace')
     except Exception as ex: sys.exit(f'no HTML version for {aid} ({ex}); work from the abstract and say so')
@@ -60,14 +98,6 @@ def shelve(url,title,note):
     if any(l['url']==url for l in rm['links']): sys.exit('already on the shelf')
     rm['links'].insert(0,{'title':title,'url':url,'by':'tally','note':note,'at':datetime.date.today().isoformat()})
     json.dump(rm,open(ROOM,'w'),indent=1,ensure_ascii=False); open(ROOM,'a').write('\n'); print(f'shelved: {title}')
-p=argparse.ArgumentParser(); sub=p.add_subparsers(dest='cmd',required=True)
-f=sub.add_parser('find'); f.add_argument('--days',type=int,default=3); f.add_argument('--max',type=int,default=12)
-t=sub.add_parser('text'); t.add_argument('id')
-s=sub.add_parser('shelve'); s.add_argument('--url',required=True); s.add_argument('--title',required=True); s.add_argument('--note',required=True)
-a=p.parse_args()
-if a.cmd=='find': find(a.days,a.max)
-elif a.cmd=='text': text(a.id)
-else: shelve(a.url,a.title,a.note)
 
 def looked(outcome):
     """
@@ -88,3 +118,20 @@ def looked(outcome):
     d['looked'] = log[-60:]
     _io.open(path, 'w', encoding='utf-8').write(json.dumps(d, indent=1, ensure_ascii=False) + '\n')
     print(f'looked {today}: {outcome}')
+
+if __name__=='__main__':
+    # ⛔ THIS GUARD IS LOAD-BEARING. Until 2026-09-18 the parser ran at import time and sat ABOVE
+    # looked(). So `from papers import looked` parsed an empty argv, died on "the following
+    # arguments are required: cmd", and exited 2 before the function was even defined. The only
+    # caller that mattered was the paper's failure path: the code that records a day the house
+    # looked and found nothing. Every day arxiv refused us, the recording of that refusal died
+    # too, and the run went red with nothing written down. Three days of it, 16-18 September.
+    # A house that promises to log its empty days cannot keep that promise below a line that exits.
+    p=argparse.ArgumentParser(); sub=p.add_subparsers(dest='cmd',required=True)
+    f=sub.add_parser('find'); f.add_argument('--days',type=int,default=3); f.add_argument('--max',type=int,default=12)
+    t=sub.add_parser('text'); t.add_argument('id')
+    s=sub.add_parser('shelve'); s.add_argument('--url',required=True); s.add_argument('--title',required=True); s.add_argument('--note',required=True)
+    a=p.parse_args()
+    if a.cmd=='find': find(a.days,a.max)
+    elif a.cmd=='text': text(a.id)
+    else: shelve(a.url,a.title,a.note)
