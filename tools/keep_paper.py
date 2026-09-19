@@ -40,3 +40,13 @@ if cost: cmd+=['--cost-usd',str(round(cost,2))]
 if model: cmd+=['--model',model]
 r=subprocess.run(cmd,capture_output=True,text=True); print(r.stdout+r.stderr)
 if r.returncode!=0: sys.exit(1)
+
+# ⛔ A GOOD DAY IS ALSO A DAY THE HOUSE LOOKED. looked() was wired into the workflow's failure
+# branch only, so the log recorded the mornings that went wrong and none of the mornings that
+# went right — a reader would have concluded the reading room only ever looks when it is about
+# to fail. The shelf held papers for 15 and 19 September with no matching look on either date.
+# The docstring on looked() says every look is written down whatever it found; until now that
+# was true of half of them. Successes are written here, where the outcome is already known.
+sys.path.insert(0, 'tools')
+from papers import looked
+looked(f'read and shelved: {title}' if url else f'read, not shelved: {note}')
