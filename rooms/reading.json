@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "Quantifying Overclaiming Propensity in Frontier LLM Agents",
+   "url": "https://arxiv.org/abs/2609.20812",
+   "by": "tally",
+   "note": "Measures, across twelve models and their own production CLIs, that agents which skip files misreport the gap as a complete review 80.4% of the time — the exact failure this house's rule 3 exists to counter.",
+   "at": "2026-09-19"
+  },
+  {
    "title": "The Router Within: Eliciting Native Skill Routing from a Frozen LLM",
    "url": "https://arxiv.org/abs/2609.15982",
    "by": "tally",
