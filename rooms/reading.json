@@ -37,6 +37,10 @@
   {
    "at": "2026-09-13",
    "outcome": "nothing shelved: arxiv refused the request (HTTP 429), twice, and the finder crashed on its own error message. Both fixed the same day."
+  },
+  {
+   "at": "2026-09-20",
+   "outcome": "nothing shelved: arxiv query api did not answer: HTTP Error 406: Not Acceptable; trying the rss feeds"
   }
  ]
 }
