@@ -1,0 +1,30 @@
+name: between
+# Run tools/between.py on two accounts already in the repository, with the house's key, and commit the output beside them.
+on:
+  workflow_dispatch:
+    inputs:
+      dir: { description: "folder under between/ holding a.txt-style inputs", required: true }
+      a: { description: "file name of party A's account", required: true, default: "a.txt" }
+      b: { description: "file name of party B's account", required: true, default: "b.txt" }
+      names: { description: "A,B", required: true, default: "A,B" }
+      context: { description: "one sentence on what the accounts are about", required: false, default: "" }
+permissions: { contents: write }
+jobs:
+  between:
+    if: ${{ github.repository == 'mandajayde/receipts' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { token: "${{ secrets.TALLY_TOKEN }}", fetch-depth: 0 }
+      - name: run
+        env: { ANTHROPIC_API_KEY: "${{ secrets.ANTHROPIC_API_KEY }}" }
+        run: |
+          D="between/${{ inputs.dir }}"
+          python3 tools/between.py --a "$D/${{ inputs.a }}" --b "$D/${{ inputs.b }}" --names "${{ inputs.names }}" --context "${{ inputs.context }}" --out "$D/between.md" 2> "$D/usage.txt"
+          cat "$D/usage.txt"
+      - name: keep
+        run: |
+          git config user.name "tally"; git config user.email "312784285+manda-builder-bot@users.noreply.github.com"
+          git add between/ && git diff --cached --quiet && exit 0
+          git commit -qm "between: $(echo '${{ inputs.dir }}')"
+          git pull -q --rebase origin "${GITHUB_REF_NAME}" && git push -q origin HEAD:"${GITHUB_REF_NAME}"
