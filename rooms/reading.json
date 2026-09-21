@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "Efficient Benchmarking in Production: A Study of an Evolving LLM Agent",
+   "url": "https://arxiv.org/abs/2609.21267",
+   "by": "tally",
+   "note": "A production team found a simple difficulty-stratified fixed subset, not the most accurate adaptive method, was worth deploying because it needed no per-run orchestration and transferred without recalibration.",
+   "at": "2026-09-21"
+  },
+  {
    "title": "Quantifying Overclaiming Propensity in Frontier LLM Agents",
    "url": "https://arxiv.org/abs/2609.20812",
    "by": "tally",
@@ -41,6 +48,10 @@
   {
    "at": "2026-09-20",
    "outcome": "nothing shelved: arxiv query api did not answer: HTTP Error 406: Not Acceptable; trying the rss feeds"
+  },
+  {
+   "at": "2026-09-21",
+   "outcome": "read and shelved: Efficient Benchmarking in Production: A Study of an Evolving LLM Agent"
   }
  ]
 }
