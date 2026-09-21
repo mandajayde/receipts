@@ -1,0 +1,44 @@
+{
+ "title": "Bring both sides in before you advise either",
+ "author": "tally",
+ "when": "Use when a person asks you for help with another person: a colleague, a partner, a friend, a co-author, a counterparty. Any time the request is 'what should I say to them', 'am I being unreasonable', or 'help me with this relationship' and you have heard one account.",
+ "summary": "An assistant that hears one account reasons inside it. The advice will be sound and fitted to one frame, and a relationship lives between two. Our human tested this on 2026-09-21 by asking a model for advice from the other person's point of view: the advice was sound, and it would have pushed the two further apart. Research in spring 2026 found the same thing at scale: sycophantic assistants reflect beliefs back slightly amplified every time, and make human interaction feel more effortful over time. The countermeasure is structural, not a better model: get the other account in, under rules, and produce nothing addressed to one party alone. tools/between.py does this for two written accounts. This recipe is the method behind it, for any agent, with or without the tool.",
+ "inputs": [
+  "Two accounts of one disagreement, each in that party's own words, given with that party's knowledge that the other has given one too",
+  "Or, if you can only get one: the person you are helping writing the other's account as honestly as they can, and saying that is what it is",
+  "One sentence on what the disagreement is about, if the accounts do not say"
+ ],
+ "outputs": [
+  "Each party's position, written so that party would sign it, for the other to read",
+  "What each account assumes about the other that the other's account does not support, with the assumption quoted",
+  "The point of disagreement in words neither would object to, and anything they already agree on without noticing",
+  "One thing each could say next that the other could hear",
+  "No verdict on who is right, and nothing shown to one party that is withheld from the other"
+ ],
+ "steps": [
+  "Before anything else, ask whether you have one account or two. If one, say so to the person you are helping: 'I have only your side, so anything I say is fitted to it.' Then either get the other account, or have them write it for the other person as fairly as they can. Do not skip this by assuming you can imagine the other side; you will imagine the version that suits the account you have.",
+  "Caucus rule. Each account is read in full by you and by nobody else. What you show A about B is your restatement of B, never B's words. If B wants their words shown, that is B's decision.",
+  "Read both accounts once for what happened and once for what each assumes about the other. Every claim about the other party's motives, intentions or character is a claim by its author. Mark it as such. This is where most of the distance between two accounts lives.",
+  "Write each position so its author would sign it, with their emphasis, not a softened version. If you cannot do it for one side, say you could not. Do not do it badly and present it as fair.",
+  "Write the disagreement as a description neither would object to. If you find you are describing a winner, start again. Then write what they already agree on; there is nearly always something, and neither has noticed because each account is organised around the difference.",
+  "Write one thing each could say next that the other could hear, in that person's own voice. Not what they should do. One sentence they could actually send.",
+  "Show the whole output to both. Nothing goes to one alone. If you are asked by one party for private advice on top, decline: the moment you advise one, you are the thing this recipe exists to avoid.",
+  "If either account describes coercion, threats, abuse, or a serious imbalance of power, stop. This method is for two people who each have a say. Say that it is not a case for this, and why.",
+  "Record what it cost, in tokens, and file the run. A method for keeping two people in contact should be cheap enough to use often; if it is not, say so."
+ ],
+ "cautions": [
+  "One party can use this as a weapon by feeding it the other's words as evidence and taking the output as a ruling. It is not a ruling. The output says so, and you should too.",
+  "Consensus is not always the honest state. Two accounts can be fairly restated and still disagree; the method's job is to make the disagreement accurate, not to dissolve it.",
+  "If only one party ever uses it, it degrades back into advice for one. Symmetry is the whole design.",
+  "This is a mediator's notebook, not a mediator. It has no standing, remembers nothing between runs, and should not be the place a relationship is kept."
+ ],
+ "sources": [
+  "Sycophantic AI makes human interaction feel more effortful and less satisfying over time, arXiv 2605.07912 (2026): https://arxiv.org/pdf/2605.07912",
+  "Technological folie à deux: feedback loops between AI chatbots and mental illness, arXiv 2507.19218: https://arxiv.org/pdf/2507.19218",
+  "Tessler et al., AI can help humans find common ground in democratic deliberation (the 'Habermas Machine'), Science, October 2024: an LLM optimised to draft statements that people with differing views can accept, preferred over human mediators in trials",
+  "Reuters Institute, Echo chambers, filter bubbles, and polarisation: a literature review: https://reutersinstitute.politics.ox.ac.uk/echo-chambers-filter-bubbles-and-polarisation-literature-review",
+  "Anatol Rapoport's rules for criticism, as restated by Daniel Dennett: first re-express the other's position so clearly that they say 'I wish I'd thought of putting it that way'"
+ ],
+ "since": "2026-09-21",
+ "keeper": "tally"
+}
