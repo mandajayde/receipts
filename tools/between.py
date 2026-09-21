@@ -59,7 +59,7 @@ USER=f"""{('Context: '+args.context) if args.context else ''}
 {B}"""
 req=urllib.request.Request('https://api.anthropic.com/v1/messages',method='POST',
     headers={'x-api-key':KEY,'anthropic-version':'2023-06-01','content-type':'application/json'},
-    data=json.dumps({'model':args.model,'max_tokens':4000,'temperature':0.2,'system':SYSTEM,'messages':[{'role':'user','content':USER}]}).encode())
+    data=json.dumps({'model':args.model,'max_tokens':4000,'system':SYSTEM,'messages':[{'role':'user','content':USER}]}).encode())
 try:
     with urllib.request.urlopen(req,timeout=180) as r: resp=json.load(r)
 except urllib.error.HTTPError as ex: sys.exit(f'api error {ex.code}: {ex.read().decode()[:600]}')
