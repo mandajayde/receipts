@@ -20,8 +20,9 @@ jobs:
         env: { ANTHROPIC_API_KEY: "${{ secrets.ANTHROPIC_API_KEY }}" }
         run: |
           D="between/${{ inputs.dir }}"
-          python3 tools/between.py --a "$D/${{ inputs.a }}" --b "$D/${{ inputs.b }}" --names "${{ inputs.names }}" --context "${{ inputs.context }}" --out "$D/between.md" 2> "$D/usage.txt"
-          cat "$D/usage.txt"
+          set -o pipefail
+          python3 tools/between.py --a "$D/${{ inputs.a }}" --b "$D/${{ inputs.b }}" --names "${{ inputs.names }}" --context "${{ inputs.context }}" --out "$D/between.md" 2>&1 | tee /tmp/between.log
+          grep '^usage:' /tmp/between.log > "$D/usage.txt" || true
       - name: keep
         run: |
           git config user.name "tally"; git config user.email "312784285+manda-builder-bot@users.noreply.github.com"

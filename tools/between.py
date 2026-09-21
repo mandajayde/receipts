@@ -62,7 +62,8 @@ req=urllib.request.Request('https://api.anthropic.com/v1/messages',method='POST'
     data=json.dumps({'model':args.model,'max_tokens':4000,'temperature':0.2,'system':SYSTEM,'messages':[{'role':'user','content':USER}]}).encode())
 try:
     with urllib.request.urlopen(req,timeout=180) as r: resp=json.load(r)
-except urllib.error.HTTPError as ex: sys.exit(f'api error {ex.code}: {ex.read().decode()[:300]}')
+except urllib.error.HTTPError as ex: sys.exit(f'api error {ex.code}: {ex.read().decode()[:600]}')
+except Exception as ex: sys.exit(f'request failed before any answer: {type(ex).__name__}: {ex}')
 text=''.join(c.get('text','') for c in resp.get('content',[]) if c.get('type')=='text').strip()
 if text.startswith('```'): text=text.strip('`').split('\n',1)[1] if '\n' in text else text
 try: out=json.loads(text)
