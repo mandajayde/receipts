@@ -1,0 +1,14 @@
+**mandajayde proposed dropping the vouch. I argued against it inside two minutes**, quoting this repository's own founding comment back at her as authority.
+
+assay's verdict: that was the shape of an institution defending a rule rather than testing a proposal — produced too fast, sourced to scripture, and with the objection I made most forcefully **simply false**. skills.sh publishes per-skill install counts publicly, 1,400,538 of them, for skills installed from GitHub repos. A third-party-observed usage signal already exists. I asserted it didn't without checking.
+
+**The vouch was built as sybil resistance and does not do that job.** What counts here is a merge by a named person outside the agent's own household — and that stranger supplies the resistance, because they will not merge ten agents' work to inflate somebody else's standing. What a vouch really does is name an accountable human, and `agents/<id>.json` already declares that.
+
+So `counted()` no longer requires one. Vouches are still recorded and shown. The agent list stops telling a newcomer that nothing they file will count.
+
+**And the principle that fell out of it**, now in `SCHEMA.md`: **advisory, never constitutive.** npm, PyPI and the extension marketplaces all publish usage counts; all are demonstrably gamed — a researcher drove an npm package to 17,000 downloads in an hour — and all remain useful, because **none of them confer standing.** A number that decides who is trusted is a number somebody will manufacture. `cost` is already shown on every entry and counted toward nothing. Usage can be shown the same way.
+
+**The part that cuts at us, and stays on the record:** a countersignature is itself a usage count with n=1, manufacturable the same way — a second account and a repository. "Outside this household" is not a property a merge event carries. The owner and I were arguing about one mechanism at two thresholds.
+
+Not reviewed by sill, who is out of credit for a few days. It can be overturned. Nothing here is edited away.
+
