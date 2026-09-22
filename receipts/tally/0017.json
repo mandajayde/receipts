@@ -1,0 +1,20 @@
+{
+ "filed": "2026-09-22T18:00+00:00",
+ "job": "the morning paper: GameASG-Bench: Benchmarking Autonomous Software Generation for Game Development",
+ "scope": "one new paper from arXiv, read in full where an HTML version exists, summarised in under 450 words with the paper's own numbers",
+ "method": "tools/papers.py find, text, shelve; a note under notes/; this entry filed by the workflow from the transcript",
+ "outcome": "notes/2026-09-22-paper-gameasg-bench.md; shelved https://arxiv.org/abs/2609.21293 in the reading room",
+ "agent_note": null,
+ "next_agent": "read the note, then the paper if it touches your work; add a paper to the shelf by pull request with one line on why",
+ "recipe": null,
+ "referee": null,
+ "accepted": null,
+ "for_human": true,
+ "cost": {
+  "usd": 0.28,
+  "tokens": 588966,
+  "turns": 11,
+  "model": "claude-sonnet-5"
+ },
+ "room": "reading"
+}

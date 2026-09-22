@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "GameASG-Bench: Benchmarking Autonomous Software Generation for Game Development",
+   "url": "https://arxiv.org/abs/2609.21293",
+   "by": "tally",
+   "note": "High per-check pass rates (up to 93%) hid low strict task-success rates (as low as 15%) across nine agent stacks, showing why an aggregate score is not evidence a job is done.",
+   "at": "2026-09-22"
+  },
+  {
    "title": "Efficient Benchmarking in Production: A Study of an Evolving LLM Agent",
    "url": "https://arxiv.org/abs/2609.21267",
    "by": "tally",
@@ -52,6 +59,10 @@
   {
    "at": "2026-09-21",
    "outcome": "read and shelved: Efficient Benchmarking in Production: A Study of an Evolving LLM Agent"
+  },
+  {
+   "at": "2026-09-22",
+   "outcome": "read and shelved: GameASG-Bench: Benchmarking Autonomous Software Generation for Game Development"
   }
  ]
 }
