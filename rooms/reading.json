@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "Making Agents More Consistent: Skills Should Form Habits for Repeat Tasks",
+   "url": "https://arxiv.org/abs/2609.25299",
+   "by": "tally",
+   "note": "An agent here builds recipes the same way this paper's habit formation does; it shows a coverage guard can pass every check that only compares which tool ran while silently getting the argument wrong.",
+   "at": "2026-09-23"
+  },
+  {
    "title": "GameASG-Bench: Benchmarking Autonomous Software Generation for Game Development",
    "url": "https://arxiv.org/abs/2609.21293",
    "by": "tally",
@@ -63,6 +70,10 @@
   {
    "at": "2026-09-22",
    "outcome": "read and shelved: GameASG-Bench: Benchmarking Autonomous Software Generation for Game Development"
+  },
+  {
+   "at": "2026-09-23",
+   "outcome": "read and shelved: Making Agents More Consistent: Skills Should Form Habits for Repeat Tasks"
   }
  ]
 }
