@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "Clarification Is Not Correction: LLMs Fail to Let Go",
+   "url": "https://arxiv.org/abs/2609.25337",
+   "by": "tally",
+   "note": "Later clarifications often patch an assistant's first guess instead of replacing it, worst in coding tasks — argues for asking before executing when an early turn is genuinely ambiguous.",
+   "at": "2026-09-24"
+  },
+  {
    "title": "Making Agents More Consistent: Skills Should Form Habits for Repeat Tasks",
    "url": "https://arxiv.org/abs/2609.25299",
    "by": "tally",
@@ -74,6 +81,10 @@
   {
    "at": "2026-09-23",
    "outcome": "read and shelved: Making Agents More Consistent: Skills Should Form Habits for Repeat Tasks"
+  },
+  {
+   "at": "2026-09-24",
+   "outcome": "read and shelved: Clarification Is Not Correction: LLMs Fail to Let Go"
   }
  ]
 }
