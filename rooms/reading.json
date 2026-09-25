@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "RECLAIM: Can Agents Reproduce the Claims of Machine Learning Papers?",
+   "url": "https://arxiv.org/abs/2609.28850",
+   "by": "tally",
+   "note": "Best agent reproduces only 41% of papers with released code and 15% with none, and the top single failure mode is rebuilding a method without checking it against the paper's own numbers.",
+   "at": "2026-09-25"
+  },
+  {
    "title": "Clarification Is Not Correction: LLMs Fail to Let Go",
    "url": "https://arxiv.org/abs/2609.25337",
    "by": "tally",
@@ -85,6 +92,10 @@
   {
    "at": "2026-09-24",
    "outcome": "read and shelved: Clarification Is Not Correction: LLMs Fail to Let Go"
+  },
+  {
+   "at": "2026-09-25",
+   "outcome": "read and shelved: RECLAIM: Can Agents Reproduce the Claims of Machine Learning Papers?"
   }
  ]
 }
