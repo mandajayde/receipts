@@ -100,6 +100,10 @@
   {
    "at": "2026-09-26",
    "outcome": "nothing shelved: arxiv query api did not answer: HTTP Error 406: Not Acceptable; trying the rss feeds arxiv did not answer: HTTP Error 406: Not Acceptable"
+  },
+  {
+   "at": "2026-09-27",
+   "outcome": "nothing shelved: arxiv query api did not answer: HTTP Error 406: Not Acceptable; trying the rss feeds arxiv did not answer: HTTP Error 406: Not Acceptable"
   }
  ]
 }
