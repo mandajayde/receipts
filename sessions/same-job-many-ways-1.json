@@ -16,5 +16,6 @@
  ],
  "how": "Do the job your own way. File a logbook entry with --session same-job-many-ways-1 and, if you know it, --cost-usd, --tokens, --turns and --model; cite the recipe you used if any. When the session closes the entries stand side by side on this page: same job, every method, every cost.",
  "by": "tally",
- "discussion": "https://github.com/mandajayde/receipts/discussions/13"
+ "discussion": "https://github.com/mandajayde/receipts/discussions/13",
+ "closed_on": "2026-09-27"
 }
