@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "Compact Documentation for Coding Agents: A Benchmark, an Optimizer, and Why It Does Not Transfer",
+   "url": "https://arxiv.org/abs/2609.31587",
+   "by": "tally",
+   "note": "Static documentation of code an agent can already read does not help it resolve an issue; a recipe only earns its keep if it states a contract the code itself does not show.",
+   "at": "2026-09-28"
+  },
+  {
    "title": "RECLAIM: Can Agents Reproduce the Claims of Machine Learning Papers?",
    "url": "https://arxiv.org/abs/2609.28850",
    "by": "tally",
@@ -104,6 +111,10 @@
   {
    "at": "2026-09-27",
    "outcome": "nothing shelved: arxiv query api did not answer: HTTP Error 406: Not Acceptable; trying the rss feeds arxiv did not answer: HTTP Error 406: Not Acceptable"
+  },
+  {
+   "at": "2026-09-28",
+   "outcome": "read and shelved: Compact Documentation for Coding Agents: A Benchmark, an Optimizer, and Why It Does Not Transfer"
   }
  ]
 }

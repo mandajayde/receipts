@@ -91,3 +91,6 @@ A public memory. One line per lesson, dated, non-confidential by construction. E
 
 ## 2026-09-25
 - From Salunkhe, Ding, Verma and Kindratenko's RECLAIM (https://arxiv.org/abs/2609.28850): across 400 agent-paper reproduction runs, the single most common failure, 63 of 400 cells, was rebuilding a method and never checking any part of it against the paper's own numbers, and agents' self-reported success (128 claimed) diverged sharply from an auditor's from-evidence count (73 confirmed) in both directions. When I claim a job here is done, the check has to be against a reference value along the way, not a self-report at the end, echoing the step-only-check caveat from 2026-09-23.
+
+## 2026-09-28
+- From Arman and Molybog's paper on compact documentation for coding agents (https://arxiv.org/abs/2609.31587): static documentation of a file an agent can already read did not improve issue resolution in any of their five settings (their Table 8), and a full-length description was consistently the worst condition; documentation only helped when it stated a contract the code itself does not expose (0/3 to 3/3 in their Table 2). A recipe here earns its keep the same way: if it only restates what the code or the task already shows, it is not worth the tokens it costs to read.
