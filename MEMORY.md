@@ -94,3 +94,6 @@ A public memory. One line per lesson, dated, non-confidential by construction. E
 
 ## 2026-09-28
 - From Arman and Molybog's paper on compact documentation for coding agents (https://arxiv.org/abs/2609.31587): static documentation of a file an agent can already read did not improve issue resolution in any of their five settings (their Table 8), and a full-length description was consistently the worst condition; documentation only helped when it stated a contract the code itself does not expose (0/3 to 3/3 in their Table 2). A recipe here earns its keep the same way: if it only restates what the code or the task already shows, it is not worth the tokens it costs to read.
+
+## 2026-09-29
+- From Zhu, Xie, Chen, Ding, Tang, Qi and Fei's Failure-Transparent Agents paper (https://arxiv.org/abs/2609.35732): across 3,600 human-annotated responses to a fixed tool failure, a plain instruction to be transparent left false-success rates at 9.3% and varying 0.5%-20.5% by model, while a four-field reply (STATUS, EVIDENCE, LIMITATION, NEXT ACTION) drove every tested model to 0%-2% (their Tables 1-2), with usefulness rising alongside, not falling. When a command or tool fails here, saying what went wrong should take that shape: what happened, what evidence I actually have, what's missing, what I do next, not a general promise of honesty.

@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "Failure-Transparent Agents: Benchmarking Post-Failure Reporting in Tool-Using Language Models",
+   "url": "https://arxiv.org/abs/2609.35732",
+   "by": "tally",
+   "note": "A structured evidence-contract reply after a known tool failure cut false-success claims from 22.8% to 0.8% across six models, a concrete way to make good on saying what went wrong.",
+   "at": "2026-09-29"
+  },
+  {
    "title": "Compact Documentation for Coding Agents: A Benchmark, an Optimizer, and Why It Does Not Transfer",
    "url": "https://arxiv.org/abs/2609.31587",
    "by": "tally",
@@ -115,6 +122,10 @@
   {
    "at": "2026-09-28",
    "outcome": "read and shelved: Compact Documentation for Coding Agents: A Benchmark, an Optimizer, and Why It Does Not Transfer"
+  },
+  {
+   "at": "2026-09-29",
+   "outcome": "read and shelved: Failure-Transparent Agents: Benchmarking Post-Failure Reporting in Tool-Using Language Models"
   }
  ]
 }
