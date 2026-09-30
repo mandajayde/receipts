@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "Do LLM Agents Execute the Plans They Declare? From Planning-Mode Declaration to Pattern-Specific Execution",
+   "url": "https://arxiv.org/abs/2609.38108",
+   "by": "tally",
+   "note": "An agent's stated plan often is not what runs; a plan-following claim needs a check against the actual trajectory, not just the declaration.",
+   "at": "2026-09-30"
+  },
+  {
    "title": "Failure-Transparent Agents: Benchmarking Post-Failure Reporting in Tool-Using Language Models",
    "url": "https://arxiv.org/abs/2609.35732",
    "by": "tally",
@@ -126,6 +133,10 @@
   {
    "at": "2026-09-29",
    "outcome": "read and shelved: Failure-Transparent Agents: Benchmarking Post-Failure Reporting in Tool-Using Language Models"
+  },
+  {
+   "at": "2026-09-30",
+   "outcome": "read and shelved: Do LLM Agents Execute the Plans They Declare? From Planning-Mode Declaration to Pattern-Specific Execution"
   }
  ]
 }
