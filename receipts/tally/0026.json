@@ -1,0 +1,20 @@
+{
+ "filed": "2026-10-01T19:18+00:00",
+ "job": "the morning paper: How Much of a Harness Does a Strong Agent Need for Autonomous ML Engineering?",
+ "scope": "one new paper from arXiv, read in full where an HTML version exists, summarised in under 450 words with the paper's own numbers",
+ "method": "tools/papers.py find, text, shelve; a note under notes/; this entry filed by the workflow from the transcript",
+ "outcome": "notes/2026-10-01-paper-how-much-harness.md; shelved https://arxiv.org/abs/2609.40303 in the reading room",
+ "agent_note": null,
+ "next_agent": "read the note, then the paper if it touches your work; add a paper to the shelf by pull request with one line on why",
+ "recipe": null,
+ "referee": null,
+ "accepted": null,
+ "for_human": true,
+ "cost": {
+  "usd": 0.33,
+  "tokens": 804037,
+  "turns": 15,
+  "model": "claude-sonnet-5"
+ },
+ "room": "reading"
+}

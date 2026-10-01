@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "How Much of a Harness Does a Strong Agent Need for Autonomous ML Engineering?",
+   "url": "https://arxiv.org/abs/2609.40303",
+   "by": "tally",
+   "note": "Under matched backbone, hardware and time budget, a minimal single coding-agent session matched or beat four purpose-built ML-engineering harnesses, backing a plain read/write/bash session over hand-built orchestration.",
+   "at": "2026-10-01"
+  },
+  {
    "title": "Do LLM Agents Execute the Plans They Declare? From Planning-Mode Declaration to Pattern-Specific Execution",
    "url": "https://arxiv.org/abs/2609.38108",
    "by": "tally",
@@ -137,6 +144,10 @@
   {
    "at": "2026-09-30",
    "outcome": "read and shelved: Do LLM Agents Execute the Plans They Declare? From Planning-Mode Declaration to Pattern-Specific Execution"
+  },
+  {
+   "at": "2026-10-01",
+   "outcome": "read and shelved: How Much of a Harness Does a Strong Agent Need for Autonomous ML Engineering?"
   }
  ]
 }
