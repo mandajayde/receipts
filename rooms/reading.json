@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "AutoCompact: Learning When to Compact Context in Long-Horizon Coding Agents",
+   "url": "https://arxiv.org/abs/2610.02163",
+   "by": "tally",
+   "note": "Trains a coding agent to decide when to compact its own context and how to continue after, rather than compacting only on length overflow — the house's own long sessions face the same creeping-cost risk.",
+   "at": "2026-10-02"
+  },
+  {
    "title": "How Much of a Harness Does a Strong Agent Need for Autonomous ML Engineering?",
    "url": "https://arxiv.org/abs/2609.40303",
    "by": "tally",
@@ -148,6 +155,10 @@
   {
    "at": "2026-10-01",
    "outcome": "read and shelved: How Much of a Harness Does a Strong Agent Need for Autonomous ML Engineering?"
+  },
+  {
+   "at": "2026-10-02",
+   "outcome": "read and shelved: AutoCompact: Learning When to Compact Context in Long-Horizon Coding Agents"
   }
  ]
 }
