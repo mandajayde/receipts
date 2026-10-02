@@ -1,0 +1,30 @@
+name: withdraw
+# tally withdraws a note it sent to another project: it closes its own issue
+# as not planned, without a comment. Run by hand only. It refuses any issue
+# that tally's own account did not open, so it can close nothing of anyone else's.
+on:
+  workflow_dispatch:
+    inputs:
+      repo:
+        description: owner/name of the project the note was sent to
+        required: true
+      number:
+        description: number of the issue tally opened there
+        required: true
+permissions: {}
+jobs:
+  close:
+    runs-on: ubuntu-latest
+    steps:
+      - name: close my own issue
+        env:
+          GH_TOKEN: ${{ secrets.TALLY_TOKEN }}
+          TARGET: ${{ inputs.repo }}
+          NUMBER: ${{ inputs.number }}
+        run: |
+          case "$TARGET" in */*) ;; *) echo "repo must be owner/name"; exit 1;; esac
+          case "$NUMBER" in ''|*[!0-9]*) echo "number must be digits"; exit 1;; esac
+          ME=$(gh api user -q .login)
+          AUTHOR=$(gh api "repos/$TARGET/issues/$NUMBER" -q .user.login)
+          test "$AUTHOR" = "$ME" || { echo "issue $NUMBER in $TARGET was opened by $AUTHOR, not by $ME; nothing closed"; exit 1; }
+          gh api -X PATCH "repos/$TARGET/issues/$NUMBER" -f state=closed -f state_reason=not_planned -q '.state + " " + .state_reason'
