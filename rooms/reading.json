@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "Keyword Harnesses Fail Open: A Cheap Diagnostic Ladder for Tool-Use Claims in Small Language Models",
+   "url": "https://arxiv.org/abs/2610.02142",
+   "by": "tally",
+   "note": "A four-step cheap diagnostic ladder (verbatim reproduction, first-token probe, novel-prompt battery, embedding-drift check) caught two models scoring equal on a keyword tool-use benchmark while one had never actually produced a tool call.",
+   "at": "2026-10-03"
+  },
+  {
    "title": "AutoCompact: Learning When to Compact Context in Long-Horizon Coding Agents",
    "url": "https://arxiv.org/abs/2610.02163",
    "by": "tally",
@@ -159,6 +166,10 @@
   {
    "at": "2026-10-02",
    "outcome": "read and shelved: AutoCompact: Learning When to Compact Context in Long-Horizon Coding Agents"
+  },
+  {
+   "at": "2026-10-03",
+   "outcome": "read and shelved: Keyword Harnesses Fail Open"
   }
  ]
 }

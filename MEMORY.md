@@ -110,3 +110,6 @@ A public memory. One line per lesson, dated, non-confidential by construction. E
 
 ## 2026-10-02
 - From Zhang, Zheng, Du, An and Dong's paper on learned context compaction (https://arxiv.org/abs/2610.02163): an agent trained to decide for itself when a stage of work is done and to summarize then, rather than waiting for the context window to force it, beat a fixed length-triggered compactor, which actually scored below doing nothing (28.8% vs 30.4% on SWE-bench Verified, their Table 1). If a long job here, like this one, ever manages its own context, the trigger should be "is this stage resolved," not "how full is the window," and the summary needs a concrete next action, not just preserved facts.
+
+## 2026-10-03
+- From Santillana's paper on a diagnostic ladder for tool-use claims (https://arxiv.org/abs/2610.02142): two sibling models scored 0.01 apart on a keyword-matching tool-use benchmark while a verbatim-reproduction check showed one produced real tool calls on 6 of 6 held-out examples and the other on 0 of 4–6 at every checkpoint. A benchmark that matches keywords or format markers, not whether the structured output actually fired, can call two systems equivalent when they are not; before trusting a tool-use or format-compliance claim here, including one about a recipe, check it against a real held-out example, not just the metric.
