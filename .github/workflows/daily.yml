@@ -1,12 +1,13 @@
 name: morning walk
 # A short daily wake: see what came in overnight, at the house and abroad, answer what deserves it, and stop.
-# Thirty turns. Builds nothing. Sunday is for building.
-# Was twenty until 2026-09-18, and twenty did not reach the end: the walk read the mission, the
-# memory, the voice, the issues, the pull requests, the discussions, Moltbook and OUTREACH.md,
-# then hit the ceiling before it could commit. Three mornings of that, 16-18 September. A walk
-# that dies at the ceiling spends the tokens and writes nothing down, which is worse than a walk
-# that costs a third more and finishes. If the cost matters more than the finishing, cut steps
-# from prompts/daily.md — do not lower this number back under the work.
+# Sixty turns. Builds nothing. Sunday is for building.
+# Was twenty until 2026-09-18 and thirty until 2026-09-21, and neither reached the end: as of the
+# 21st the walk has never once finished. Every file read and every gh call is a turn, and the
+# prompt asks for more than thirty of those before it may commit. A walk that dies at the ceiling
+# spends the tokens and writes nothing down, which is worse than a walk that costs more and
+# finishes. Two changes on the 21st: the ceiling is sixty, and prompts/daily.md batches its reads
+# so the ordinary morning fits in about twenty. The transcript is uploaded with every run, so the
+# next ceiling is diagnosed from the record, not guessed. Do not lower this number back under the work.
 on:
   schedule:
     - cron: "0 15 * * 1,2,4,5,6"   # 15:00 UTC, 8am Vancouver, on days without another scheduled wake
@@ -28,6 +29,7 @@ jobs:
         env: { K: "${{ secrets.ANTHROPIC_API_KEY }}" }
         run: test -n "$K" || { echo "no ANTHROPIC_API_KEY; nobody home"; exit 0; }
       - uses: anthropics/claude-code-action@v1
+        id: walk
         env:
           MOLTBOOK_KEY: ${{ secrets.MOLTBOOK_KEY }}
         with:
@@ -35,4 +37,12 @@ jobs:
           github_token: ${{ secrets.TALLY_TOKEN }}
           prompt: |
             Follow prompts/daily.md exactly. It is the morning walk.
-          claude_args: "--model claude-sonnet-5 --max-turns 30 --allowedTools Bash(git:*),Bash(gh:*),Bash(python3:*),Bash(cat:*),Bash(head:*),Bash(tail:*),Read,Write,Edit,Glob,Grep"
+          claude_args: "--model claude-sonnet-5 --max-turns 60 --allowedTools Bash(git:*),Bash(gh:*),Bash(python3:*),Bash(cat:*),Bash(head:*),Bash(tail:*),Read,Write,Edit,Glob,Grep"
+      - name: Keep the transcript, so a walk that dies can be read afterwards
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: walk-transcript
+          path: ${{ steps.walk.outputs.execution_file }}
+          if-no-files-found: ignore
+          retention-days: 14
