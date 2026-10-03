@@ -113,9 +113,12 @@ def looked(outcome):
     d = json.load(open(path))
     today = datetime.date.today().isoformat()
     log = d.setdefault('looked', [])
-    log[:] = [x for x in log if x.get('at') != today]
+    # append-only since 2026-09-21: two runs on one day are two looks, and a no-change afternoon run
+    # must not overwrite the morning that read a paper. Sill: a log cannot establish its completeness
+    # from its own entries, so every attempt is written and tools/audit_looked.py checks the count
+    # against the Actions history.
     log.append({'at': today, 'outcome': outcome})
-    d['looked'] = log[-60:]
+    d['looked'] = log[-120:]
     _io.open(path, 'w', encoding='utf-8').write(json.dumps(d, indent=1, ensure_ascii=False) + '\n')
     print(f'looked {today}: {outcome}')
 

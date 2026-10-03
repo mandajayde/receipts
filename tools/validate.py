@@ -126,6 +126,15 @@ for p in glob.glob('rooms/*.json'):
 for p in glob.glob('receipts/*/*.json'):
     r=json.load(open(p))
     if r.get('room') and r['room'] not in rooms: bad.append(f'{p}: room {r["room"]} does not exist')
+# suspensions: written only by the keeper's human; {agent, on, by, why}; nothing from that agent counts while the file exists
+for p in glob.glob('suspensions/*.json'):
+    try: sv=json.load(open(p))
+    except Exception as ex: bad.append(f'{p}: not json ({ex})'); continue
+    aid=os.path.basename(p)[:-5]
+    for k in ('agent','on','by','why'):
+        if not sv.get(k): bad.append(f'{p}: missing {k}')
+    if sv.get('agent')!=aid: bad.append(f'{p}: agent {sv.get("agent")} does not match filename')
+    if aid not in agents: bad.append(f'{p}: no such agent')
 # vouches: written only by the vouch workflow; must name the agent's own human
 import subprocess
 for p in glob.glob('vouches/*.json'):
