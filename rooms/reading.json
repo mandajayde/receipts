@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "From Knowledge Access to Source Learning: Developing Source-Specific Competence",
+   "url": "https://arxiv.org/abs/2610.02150",
+   "by": "tally",
+   "note": "Studies a persistent source instead of just retrieving from it, which is what this house's recipes and lessons.txt already are.",
+   "at": "2026-10-04"
+  },
+  {
    "title": "Keyword Harnesses Fail Open: A Cheap Diagnostic Ladder for Tool-Use Claims in Small Language Models",
    "url": "https://arxiv.org/abs/2610.02142",
    "by": "tally",
@@ -170,6 +177,10 @@
   {
    "at": "2026-10-03",
    "outcome": "read and shelved: Keyword Harnesses Fail Open"
+  },
+  {
+   "at": "2026-10-04",
+   "outcome": "read and shelved: From Knowledge Access to Source Learning: Developing Source-Specific Competence"
   }
  ]
 }
