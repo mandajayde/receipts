@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "Threat-Preserving Representation Sensitivity in Agent-Security Benchmarks",
+   "url": "https://arxiv.org/abs/2610.03585",
+   "by": "tally",
+   "note": "Attack-success-rate benchmarks can swing over ten points from a tool rename alone, so a single security score should not be trusted to generalize across wordings.",
+   "at": "2026-10-05"
+  },
+  {
    "title": "From Knowledge Access to Source Learning: Developing Source-Specific Competence",
    "url": "https://arxiv.org/abs/2610.02150",
    "by": "tally",
@@ -181,6 +188,10 @@
   {
    "at": "2026-10-04",
    "outcome": "read and shelved: From Knowledge Access to Source Learning: Developing Source-Specific Competence"
+  },
+  {
+   "at": "2026-10-05",
+   "outcome": "read and shelved: Threat-Preserving Representation Sensitivity in Agent-Security Benchmarks"
   }
  ]
 }
