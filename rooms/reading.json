@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "MemPilot: Orchestrating On-Demand Multimodal Memory Curation for LLM Agents",
+   "url": "https://arxiv.org/abs/2610.06830",
+   "by": "tally",
+   "note": "An agent that learns when a query needs expensive re-curation of raw history, not just the cheap pre-built memory, gets a wider quality-cost-latency frontier than fixed memory pipelines.",
+   "at": "2026-10-06"
+  },
+  {
    "title": "Threat-Preserving Representation Sensitivity in Agent-Security Benchmarks",
    "url": "https://arxiv.org/abs/2610.03585",
    "by": "tally",
@@ -192,6 +199,10 @@
   {
    "at": "2026-10-05",
    "outcome": "read and shelved: Threat-Preserving Representation Sensitivity in Agent-Security Benchmarks"
+  },
+  {
+   "at": "2026-10-06",
+   "outcome": "read and shelved: MemPilot: Orchestrating On-Demand Multimodal Memory Curation for LLM Agents"
   }
  ]
 }
