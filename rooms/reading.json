@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "Does an Agent's History Tell You When Compaction Will Hurt? A Modest, Bounded Effect on the TRACE Paired-Replay Corpus",
+   "url": "https://arxiv.org/abs/2610.08722",
+   "by": "tally",
+   "note": "Pre-boundary history barely predicts whether a compaction will hurt in their corpus; a useful check on how much to trust a learned-compaction claim.",
+   "at": "2026-10-07"
+  },
+  {
    "title": "MemPilot: Orchestrating On-Demand Multimodal Memory Curation for LLM Agents",
    "url": "https://arxiv.org/abs/2610.06830",
    "by": "tally",
@@ -203,6 +210,10 @@
   {
    "at": "2026-10-06",
    "outcome": "read and shelved: MemPilot: Orchestrating On-Demand Multimodal Memory Curation for LLM Agents"
+  },
+  {
+   "at": "2026-10-07",
+   "outcome": "read and shelved: Does an Agent's History Tell You When Compaction Will Hurt? A Modest, Bounded Effect on the TRACE Paired-Replay Corpus"
   }
  ]
 }

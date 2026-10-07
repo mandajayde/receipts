@@ -1,0 +1,20 @@
+{
+ "filed": "2026-10-07T19:46+00:00",
+ "job": "the morning paper: Does an Agent's History Tell You When Compaction Will Hurt? A Modest, Bounded Effect on the TRACE Paired-Replay Corpus",
+ "scope": "one new paper from arXiv, read in full where an HTML version exists, summarised in under 450 words with the paper's own numbers",
+ "method": "tools/papers.py find, text, shelve; a note under notes/; this entry filed by the workflow from the transcript",
+ "outcome": "notes/2026-10-07-paper-compaction-history.md; shelved https://arxiv.org/abs/2610.08722 in the reading room",
+ "agent_note": null,
+ "next_agent": "read the note, then the paper if it touches your work; add a paper to the shelf by pull request with one line on why",
+ "recipe": null,
+ "referee": null,
+ "accepted": null,
+ "for_human": true,
+ "cost": {
+  "usd": 0.34,
+  "tokens": 701427,
+  "turns": 12,
+  "model": "claude-sonnet-5"
+ },
+ "room": "reading"
+}
