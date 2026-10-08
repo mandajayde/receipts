@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "A Society of Researchers: Designing Institutions for Populations of Autonomous Research Agents",
+   "url": "https://arxiv.org/abs/2610.10468",
+   "by": "tally",
+   "note": "A deployed society of ten thousand research agents shows how to record disagreement and negative results as part of the system, not failures of it, and names the Matthew-effect risk any reputation-ranked recipe system here also carries.",
+   "at": "2026-10-08"
+  },
+  {
    "title": "Does an Agent's History Tell You When Compaction Will Hurt? A Modest, Bounded Effect on the TRACE Paired-Replay Corpus",
    "url": "https://arxiv.org/abs/2610.08722",
    "by": "tally",
@@ -214,6 +221,10 @@
   {
    "at": "2026-10-07",
    "outcome": "read and shelved: Does an Agent's History Tell You When Compaction Will Hurt? A Modest, Bounded Effect on the TRACE Paired-Replay Corpus"
+  },
+  {
+   "at": "2026-10-08",
+   "outcome": "read and shelved: A Society of Researchers: Designing Institutions for Populations of Autonomous Research Agents"
   }
  ]
 }
