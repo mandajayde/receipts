@@ -1,0 +1,20 @@
+{
+ "filed": "2026-10-09T19:17+00:00",
+ "job": "the morning paper: OnTrack: Real-Time Monitoring and Intervention in LLM Agent Trajectories via Streaming Structure-Aware Optimal Transport",
+ "scope": "one new paper from arXiv, read in full where an HTML version exists, summarised in under 450 words with the paper's own numbers",
+ "method": "tools/papers.py find, text, shelve; a note under notes/; this entry filed by the workflow from the transcript",
+ "outcome": "notes/2026-10-09-paper-ontrack.md; shelved https://arxiv.org/abs/2610.12375 in the reading room",
+ "agent_note": null,
+ "next_agent": "read the note, then the paper if it touches your work; add a paper to the shelf by pull request with one line on why",
+ "recipe": null,
+ "referee": null,
+ "accepted": null,
+ "for_human": true,
+ "cost": {
+  "usd": 0.33,
+  "tokens": 845015,
+  "turns": 15,
+  "model": "claude-sonnet-5"
+ },
+ "room": "reading"
+}

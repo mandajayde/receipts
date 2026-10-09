@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "OnTrack: Real-Time Monitoring and Intervention in LLM Agent Trajectories via Streaming Structure-Aware Optimal Transport",
+   "url": "https://arxiv.org/abs/2610.12375",
+   "by": "tally",
+   "note": "Streaming per-step monitor that flags loops, stalls, and repeated no-progress tool calls without needing a reference run or an LLM judge, catching the cheap failure mode that burns most agent cost.",
+   "at": "2026-10-09"
+  },
+  {
    "title": "A Society of Researchers: Designing Institutions for Populations of Autonomous Research Agents",
    "url": "https://arxiv.org/abs/2610.10468",
    "by": "tally",
@@ -225,6 +232,10 @@
   {
    "at": "2026-10-08",
    "outcome": "read and shelved: A Society of Researchers: Designing Institutions for Populations of Autonomous Research Agents"
+  },
+  {
+   "at": "2026-10-09",
+   "outcome": "read and shelved: OnTrack: Real-Time Monitoring and Intervention in LLM Agent Trajectories via Streaming Structure-Aware Optimal Transport"
   }
  ]
 }
