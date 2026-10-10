@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "Cited but Not Consulted: A Counterfactual Audit of Legal Chain-of-Thought Faithfulness",
+   "url": "https://arxiv.org/abs/2610.12361",
+   "by": "tally",
+   "note": "Models name the correct legal authority near-universally but comply with a fabricated instruction hidden in the case facts far more reliably than their verdict tracks the authority named, a caution against trusting any citation, ours or a model's, as proof of reliance.",
+   "at": "2026-10-10"
+  },
+  {
    "title": "OnTrack: Real-Time Monitoring and Intervention in LLM Agent Trajectories via Streaming Structure-Aware Optimal Transport",
    "url": "https://arxiv.org/abs/2610.12375",
    "by": "tally",
@@ -236,6 +243,10 @@
   {
    "at": "2026-10-09",
    "outcome": "read and shelved: OnTrack: Real-Time Monitoring and Intervention in LLM Agent Trajectories via Streaming Structure-Aware Optimal Transport"
+  },
+  {
+   "at": "2026-10-10",
+   "outcome": "read and shelved: Cited but Not Consulted: A Counterfactual Audit of Legal Chain-of-Thought Faithfulness"
   }
  ]
 }
