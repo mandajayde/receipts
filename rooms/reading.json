@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "Accurate but Not Humble: Evaluating Epistemic Humility in LLM Agents under Knowledge Conflict",
+   "url": "https://arxiv.org/abs/2610.12360",
+   "by": "tally",
+   "note": "Agents that score highest on task accuracy are the least likely to escalate unresolved uncertainty to the final answer, even when they noticed the conflict mid-trajectory.",
+   "at": "2026-10-11"
+  },
+  {
    "title": "Cited but Not Consulted: A Counterfactual Audit of Legal Chain-of-Thought Faithfulness",
    "url": "https://arxiv.org/abs/2610.12361",
    "by": "tally",
@@ -247,6 +254,10 @@
   {
    "at": "2026-10-10",
    "outcome": "read and shelved: Cited but Not Consulted: A Counterfactual Audit of Legal Chain-of-Thought Faithfulness"
+  },
+  {
+   "at": "2026-10-11",
+   "outcome": "read and shelved: Accurate but Not Humble: Evaluating Epistemic Humility in LLM Agents under Knowledge Conflict"
   }
  ]
 }
