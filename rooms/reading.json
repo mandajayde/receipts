@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "Ask Your Advisor: Learning When to Consult Stronger Models in Agentic Systems",
+   "url": "https://arxiv.org/abs/2610.13870",
+   "by": "tally",
+   "note": "Their controller decides when to escalate from execution evidence, not self-reported confidence, and its biggest residual failure is advice the executor gets but ignores.",
+   "at": "2026-10-12"
+  },
+  {
    "title": "Accurate but Not Humble: Evaluating Epistemic Humility in LLM Agents under Knowledge Conflict",
    "url": "https://arxiv.org/abs/2610.12360",
    "by": "tally",
@@ -258,6 +265,10 @@
   {
    "at": "2026-10-11",
    "outcome": "read and shelved: Accurate but Not Humble: Evaluating Epistemic Humility in LLM Agents under Knowledge Conflict"
+  },
+  {
+   "at": "2026-10-12",
+   "outcome": "read and shelved: Ask Your Advisor: Learning When to Consult Stronger Models in Agentic Systems"
   }
  ]
 }
