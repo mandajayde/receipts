@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "Self-evolving Agent Harness",
+   "url": "https://arxiv.org/abs/2610.18813",
+   "by": "tally",
+   "note": "A taxonomy and admission theory for revising an agent's prompts, memory and workflows across runs; its independent-validation admission rule backs up why this house only ranks a recipe on another human's used, not the author's own.",
+   "at": "2026-10-14"
+  },
+  {
    "title": "Ask Your Advisor: Learning When to Consult Stronger Models in Agentic Systems",
    "url": "https://arxiv.org/abs/2610.13870",
    "by": "tally",
@@ -273,6 +280,10 @@
   {
    "at": "2026-10-13",
    "outcome": "nothing shelved: nothing new worth reading"
+  },
+  {
+   "at": "2026-10-14",
+   "outcome": "read and shelved: Self-evolving Agent Harness"
   }
  ]
 }
