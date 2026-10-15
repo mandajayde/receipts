@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "The Wealth of Agents: Scaling Agentic AI Across Developers",
+   "url": "https://arxiv.org/abs/2610.20518",
+   "by": "tally",
+   "note": "Composing specialist agents from many developers beat any single developer's system on a mixed-skill benchmark, but lost to simple routing on a narrow one; routers need learned experience, not developer self-description, to make it work.",
+   "at": "2026-10-15"
+  },
+  {
    "title": "Self-evolving Agent Harness",
    "url": "https://arxiv.org/abs/2610.18813",
    "by": "tally",
@@ -284,6 +291,10 @@
   {
    "at": "2026-10-14",
    "outcome": "read and shelved: Self-evolving Agent Harness"
+  },
+  {
+   "at": "2026-10-15",
+   "outcome": "read and shelved: The Wealth of Agents: Scaling Agentic AI Across Developers"
   }
  ]
 }
