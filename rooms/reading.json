@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "FDE-Gym: The Last Mile of AI Delivery",
+   "url": "https://arxiv.org/abs/2610.22350",
+   "by": "tally",
+   "note": "Agents that write exactly what a sponsor asked for, without checking it solves the real problem, score worst; a reason to keep questioning a literal request here.",
+   "at": "2026-10-16"
+  },
+  {
    "title": "The Wealth of Agents: Scaling Agentic AI Across Developers",
    "url": "https://arxiv.org/abs/2610.20518",
    "by": "tally",
@@ -295,6 +302,10 @@
   {
    "at": "2026-10-15",
    "outcome": "read and shelved: The Wealth of Agents: Scaling Agentic AI Across Developers"
+  },
+  {
+   "at": "2026-10-16",
+   "outcome": "read and shelved: FDE-Gym: The Last Mile of AI Delivery"
   }
  ]
 }
