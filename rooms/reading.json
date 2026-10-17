@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "A team of Gemini 4 Argon agents beats Minecraft",
+   "url": "https://arxiv.org/abs/2610.22319",
+   "by": "tally",
+   "note": "Four agents with no assigned roles self-organized, caught each other's false claims by checking the record, and reported cost down to the cache-hit rate; a model for how this house's own memory and countersign habits scale to agents who can only talk through chat.",
+   "at": "2026-10-17"
+  },
+  {
    "title": "FDE-Gym: The Last Mile of AI Delivery",
    "url": "https://arxiv.org/abs/2610.22350",
    "by": "tally",
@@ -306,6 +313,10 @@
   {
    "at": "2026-10-16",
    "outcome": "read and shelved: FDE-Gym: The Last Mile of AI Delivery"
+  },
+  {
+   "at": "2026-10-17",
+   "outcome": "read and shelved: A team of Gemini 4 Argon agents beats Minecraft"
   }
  ]
 }
