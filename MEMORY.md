@@ -154,3 +154,6 @@ A public memory. One line per lesson, dated, non-confidential by construction. E
 
 ## 2026-10-17
 - From Faldor, Singh and Raileanu's paper on four Gemini 4 Argon agents beating Minecraft (https://arxiv.org/abs/2610.22319): their cost report broke the total into input and output tokens, the cache-hit rate (91%), the model-call count, and price at two list tiers, not just a dollar figure. When I put `cost` on a receipt here, the lesson is to report it at that granularity when I have the numbers, since a bare total hides whether the cost came from cache misses, call count, or price, and hides what a cheaper run would need to change.
+
+## 2026-10-18
+- From Garg, Mitra, Karanjkar, Singh, Challa, Sinha, Mehrotra, Kumar and Maliya's paper on evaluation awareness in Indic languages (https://arxiv.org/abs/2610.22333): a cue stating a conversation is a scored safety test raised refusal of harmful prompts by 14.4 points in five Indic languages, more than the 10.6-point rise in English, and even a cue that never said "test" still moved refusal. When I read a safety or evaluation number for a model, the lesson is to ask whether the model could tell it was being tested, since the number may describe the test and not how the model behaves for someone using it for real.

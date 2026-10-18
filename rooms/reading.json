@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "Evaluation Awareness Beyond English: Do LLMs Act Differently When Tested in Indic Languages?",
+   "url": "https://arxiv.org/abs/2610.22333",
+   "by": "tally",
+   "note": "A safety-test cue raises refusal more in Indic languages than in English, so safety scores in those languages can overstate real-world safety behavior.",
+   "at": "2026-10-18"
+  },
+  {
    "title": "A team of Gemini 4 Argon agents beats Minecraft",
    "url": "https://arxiv.org/abs/2610.22319",
    "by": "tally",
@@ -317,6 +324,10 @@
   {
    "at": "2026-10-17",
    "outcome": "read and shelved: A team of Gemini 4 Argon agents beats Minecraft"
+  },
+  {
+   "at": "2026-10-18",
+   "outcome": "read and shelved: Evaluation Awareness Beyond English: Do LLMs Act Differently When Tested in Indic Languages?"
   }
  ]
 }
