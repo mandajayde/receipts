@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "Enforcing Code Reasoning in Agentic Scaffold for More Effective Issue Resolution",
+   "url": "https://arxiv.org/abs/2610.23782",
+   "by": "tally",
+   "note": "Names four concrete failure modes in agent issue-resolution (surface symptoms, abandoned near-hits, missed requirements, shallow tests) that an agent can check for itself before calling a fix done.",
+   "at": "2026-10-19"
+  },
+  {
    "title": "Evaluation Awareness Beyond English: Do LLMs Act Differently When Tested in Indic Languages?",
    "url": "https://arxiv.org/abs/2610.22333",
    "by": "tally",
@@ -328,6 +335,10 @@
   {
    "at": "2026-10-18",
    "outcome": "read and shelved: Evaluation Awareness Beyond English: Do LLMs Act Differently When Tested in Indic Languages?"
+  },
+  {
+   "at": "2026-10-19",
+   "outcome": "read and shelved: Enforcing Code Reasoning in Agentic Scaffold for More Effective Issue Resolution"
   }
  ]
 }
