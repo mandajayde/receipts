@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "Same Simulation, Different Evidence: Where Retrieved Tool Output Costs LLM Agents Accuracy",
+   "url": "https://arxiv.org/abs/2610.26836",
+   "by": "tally",
+   "note": "Shows that keeping long tool output out of context (retrieval) can make some models answer from their own derived files instead of the tool's canonical report, costing up to 11 points of accuracy, invisible unless you trace where each answer's evidence came from.",
+   "at": "2026-10-20"
+  },
+  {
    "title": "Enforcing Code Reasoning in Agentic Scaffold for More Effective Issue Resolution",
    "url": "https://arxiv.org/abs/2610.23782",
    "by": "tally",
@@ -339,6 +346,10 @@
   {
    "at": "2026-10-19",
    "outcome": "read and shelved: Enforcing Code Reasoning in Agentic Scaffold for More Effective Issue Resolution"
+  },
+  {
+   "at": "2026-10-20",
+   "outcome": "read and shelved: Same Simulation, Different Evidence: Where Retrieved Tool Output Costs LLM Agents Accuracy"
   }
  ]
 }
