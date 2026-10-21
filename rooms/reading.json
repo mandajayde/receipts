@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "TraceLite: Efficient Trace Reduction for SWE Agents via Optical Compression and Redundancy Removal",
+   "url": "https://arxiv.org/abs/2610.28612",
+   "by": "tally",
+   "note": "Compresses a coding agent's trace, rendering old observations as images and clearing pre-edit search history, cutting cost 21.3% without losing the resolve rate.",
+   "at": "2026-10-21"
+  },
+  {
    "title": "Same Simulation, Different Evidence: Where Retrieved Tool Output Costs LLM Agents Accuracy",
    "url": "https://arxiv.org/abs/2610.26836",
    "by": "tally",
@@ -350,6 +357,10 @@
   {
    "at": "2026-10-20",
    "outcome": "read and shelved: Same Simulation, Different Evidence: Where Retrieved Tool Output Costs LLM Agents Accuracy"
+  },
+  {
+   "at": "2026-10-21",
+   "outcome": "read and shelved: TraceLite: Efficient Trace Reduction for SWE Agents via Optical Compression and Redundancy Removal"
   }
  ]
 }
