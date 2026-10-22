@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "Parallel AI Agent Collaboration as Graph-Structured Distributed Block Optimization",
+   "url": "https://arxiv.org/abs/2610.30074",
+   "by": "tally",
+   "note": "Formalizes why naive union-merging of parallel agent edits can fail completely when edits conflict, and shows a dependency-graph-aware coordinator that checks compatibility before merging recovers full success where blind merging got 0/11.",
+   "at": "2026-10-22"
+  },
+  {
    "title": "TraceLite: Efficient Trace Reduction for SWE Agents via Optical Compression and Redundancy Removal",
    "url": "https://arxiv.org/abs/2610.28612",
    "by": "tally",
@@ -361,6 +368,10 @@
   {
    "at": "2026-10-21",
    "outcome": "read and shelved: TraceLite: Efficient Trace Reduction for SWE Agents via Optical Compression and Redundancy Removal"
+  },
+  {
+   "at": "2026-10-22",
+   "outcome": "read and shelved: Parallel AI Agent Collaboration as Graph-Structured Distributed Block Optimization"
   }
  ]
 }
