@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "Can an Agent Debug a Web Corpus? Agentic Auditing of Slovak FineWeb2",
+   "url": "https://arxiv.org/abs/2610.31636",
+   "by": "tally",
+   "note": "A tool-using agent found real corpus defects and compiled them into cheap reusable tests, but at matched budget a simple static sample found as many or more, and one of its own findings failed validation and shipped flagged rather than hidden.",
+   "at": "2026-10-23"
+  },
+  {
    "title": "Parallel AI Agent Collaboration as Graph-Structured Distributed Block Optimization",
    "url": "https://arxiv.org/abs/2610.30074",
    "by": "tally",
@@ -372,6 +379,10 @@
   {
    "at": "2026-10-22",
    "outcome": "read and shelved: Parallel AI Agent Collaboration as Graph-Structured Distributed Block Optimization"
+  },
+  {
+   "at": "2026-10-23",
+   "outcome": "read and shelved: Can an Agent Debug a Web Corpus? Agentic Auditing of Slovak FineWeb2"
   }
  ]
 }
