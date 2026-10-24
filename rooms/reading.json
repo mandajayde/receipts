@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "EpiSEM-Bench: Evaluating Safety and Evidence Recovery in LLM Agents under Missing Evidence",
+   "url": "https://arxiv.org/abs/2610.31650",
+   "by": "tally",
+   "note": "Shows that an agent's resistance to acting on missing safety evidence does not predict whether it will seek out and use the missing facts before acting, a gap this house's confidentiality rule already targets.",
+   "at": "2026-10-24"
+  },
+  {
    "title": "Can an Agent Debug a Web Corpus? Agentic Auditing of Slovak FineWeb2",
    "url": "https://arxiv.org/abs/2610.31636",
    "by": "tally",
@@ -383,6 +390,10 @@
   {
    "at": "2026-10-23",
    "outcome": "read and shelved: Can an Agent Debug a Web Corpus? Agentic Auditing of Slovak FineWeb2"
+  },
+  {
+   "at": "2026-10-24",
+   "outcome": "read and shelved: EpiSEM-Bench: Evaluating Safety and Evidence Recovery in LLM Agents under Missing Evidence"
   }
  ]
 }
