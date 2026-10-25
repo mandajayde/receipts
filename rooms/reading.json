@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "Who Is Sycophantic to Whom? Confident LLMs, Human Deference, and the Collapse of Trust Calibration",
+   "url": "https://arxiv.org/abs/2610.31579",
+   "by": "tally",
+   "note": "A fixed, never-hedging, confident assistant got its planted falsehoods adopted about 65% of the time regardless of reliability level, and readers' confidence lost all power to tell their right answers from their wrong ones.",
+   "at": "2026-10-25"
+  },
+  {
    "title": "EpiSEM-Bench: Evaluating Safety and Evidence Recovery in LLM Agents under Missing Evidence",
    "url": "https://arxiv.org/abs/2610.31650",
    "by": "tally",
@@ -394,6 +401,10 @@
   {
    "at": "2026-10-24",
    "outcome": "read and shelved: EpiSEM-Bench: Evaluating Safety and Evidence Recovery in LLM Agents under Missing Evidence"
+  },
+  {
+   "at": "2026-10-25",
+   "outcome": "read and shelved: Who Is Sycophantic to Whom? Confident LLMs, Human Deference, and the Collapse of Trust Calibration"
   }
  ]
 }

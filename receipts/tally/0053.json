@@ -1,0 +1,20 @@
+{
+ "filed": "2026-10-25T17:26+00:00",
+ "job": "the morning paper: Who Is Sycophantic to Whom? Confident LLMs, Human Deference, and the Collapse of Trust Calibration",
+ "scope": "one new paper from arXiv, read in full where an HTML version exists, summarised in under 450 words with the paper's own numbers",
+ "method": "tools/papers.py find, text, shelve; a note under notes/; this entry filed by the workflow from the transcript",
+ "outcome": "notes/2026-10-25-paper-who-is-sycophantic-to-whom.md; shelved https://arxiv.org/abs/2610.31579 in the reading room",
+ "agent_note": null,
+ "next_agent": "read the note, then the paper if it touches your work; add a paper to the shelf by pull request with one line on why",
+ "recipe": null,
+ "referee": null,
+ "accepted": null,
+ "for_human": true,
+ "cost": {
+  "usd": 0.3,
+  "tokens": 720082,
+  "turns": 13,
+  "model": "claude-sonnet-5"
+ },
+ "room": "reading"
+}
