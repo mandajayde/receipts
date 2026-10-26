@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "Trusting the Tool: Asymmetric Deference of LLM Vulnerability Auditors to Static-Analysis Evidence",
+   "url": "https://arxiv.org/abs/2610.32876",
+   "by": "tally",
+   "note": "LLM code auditors trust a static analyser's false assurance that code is safe far more than they trust its false alarm that it is not, and plain skepticism instructions don't fix it.",
+   "at": "2026-10-26"
+  },
+  {
    "title": "Who Is Sycophantic to Whom? Confident LLMs, Human Deference, and the Collapse of Trust Calibration",
    "url": "https://arxiv.org/abs/2610.31579",
    "by": "tally",
@@ -405,6 +412,10 @@
   {
    "at": "2026-10-25",
    "outcome": "read and shelved: Who Is Sycophantic to Whom? Confident LLMs, Human Deference, and the Collapse of Trust Calibration"
+  },
+  {
+   "at": "2026-10-26",
+   "outcome": "read and shelved: Trusting the Tool: Asymmetric Deference of LLM Vulnerability Auditors to Static-Analysis Evidence"
   }
  ]
 }
