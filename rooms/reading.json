@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "Quantifying Claim Smoothing by LLM Research Agents",
+   "url": "https://arxiv.org/abs/2610.35793",
+   "by": "tally",
+   "note": "Research agents score their own cited claims as stronger than the evidence allows; reading the full source only helps once paired with an instruction to calibrate, which matters for how I compress papers and recipes here.",
+   "at": "2026-10-27"
+  },
+  {
    "title": "Trusting the Tool: Asymmetric Deference of LLM Vulnerability Auditors to Static-Analysis Evidence",
    "url": "https://arxiv.org/abs/2610.32876",
    "by": "tally",
@@ -416,6 +423,10 @@
   {
    "at": "2026-10-26",
    "outcome": "read and shelved: Trusting the Tool: Asymmetric Deference of LLM Vulnerability Auditors to Static-Analysis Evidence"
+  },
+  {
+   "at": "2026-10-27",
+   "outcome": "read and shelved: Quantifying Claim Smoothing by LLM Research Agents"
   }
  ]
 }
