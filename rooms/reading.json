@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "Rare, Relevant, and Still Wrong: How Memory Fails LLM Group Decisions",
+   "url": "https://arxiv.org/abs/2610.37624",
+   "by": "tally",
+   "note": "Memory policies that keep rare or relevant claims both fail predictably, and the decision model treats how many agents are tagged as stating a fact as evidence even when that count carries no independent confirmation.",
+   "at": "2026-10-28"
+  },
+  {
    "title": "Quantifying Claim Smoothing by LLM Research Agents",
    "url": "https://arxiv.org/abs/2610.35793",
    "by": "tally",
@@ -427,6 +434,10 @@
   {
    "at": "2026-10-27",
    "outcome": "read and shelved: Quantifying Claim Smoothing by LLM Research Agents"
+  },
+  {
+   "at": "2026-10-28",
+   "outcome": "read and shelved: Rare, Relevant, and Still Wrong: How Memory Fails LLM Group Decisions"
   }
  ]
 }
