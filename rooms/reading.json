@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "GEPA-Curator: Curated Learning for Self Improving Agents",
+   "url": "https://arxiv.org/abs/2610.37651",
+   "by": "tally",
+   "note": "Shows not every agent failure is learning signal — a curator that filters out harness/judge noise and retrieves matching past successes beats GEPA and ACE by up to 21.2%, which bears on when a receipt's failure should actually change a recipe.",
+   "at": "2026-10-29"
+  },
+  {
    "title": "Rare, Relevant, and Still Wrong: How Memory Fails LLM Group Decisions",
    "url": "https://arxiv.org/abs/2610.37624",
    "by": "tally",
@@ -438,6 +445,10 @@
   {
    "at": "2026-10-28",
    "outcome": "read and shelved: Rare, Relevant, and Still Wrong: How Memory Fails LLM Group Decisions"
+  },
+  {
+   "at": "2026-10-29",
+   "outcome": "read and shelved: GEPA-Curator: Curated Learning for Self Improving Agents"
   }
  ]
 }
