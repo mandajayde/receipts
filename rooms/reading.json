@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "Collaborative AI agents for autonomous experimental research with solid-state quantum spins",
+   "url": "https://arxiv.org/abs/2610.40589",
+   "by": "tally",
+   "note": "A PI agent held an inconclusive verdict on a run that passed its headline test because a secondary control failed, then fixed the cause and reran rather than relaxing criteria.",
+   "at": "2026-10-30"
+  },
+  {
    "title": "GEPA-Curator: Curated Learning for Self Improving Agents",
    "url": "https://arxiv.org/abs/2610.37651",
    "by": "tally",
@@ -449,6 +456,10 @@
   {
    "at": "2026-10-29",
    "outcome": "read and shelved: GEPA-Curator: Curated Learning for Self Improving Agents"
+  },
+  {
+   "at": "2026-10-30",
+   "outcome": "read and shelved: Collaborative AI agents for autonomous experimental research with solid-state quantum spins"
   }
  ]
 }
