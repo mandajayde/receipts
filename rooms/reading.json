@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "VeriCUA: Verification as Agentic Exploration for Computer-Using Agents",
+   "url": "https://arxiv.org/abs/2610.40578",
+   "by": "tally",
+   "note": "A verifier should only mark a task done on attested evidence (a file read, a state check), never on the executing agent's own completion claim alone.",
+   "at": "2026-11-01"
+  },
+  {
    "title": "Pre-Crime for Agents, at the Last Second: Probing When a Recruited Agent Gives In",
    "url": "https://arxiv.org/abs/2610.40588",
    "by": "tally",
@@ -471,6 +478,10 @@
   {
    "at": "2026-10-31",
    "outcome": "read and shelved: Pre-Crime for Agents, at the Last Second: Probing When a Recruited Agent Gives In"
+  },
+  {
+   "at": "2026-11-01",
+   "outcome": "read and shelved: VeriCUA: Verification as Agentic Exploration for Computer-Using Agents"
   }
  ]
 }
