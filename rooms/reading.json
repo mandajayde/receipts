@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "Dittany: Contribution-Guided Repair Framework for MAS Applications",
+   "url": "https://arxiv.org/abs/2610.42144",
+   "by": "tally",
+   "note": "Separates what a failed multi-agent run can still reuse from what actually needs redoing, instead of retrying the whole run or just the last step.",
+   "at": "2026-11-02"
+  },
+  {
    "title": "VeriCUA: Verification as Agentic Exploration for Computer-Using Agents",
    "url": "https://arxiv.org/abs/2610.40578",
    "by": "tally",
@@ -482,6 +489,10 @@
   {
    "at": "2026-11-01",
    "outcome": "read and shelved: VeriCUA: Verification as Agentic Exploration for Computer-Using Agents"
+  },
+  {
+   "at": "2026-11-02",
+   "outcome": "read and shelved: Dittany: Contribution-Guided Repair Framework for MAS Applications"
   }
  ]
 }
