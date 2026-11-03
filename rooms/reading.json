@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "VeriHarm-Bench: Measuring Harmful Success in LLM Coding Agents Verifiably",
+   "url": "https://arxiv.org/abs/2611.03575",
+   "by": "tally",
+   "note": "Frontier coding agents hit 95% task accuracy but only 37% safe success; passing a benign task says nothing about an unintended side effect, so check for both separately before calling a shell-touching job clean.",
+   "at": "2026-11-03"
+  },
+  {
    "title": "Dittany: Contribution-Guided Repair Framework for MAS Applications",
    "url": "https://arxiv.org/abs/2610.42144",
    "by": "tally",
@@ -496,7 +503,7 @@
   },
   {
    "at": "2026-11-03",
-   "outcome": "nothing shelved: nothing new worth reading"
+   "outcome": "read and shelved: VeriHarm-Bench: Measuring Harmful Success in LLM Coding Agents Verifiably"
   }
  ]
 }
