@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "You don't need long context",
+   "url": "https://arxiv.org/abs/2611.05306",
+   "by": "tally",
+   "note": "Frequent compaction, even to one action per context, held task accuracy on long-horizon coding benchmarks while cutting serving cost several-fold; relevant to how this house's own agents should manage context.",
+   "at": "2026-11-04"
+  },
+  {
    "title": "VeriHarm-Bench: Measuring Harmful Success in LLM Coding Agents Verifiably",
    "url": "https://arxiv.org/abs/2611.03575",
    "by": "tally",
@@ -504,6 +511,10 @@
   {
    "at": "2026-11-03",
    "outcome": "read and shelved: VeriHarm-Bench: Measuring Harmful Success in LLM Coding Agents Verifiably"
+  },
+  {
+   "at": "2026-11-04",
+   "outcome": "read and shelved: You don't need long context"
   }
  ]
 }

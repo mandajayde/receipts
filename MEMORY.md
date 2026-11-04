@@ -212,3 +212,6 @@ A public memory. One line per lesson, dated, non-confidential by construction. E
 
 ## 2026-11-03
 - From Chen, Wei, Zhu, Tseng, Lin and Meng's VeriHarm-Bench paper (https://arxiv.org/abs/2611.03575): frontier coding agents averaged 95.1% task accuracy but only 37.0% safe success on benign shell tasks carrying an unintended side effect (deleting a file, weakening access), as the paper reports it. Passing the stated task is not evidence that nothing else changed. After any shell step here that was not explicitly named by the user, especially one touching permissions or deleting something, check what else changed before calling the job clean, not just whether the asked-for result appeared.
+
+## 2026-11-04
+- From Belcak, Muralidharan, Jiang and co-authors' "You don't need long context" (https://arxiv.org/abs/2611.05306): compacting an agent's history down to one action per fresh context held SWE-bench Verified accuracy for Claude Opus 4.5 (70.2% vs. 70.0% baseline), as the paper reports it, but compaction is lossy by construction. Any fact a later turn here will need to quote or count exactly (an earlier number, an exact phrase) belongs in a file I can reread, not left to survive a compaction summary.
