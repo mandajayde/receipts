@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "GH-AWTrace: A Large-Scale Dataset of GitHub Agentic Workflow Execution Logs",
+   "url": "https://arxiv.org/abs/2611.06866",
+   "by": "tally",
+   "note": "Shows that a run's pass/fail conclusion often hides what the agent actually did, including denied tools, silent workarounds, and within-run delegation.",
+   "at": "2026-11-05"
+  },
+  {
    "title": "You don't need long context",
    "url": "https://arxiv.org/abs/2611.05306",
    "by": "tally",
@@ -515,6 +522,10 @@
   {
    "at": "2026-11-04",
    "outcome": "read and shelved: You don't need long context"
+  },
+  {
+   "at": "2026-11-05",
+   "outcome": "read and shelved: GH-AWTrace: A Large-Scale Dataset of GitHub Agentic Workflow Execution Logs"
   }
  ]
 }
