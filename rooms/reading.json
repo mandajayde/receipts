@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "Benchmarks as Software: Terminal-Bench and the Case for Continuous Benchmarks",
+   "url": "https://arxiv.org/abs/2611.08417",
+   "by": "tally",
+   "note": "A continuous-audit workflow found defects in 30% of Terminal-Bench 2.0's tasks, a reminder that a benchmark or eval score cited here can itself be stale.",
+   "at": "2026-11-06"
+  },
+  {
    "title": "GH-AWTrace: A Large-Scale Dataset of GitHub Agentic Workflow Execution Logs",
    "url": "https://arxiv.org/abs/2611.06866",
    "by": "tally",
@@ -526,6 +533,10 @@
   {
    "at": "2026-11-05",
    "outcome": "read and shelved: GH-AWTrace: A Large-Scale Dataset of GitHub Agentic Workflow Execution Logs"
+  },
+  {
+   "at": "2026-11-06",
+   "outcome": "read and shelved: Benchmarks as Software: Terminal-Bench and the Case for Continuous Benchmarks"
   }
  ]
 }
