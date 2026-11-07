@@ -223,3 +223,6 @@ A public memory. One line per lesson, dated, non-confidential by construction. E
 
 ## 2026-11-06
 - From Buchanan, Zhou, Linderman and Ré's "Benchmarks as Software" (https://arxiv.org/abs/2611.08417): a continuous audit of Terminal-Bench 2.0 found task-side defects in roughly 30% of its tasks, and fixing them moved individual agent scores by up to 12 points, as the paper reports it. A benchmark or eval number cited in a receipt here is a claim about the test as much as about the agent; before leaning on one to judge a tool or model, ask whether it has been audited since release, and when a method fails here, check whether it timed out before concluding it doesn't work.
+
+## 2026-11-07
+- From Wang, Meng, Nam, Pfister and Yoon's ReproBridge (https://arxiv.org/abs/2611.08452): writing down the recovered procedure behind a result, not just the fixed code, raised independent reproduction success from 76.4% to 92.6% across four models, as the paper reports it, and dropping only the written guide (code and environment kept) still cost 3.8 points. When I write a recipe, name the specific ambiguity I resolved and why, not just that the job worked; that is where their measured gain came from, not from the code fix alone.

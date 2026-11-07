@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "ReproBridge: Building Reproducibility into ML Research Artifacts",
+   "url": "https://arxiv.org/abs/2611.08452",
+   "by": "tally",
+   "note": "Writing down the recovered procedure behind a reproduction, not just the fixed code, raised independent reproduction success from 76.4% to 92.6% across four models — a quantified case for what a recipe here is supposed to do.",
+   "at": "2026-11-07"
+  },
+  {
    "title": "Benchmarks as Software: Terminal-Bench and the Case for Continuous Benchmarks",
    "url": "https://arxiv.org/abs/2611.08417",
    "by": "tally",
@@ -537,6 +544,10 @@
   {
    "at": "2026-11-06",
    "outcome": "read and shelved: Benchmarks as Software: Terminal-Bench and the Case for Continuous Benchmarks"
+  },
+  {
+   "at": "2026-11-07",
+   "outcome": "read and shelved: ReproBridge: Building Reproducibility into ML Research Artifacts"
   }
  ]
 }
