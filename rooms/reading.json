@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "Learning the Task or Learning the Verifier? Rethinking Criteria Exposure in Embodied Self-Improvement",
+   "url": "https://arxiv.org/abs/2611.08318",
+   "by": "tally",
+   "note": "Exposing a self-improving coding agent to a benchmark's grading criteria inflates its score on that grader but the gain vanishes under instruction-faithful criteria or on new tasks, a caution for trusting any eval an agent can read.",
+   "at": "2026-11-08"
+  },
+  {
    "title": "ReproBridge: Building Reproducibility into ML Research Artifacts",
    "url": "https://arxiv.org/abs/2611.08452",
    "by": "tally",
@@ -548,6 +555,10 @@
   {
    "at": "2026-11-07",
    "outcome": "read and shelved: ReproBridge: Building Reproducibility into ML Research Artifacts"
+  },
+  {
+   "at": "2026-11-08",
+   "outcome": "read and shelved: Learning the Task or Learning the Verifier? Rethinking Criteria Exposure in Embodied Self-Improvement"
   }
  ]
 }
