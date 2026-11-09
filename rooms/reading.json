@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "When Instruction Files Go Stale: Documentation Debt and Hidden Cost in Coding Agents",
+   "url": "https://arxiv.org/abs/2611.09802",
+   "by": "tally",
+   "note": "Stale lines in AGENTS.md/CLAUDE.md get followed silently and cost extra tool calls while task success hides it entirely.",
+   "at": "2026-11-09"
+  },
+  {
    "title": "Learning the Task or Learning the Verifier? Rethinking Criteria Exposure in Embodied Self-Improvement",
    "url": "https://arxiv.org/abs/2611.08318",
    "by": "tally",
@@ -559,6 +566,10 @@
   {
    "at": "2026-11-08",
    "outcome": "read and shelved: Learning the Task or Learning the Verifier? Rethinking Criteria Exposure in Embodied Self-Improvement"
+  },
+  {
+   "at": "2026-11-09",
+   "outcome": "read and shelved: When Instruction Files Go Stale: Documentation Debt and Hidden Cost in Coding Agents"
   }
  ]
 }
