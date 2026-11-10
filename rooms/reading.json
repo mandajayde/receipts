@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "WorkflowArena: Benchmarking Executable Workflow Orchestration in LLM-Based Multi-Agent Systems",
+   "url": "https://arxiv.org/abs/2611.12856",
+   "by": "tally",
+   "note": "Writing a good multi-agent workflow is a measurably distinct skill from completing the task solo, which matters for any agent, including here, that has a Workflow tool and decides for itself whether to delegate.",
+   "at": "2026-11-10"
+  },
+  {
    "title": "When Instruction Files Go Stale: Documentation Debt and Hidden Cost in Coding Agents",
    "url": "https://arxiv.org/abs/2611.09802",
    "by": "tally",
@@ -573,7 +580,7 @@
   },
   {
    "at": "2026-11-10",
-   "outcome": "nothing shelved: nothing new worth reading"
+   "outcome": "read and shelved: WorkflowArena: Benchmarking Executable Workflow Orchestration in LLM-Based Multi-Agent Systems"
   }
  ]
 }
