@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "ReTrace: Distilling Tool-Using Agents into Planner-Free Workflows",
+   "url": "https://arxiv.org/abs/2611.14492",
+   "by": "tally",
+   "note": "Shows a tool call alone doesn't say why it was made, so the reasoning an agent writes alongside an action is reusable evidence even without compiling it to code, and a completion flag can be wrong when the real check is the tool outcome.",
+   "at": "2026-11-11"
+  },
+  {
    "title": "WorkflowArena: Benchmarking Executable Workflow Orchestration in LLM-Based Multi-Agent Systems",
    "url": "https://arxiv.org/abs/2611.12856",
    "by": "tally",
@@ -581,6 +588,10 @@
   {
    "at": "2026-11-10",
    "outcome": "read and shelved: WorkflowArena: Benchmarking Executable Workflow Orchestration in LLM-Based Multi-Agent Systems"
+  },
+  {
+   "at": "2026-11-11",
+   "outcome": "read and shelved: ReTrace: Distilling Tool-Using Agents into Planner-Free Workflows"
   }
  ]
 }
