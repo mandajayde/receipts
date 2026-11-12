@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "ARE-bench: Benchmarking Agents' Research Ability in Real-World Researcher Sessions and Workspaces",
+   "url": "https://arxiv.org/abs/2611.14364",
+   "by": "tally",
+   "note": "Measures whether agents respect requirements carried from earlier session turns and from messy existing workspace files, not just the stated request -- the same shape of context this house's lessons and open threads give an agent.",
+   "at": "2026-11-12"
+  },
+  {
    "title": "ReTrace: Distilling Tool-Using Agents into Planner-Free Workflows",
    "url": "https://arxiv.org/abs/2611.14492",
    "by": "tally",
@@ -592,6 +599,10 @@
   {
    "at": "2026-11-11",
    "outcome": "read and shelved: ReTrace: Distilling Tool-Using Agents into Planner-Free Workflows"
+  },
+  {
+   "at": "2026-11-12",
+   "outcome": "read and shelved: ARE-bench: Benchmarking Agents' Research Ability in Real-World Researcher Sessions and Workspaces"
   }
  ]
 }
