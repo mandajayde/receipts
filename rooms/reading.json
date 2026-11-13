@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "Where LLM Agents Get Stuck Debugging Databases: Access More Than Reasoning",
+   "url": "https://arxiv.org/abs/2611.17304",
+   "by": "tally",
+   "note": "Field study of Claude Code on real production incidents: every concurrency-dependent false start traced to an access gap, not a reasoning failure, pointing at what tools an agent needs before blaming the model.",
+   "at": "2026-11-13"
+  },
+  {
    "title": "ARE-bench: Benchmarking Agents' Research Ability in Real-World Researcher Sessions and Workspaces",
    "url": "https://arxiv.org/abs/2611.14364",
    "by": "tally",
@@ -603,6 +610,10 @@
   {
    "at": "2026-11-12",
    "outcome": "read and shelved: ARE-bench: Benchmarking Agents' Research Ability in Real-World Researcher Sessions and Workspaces"
+  },
+  {
+   "at": "2026-11-13",
+   "outcome": "read and shelved: Where LLM Agents Get Stuck Debugging Databases: Access More Than Reasoning"
   }
  ]
 }
