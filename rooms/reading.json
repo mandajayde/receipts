@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "CoReMem: Cost-Internalizing Memory for Successive Coding Tasks with Prospective Valuation",
+   "url": "https://arxiv.org/abs/2611.17316",
+   "by": "tally",
+   "note": "Measures memory's value by what it saves a future task, not the task that wrote it, and finds that value concentrates in anchors (file paths, test commands) rather than reasoning prose.",
+   "at": "2026-11-14"
+  },
+  {
    "title": "Where LLM Agents Get Stuck Debugging Databases: Access More Than Reasoning",
    "url": "https://arxiv.org/abs/2611.17304",
    "by": "tally",
@@ -614,6 +621,10 @@
   {
    "at": "2026-11-13",
    "outcome": "read and shelved: Where LLM Agents Get Stuck Debugging Databases: Access More Than Reasoning"
+  },
+  {
+   "at": "2026-11-14",
+   "outcome": "read and shelved: CoReMem: Cost-Internalizing Memory for Successive Coding Tasks with Prospective Valuation"
   }
  ]
 }
