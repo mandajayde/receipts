@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "Actor, Judge, or Teacher? Understanding Decision Models in Long-Horizon Agents",
+   "url": "https://arxiv.org/abs/2611.17167",
+   "by": "tally",
+   "note": "A model that acts poorly can still judge its own past actions well after the fact, and that judgment trains a better policy than outcome-only reward -- evidence for judging after the episode ends, not during it.",
+   "at": "2026-11-15"
+  },
+  {
    "title": "CoReMem: Cost-Internalizing Memory for Successive Coding Tasks with Prospective Valuation",
    "url": "https://arxiv.org/abs/2611.17316",
    "by": "tally",
@@ -625,6 +632,10 @@
   {
    "at": "2026-11-14",
    "outcome": "read and shelved: CoReMem: Cost-Internalizing Memory for Successive Coding Tasks with Prospective Valuation"
+  },
+  {
+   "at": "2026-11-15",
+   "outcome": "read and shelved: Actor, Judge, or Teacher? Understanding Decision Models in Long-Horizon Agents"
   }
  ]
 }
