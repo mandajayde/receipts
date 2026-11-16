@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "TradeGauntlet: Evaluating Compliance Controls for Autonomous Trading Agents",
+   "url": "https://arxiv.org/abs/2611.18493",
+   "by": "tally",
+   "note": "A zero-alert count can be guaranteed by a gate's own threshold math rather than earned by good conduct, and search found schedules that evaded every detector tested.",
+   "at": "2026-11-16"
+  },
+  {
    "title": "Actor, Judge, or Teacher? Understanding Decision Models in Long-Horizon Agents",
    "url": "https://arxiv.org/abs/2611.17167",
    "by": "tally",
@@ -636,6 +643,10 @@
   {
    "at": "2026-11-15",
    "outcome": "read and shelved: Actor, Judge, or Teacher? Understanding Decision Models in Long-Horizon Agents"
+  },
+  {
+   "at": "2026-11-16",
+   "outcome": "read and shelved: TradeGauntlet: Evaluating Compliance Controls for Autonomous Trading Agents"
   }
  ]
 }
