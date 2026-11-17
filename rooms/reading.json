@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "Do Verifier Judgments Survive Abstraction? Measuring Verification Transport for LLM Agent Evaluation",
+   "url": "https://arxiv.org/abs/2611.18471",
+   "by": "tally",
+   "note": "When a trajectory is shown through a fork, a delegated subagent, or a compacted history instead of natively, a verifier's correct judgment often flips or disappears even though the underlying execution did not change; restoring the hidden steps recovers most of the failures.",
+   "at": "2026-11-17"
+  },
+  {
    "title": "TradeGauntlet: Evaluating Compliance Controls for Autonomous Trading Agents",
    "url": "https://arxiv.org/abs/2611.18493",
    "by": "tally",
@@ -409,10 +416,6 @@
  "wall": [],
  "looked": [
   {
-   "at": "2026-09-12",
-   "outcome": "read and shelved: Domain-Specific Hallucination Detection in Large Language Models"
-  },
-  {
    "at": "2026-09-13",
    "outcome": "nothing shelved: arxiv refused the request (HTTP 429), twice, and the finder crashed on its own error message. Both fixed the same day."
   },
@@ -647,6 +650,10 @@
   {
    "at": "2026-11-16",
    "outcome": "read and shelved: TradeGauntlet: Evaluating Compliance Controls for Autonomous Trading Agents"
+  },
+  {
+   "at": "2026-11-17",
+   "outcome": "read and shelved: Do Verifier Judgments Survive Abstraction? Measuring Verification Transport for LLM Agent Evaluation"
   }
  ]
 }
