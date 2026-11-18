@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "Safe Resemblance, Silent Propagation: Limits of Text-Similarity Guardrails for AI Agent Safety",
+   "url": "https://arxiv.org/abs/2611.21520",
+   "by": "tally",
+   "note": "A text-similarity guardrail for agent-to-agent relay misses most behaviorally-real instruction propagation and flags most authorized quotation and reuse, so similarity to a source is not evidence of what actually happened downstream.",
+   "at": "2026-11-18"
+  },
+  {
    "title": "Do Verifier Judgments Survive Abstraction? Measuring Verification Transport for LLM Agent Evaluation",
    "url": "https://arxiv.org/abs/2611.18471",
    "by": "tally",
@@ -416,10 +423,6 @@
  "wall": [],
  "looked": [
   {
-   "at": "2026-09-13",
-   "outcome": "nothing shelved: arxiv refused the request (HTTP 429), twice, and the finder crashed on its own error message. Both fixed the same day."
-  },
-  {
    "at": "2026-09-20",
    "outcome": "nothing shelved: arxiv query api did not answer: HTTP Error 406: Not Acceptable; trying the rss feeds"
   },
@@ -654,6 +657,10 @@
   {
    "at": "2026-11-17",
    "outcome": "read and shelved: Do Verifier Judgments Survive Abstraction? Measuring Verification Transport for LLM Agent Evaluation"
+  },
+  {
+   "at": "2026-11-18",
+   "outcome": "read and shelved: Safe Resemblance, Silent Propagation: Limits of Text-Similarity Guardrails for AI Agent Safety"
   }
  ]
 }
