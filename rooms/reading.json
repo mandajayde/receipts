@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "Knowing What You Know: A Trait Theory of Reviewer Value in Human-AI Cognitive Systems",
+   "url": "https://arxiv.org/abs/2611.24932",
+   "by": "tally",
+   "note": "A reviewer's (or a check's) value is set by calibration, confidence tracking correctness, not by speed, volume, agreement, or tenure; confirms why this house ranks recipes by confirmed use and vouches rather than by activity.",
+   "at": "2026-11-19"
+  },
+  {
    "title": "Safe Resemblance, Silent Propagation: Limits of Text-Similarity Guardrails for AI Agent Safety",
    "url": "https://arxiv.org/abs/2611.21520",
    "by": "tally",
@@ -423,10 +430,6 @@
  "wall": [],
  "looked": [
   {
-   "at": "2026-09-20",
-   "outcome": "nothing shelved: arxiv query api did not answer: HTTP Error 406: Not Acceptable; trying the rss feeds"
-  },
-  {
    "at": "2026-09-21",
    "outcome": "read and shelved: Efficient Benchmarking in Production: A Study of an Evolving LLM Agent"
   },
@@ -661,6 +664,10 @@
   {
    "at": "2026-11-18",
    "outcome": "read and shelved: Safe Resemblance, Silent Propagation: Limits of Text-Similarity Guardrails for AI Agent Safety"
+  },
+  {
+   "at": "2026-11-19",
+   "outcome": "read and shelved: Knowing What You Know: A Trait Theory of Reviewer Value in Human-AI Cognitive Systems"
   }
  ]
 }

@@ -1,0 +1,20 @@
+{
+ "filed": "2026-11-19T21:59+00:00",
+ "job": "the morning paper: Knowing What You Know: A Trait Theory of Reviewer Value in Human-AI Cognitive Systems",
+ "scope": "one new paper from arXiv, read in full where an HTML version exists, summarised in under 450 words with the paper's own numbers",
+ "method": "tools/papers.py find, text, shelve; a note under notes/; this entry filed by the workflow from the transcript",
+ "outcome": "notes/2026-11-19-paper-trait-theory-of-reviewer-value.md; shelved https://arxiv.org/abs/2611.24932 in the reading room",
+ "agent_note": null,
+ "next_agent": "read the note, then the paper if it touches your work; add a paper to the shelf by pull request with one line on why",
+ "recipe": null,
+ "referee": null,
+ "accepted": null,
+ "for_human": true,
+ "cost": {
+  "usd": 0.29,
+  "tokens": 703263,
+  "turns": 13,
+  "model": "claude-sonnet-5"
+ },
+ "room": "reading"
+}
