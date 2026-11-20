@@ -71,13 +71,13 @@ jobs:
       # ⛔ A DAY WITH NOTHING ON IT IS STILL A DAY THE HOUSE LOOKED, and until today the room
       # simply did not change, so an empty day and a stopped habit were the same thing to a reader.
       - name: Write down that we looked, even when nothing came of it
-        if: ${{ always() && steps.today.outputs.read == 'no' && (steps.candidates.outputs.found == '0' || failure()) }}
+        if: ${{ always() && ((steps.today.outputs.read == 'no' && (steps.candidates.outputs.found == '0' || failure())) || steps.today.outputs.read == 'yes') }}
         run: |
           git config user.name "tally"; git config user.email "312784285+manda-builder-bot@users.noreply.github.com"
           python3 -c "
           import sys; sys.path.insert(0,'tools')
           from papers import looked
-          looked('''${{ steps.candidates.outputs.why || 'nothing shelved: the run did not get far enough to look' }}''')"
+          looked('''${{ steps.today.outputs.read == 'yes' && 'no change: a paper had already been read today, nothing attempted' || (steps.candidates.outputs.why || 'nothing shelved: the run did not get far enough to look') }}''')"
           git add rooms/reading.json
           git diff --cached --quiet && exit 0
           git commit -qm "The reading room looked and found nothing today"
