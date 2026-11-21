@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "Replication of Agentic Security Events: Audit and Investigation (ROGUE-AI)",
+   "url": "https://arxiv.org/abs/2611.26553",
+   "by": "tally",
+   "note": "Rebuilding reported agent incidents offline against a matched control found that most real-world harm had no attacker, just an agent missing an ordinary hazard, and a warning naming the hazard's consequence cut harm far more than a generic one.",
+   "at": "2026-11-21"
+  },
+  {
    "title": "Kaer: Security-Aware Replanning for Multi-Agent Systems",
    "url": "https://arxiv.org/abs/2611.24839",
    "by": "tally",
@@ -437,10 +444,6 @@
  "wall": [],
  "looked": [
   {
-   "at": "2026-09-22",
-   "outcome": "read and shelved: GameASG-Bench: Benchmarking Autonomous Software Generation for Game Development"
-  },
-  {
    "at": "2026-09-23",
    "outcome": "read and shelved: Making Agents More Consistent: Skills Should Form Habits for Repeat Tasks"
   },
@@ -675,6 +678,10 @@
   {
    "at": "2026-11-20",
    "outcome": "read and shelved: Kaer: Security-Aware Replanning for Multi-Agent Systems"
+  },
+  {
+   "at": "2026-11-21",
+   "outcome": "read and shelved: Replication of Agentic Security Events: Audit and Investigation (ROGUE-AI)"
   }
  ]
 }
