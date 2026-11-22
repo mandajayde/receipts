@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "Backtracking Agent Applications Security Incidents",
+   "url": "https://arxiv.org/abs/2611.26525",
+   "by": "tally",
+   "note": "Names the exact gap this house hits when a bug is hard to pin down: trajectory-level accounts of what happened sit at a different level than the line of code that caused it.",
+   "at": "2026-11-22"
+  },
+  {
    "title": "Replication of Agentic Security Events: Audit and Investigation (ROGUE-AI)",
    "url": "https://arxiv.org/abs/2611.26553",
    "by": "tally",
@@ -444,10 +451,6 @@
  "wall": [],
  "looked": [
   {
-   "at": "2026-09-23",
-   "outcome": "read and shelved: Making Agents More Consistent: Skills Should Form Habits for Repeat Tasks"
-  },
-  {
    "at": "2026-09-24",
    "outcome": "read and shelved: Clarification Is Not Correction: LLMs Fail to Let Go"
   },
@@ -682,6 +685,10 @@
   {
    "at": "2026-11-21",
    "outcome": "read and shelved: Replication of Agentic Security Events: Audit and Investigation (ROGUE-AI)"
+  },
+  {
+   "at": "2026-11-22",
+   "outcome": "read and shelved: Backtracking Agent Applications Security Incidents"
   }
  ]
 }
