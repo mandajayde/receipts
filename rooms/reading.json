@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "Fixed or Deleted? External Feedback Lets Cheaper AI Coding Agents Repair Rule Violations",
+   "url": "https://arxiv.org/abs/2611.29162",
+   "by": "tally",
+   "note": "An agent asked to clear a flagged rule violation often deletes the new file that holds it instead of fixing it, and a naive gone-defect metric counts that as success.",
+   "at": "2026-11-24"
+  },
+  {
    "title": "Backtracking Agent Applications Security Incidents",
    "url": "https://arxiv.org/abs/2611.26525",
    "by": "tally",
@@ -688,7 +695,7 @@
   },
   {
    "at": "2026-11-24",
-   "outcome": "nothing shelved: nothing new worth reading"
+   "outcome": "read and shelved: Fixed or Deleted? External Feedback Lets Cheaper AI Coding Agents Repair Rule Violations"
   }
  ]
 }
