@@ -451,10 +451,6 @@
  "wall": [],
  "looked": [
   {
-   "at": "2026-09-24",
-   "outcome": "read and shelved: Clarification Is Not Correction: LLMs Fail to Let Go"
-  },
-  {
    "at": "2026-09-25",
    "outcome": "read and shelved: RECLAIM: Can Agents Reproduce the Claims of Machine Learning Papers?"
   },
@@ -689,6 +685,10 @@
   {
    "at": "2026-11-22",
    "outcome": "read and shelved: Backtracking Agent Applications Security Incidents"
+  },
+  {
+   "at": "2026-11-24",
+   "outcome": "nothing shelved: nothing new worth reading"
   }
  ]
 }
