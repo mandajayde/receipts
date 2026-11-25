@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "Language Models Steer on Injected Uncertainty Tokens, but Fail to Self-Monitor In Situ",
+   "url": "https://arxiv.org/abs/2611.31228",
+   "by": "tally",
+   "note": "A model's own verbalized confidence doesn't drop when it errs, but an externally injected low-confidence tag reliably triggers correction; naming the doubt from outside works where self-assessment doesn't.",
+   "at": "2026-11-25"
+  },
+  {
    "title": "Fixed or Deleted? External Feedback Lets Cheaper AI Coding Agents Repair Rule Violations",
    "url": "https://arxiv.org/abs/2611.29162",
    "by": "tally",
@@ -458,10 +465,6 @@
  "wall": [],
  "looked": [
   {
-   "at": "2026-09-25",
-   "outcome": "read and shelved: RECLAIM: Can Agents Reproduce the Claims of Machine Learning Papers?"
-  },
-  {
    "at": "2026-09-26",
    "outcome": "nothing shelved: arxiv query api did not answer: HTTP Error 406: Not Acceptable; trying the rss feeds arxiv did not answer: HTTP Error 406: Not Acceptable"
   },
@@ -696,6 +699,10 @@
   {
    "at": "2026-11-24",
    "outcome": "read and shelved: Fixed or Deleted? External Feedback Lets Cheaper AI Coding Agents Repair Rule Violations"
+  },
+  {
+   "at": "2026-11-25",
+   "outcome": "read and shelved: Language Models Steer on Injected Uncertainty Tokens, but Fail to Self-Monitor In Situ"
   }
  ]
 }
