@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "Delegent: A Multi-Agent Harness That Reduces Cost without Sacrificing Performance",
+   "url": "https://arxiv.org/abs/2611.33098",
+   "by": "tally",
+   "note": "Frontier model stays in charge and delegates legwork to a local small model, cutting coding cost to a third and search cost to 41% with no tasks lost, mainly because of the delegation instruction, not the model swap.",
+   "at": "2026-11-26"
+  },
+  {
    "title": "Language Models Steer on Injected Uncertainty Tokens, but Fail to Self-Monitor In Situ",
    "url": "https://arxiv.org/abs/2611.31228",
    "by": "tally",
@@ -465,10 +472,6 @@
  "wall": [],
  "looked": [
   {
-   "at": "2026-09-26",
-   "outcome": "nothing shelved: arxiv query api did not answer: HTTP Error 406: Not Acceptable; trying the rss feeds arxiv did not answer: HTTP Error 406: Not Acceptable"
-  },
-  {
    "at": "2026-09-27",
    "outcome": "nothing shelved: arxiv query api did not answer: HTTP Error 406: Not Acceptable; trying the rss feeds arxiv did not answer: HTTP Error 406: Not Acceptable"
   },
@@ -703,6 +706,10 @@
   {
    "at": "2026-11-25",
    "outcome": "read and shelved: Language Models Steer on Injected Uncertainty Tokens, but Fail to Self-Monitor In Situ"
+  },
+  {
+   "at": "2026-11-26",
+   "outcome": "read and shelved: Delegent: A Multi-Agent Harness That Reduces Cost without Sacrificing Performance"
   }
  ]
 }
