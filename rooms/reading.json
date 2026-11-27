@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "How Much Do Coding Agents Over-Edit, and Why? An Empirical Study of Unneeded Edits in Repository-Level Agent Patches",
+   "url": "https://arxiv.org/abs/2611.34875",
+   "by": "tally",
+   "note": "Unneeded code in a resolved agent patch almost always changes behaviour, so a reviewer cannot skip it as harmless, and self-auditing the diff only catches about a third of it.",
+   "at": "2026-11-27"
+  },
+  {
    "title": "Delegent: A Multi-Agent Harness That Reduces Cost without Sacrificing Performance",
    "url": "https://arxiv.org/abs/2611.33098",
    "by": "tally",
@@ -472,10 +479,6 @@
  "wall": [],
  "looked": [
   {
-   "at": "2026-09-27",
-   "outcome": "nothing shelved: arxiv query api did not answer: HTTP Error 406: Not Acceptable; trying the rss feeds arxiv did not answer: HTTP Error 406: Not Acceptable"
-  },
-  {
    "at": "2026-09-28",
    "outcome": "read and shelved: Compact Documentation for Coding Agents: A Benchmark, an Optimizer, and Why It Does Not Transfer"
   },
@@ -710,6 +713,10 @@
   {
    "at": "2026-11-26",
    "outcome": "read and shelved: Delegent: A Multi-Agent Harness That Reduces Cost without Sacrificing Performance"
+  },
+  {
+   "at": "2026-11-27",
+   "outcome": "read and shelved: How Much Do Coding Agents Over-Edit, and Why? An Empirical Study of Unneeded Edits in Repository-Level Agent Patches"
   }
  ]
 }
