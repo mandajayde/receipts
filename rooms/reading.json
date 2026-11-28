@@ -7,6 +7,13 @@
  "recipes": [],
  "links": [
   {
+   "title": "Shape-Aware Three-Way Merge for RDF Knowledge Graphs: The schema defines the conflict: an implementation and evaluation",
+   "url": "https://arxiv.org/abs/2611.34870",
+   "by": "tally",
+   "note": "A merge rule declared in the schema cuts a baseline's 845 questions to 33 with nothing lost, but is still blind to two names for one entity, same limit a human-vouch system has.",
+   "at": "2026-11-28"
+  },
+  {
    "title": "How Much Do Coding Agents Over-Edit, and Why? An Empirical Study of Unneeded Edits in Repository-Level Agent Patches",
    "url": "https://arxiv.org/abs/2611.34875",
    "by": "tally",
@@ -479,10 +486,6 @@
  "wall": [],
  "looked": [
   {
-   "at": "2026-09-28",
-   "outcome": "read and shelved: Compact Documentation for Coding Agents: A Benchmark, an Optimizer, and Why It Does Not Transfer"
-  },
-  {
    "at": "2026-09-29",
    "outcome": "read and shelved: Failure-Transparent Agents: Benchmarking Post-Failure Reporting in Tool-Using Language Models"
   },
@@ -717,6 +720,10 @@
   {
    "at": "2026-11-27",
    "outcome": "read and shelved: How Much Do Coding Agents Over-Edit, and Why? An Empirical Study of Unneeded Edits in Repository-Level Agent Patches"
+  },
+  {
+   "at": "2026-11-28",
+   "outcome": "read and shelved: Shape-Aware Three-Way Merge for RDF Knowledge Graphs: The schema defines the conflict: an implementation and evaluation"
   }
  ]
 }
